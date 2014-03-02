@@ -11,7 +11,6 @@ LoopsSinceBetterResult=0;
 RealDataMedianCD4Count=median(RealTestingCD4);
 
 
-SortedRealTestingCD4=sort(RealTestingCD4);
 [~, NumberOfCD4s]=size(RealTestingCD4);
 
 for LoopNumber=1:MaximumLoops
@@ -36,16 +35,7 @@ for LoopNumber=1:MaximumLoops
     SimulatedMedianCD4=median(SelectedSimulatedCD4s);
     ThisError=abs(RealDataMedianCD4Count-SimulatedMedianCD4);
 
-%     %sort such that the distributitions can be compared
-%     SortedTestingCD4=sort(SelectedSimulatedCD4s);
-%     % Distribution error
-%     ThisError=sum(abs(SortedRealTestingCD4-SortedTestingCD4));  
-
-
-
     if ThisError<BestError
-%             disp([BestError Variability BestPEstimate])%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%<------------------------
-
         BestError=ThisError;
         LoopsSinceBetterResult=0;
         BestPEstimate=CurrentPAttempt;
