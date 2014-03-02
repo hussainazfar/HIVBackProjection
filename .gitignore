@@ -1,0 +1,12 @@
+#Do not sync this file for privacy reasons
+#Imputation/Ignorethis.txt
+#Imputation/Ignorethis2.txt
+
+#The following includes the surveillance data which we can't synchronise in case we go public
+#ImputationData/
+
+#Other folders that have ignore their data include Imputation, ResultsPlots and PatientSaveFiles
+
+
+#Ignore the following file types
+*.asv
