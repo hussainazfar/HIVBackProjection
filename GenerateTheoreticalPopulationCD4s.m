@@ -54,10 +54,11 @@ mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 SQRDecline = lognrnd(mu,sigma,1,NumberThatReachSlowDecline);
 SQRDecline(SQRDecline<0.1*Pxi.SquareRootAnnualDeclineChosen)=0.1*Pxi.SquareRootAnnualDeclineChosen;%This is to avoid negative declines and divide by zero errors. Note that it is expected that around 0.9% of the population would have this level according to these calculations
-
+SQRDecline=Pxi.SquareRootAnnualDeclineChosen;
 
 TimeSpentInSQRTDecline=TimeUntilDiagnosis(IndexSlowDeclineNum)-Pxi.TimeUntilRebound;
 sqrtCalculatedCD4SQRTDecline=sqrtCD4AtRebound-SQRDecline.*TimeSpentInSQRTDecline;
+sqrtCalculatedCD4SQRTDecline(sqrtCalculatedCD4SQRTDecline<0)=0;
 CalculatedCD4SQRTDecline=sqrtCalculatedCD4SQRTDecline.^2;
 % add them to the matrix
 TestingCD4(IndexSlowDecline)=CalculatedCD4SQRTDecline;
