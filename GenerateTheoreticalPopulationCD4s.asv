@@ -85,9 +85,11 @@ TestingCD4(IndexSlowDecline)=CalculatedCD4WithSQRTDecline;
     else
         IndexExceedTimeNum=IndexSlowDeclineNum(IndexExceedTimeBinary);%this is indexed according to all people in the simulation
         % Delete the individuals who test more than 1 year after reaching 0 CD4
-        TestingCD4(IndexExceedTimeNum)=[];
-        TimeUntilDiagnosis(IndexExceedTimeNum)=[];
-        InitialCD4Vector(IndexExceedTimeNum)=[];
+        CalculatedCD4WithSQRTDecline(IndexExceedTime)=[];
+        
+        TestingCD4(IndexLinearDeclineNum(IndexExceedTime))=[];
+        TimeUntilDiagnosis(IndexLinearDeclineNum(IndexExceedTime))=[];
+        InitialCD4Vector(IndexLinearDeclineNum(IndexExceedTime))=[];
         %resample replacement from existing measurements to generate the IdealPopSize
         % create indices to resample from
         IndiciesForResample=randsample(TotalRemaining, TotalExcluded, 1);
