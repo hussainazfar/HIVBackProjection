@@ -9,7 +9,7 @@ Count=0;
 clear     MedianVec UCIVec LCIVec UQRVec LQRVec;
 % for t=0:0.1:20
 Granularity=0.05;
-EndYear=15;
+EndYear=10;
 for t=0:Granularity:EndYear
     Count=Count+1;
     ttindex=testtime>=t & testtime<t+Granularity;
@@ -32,15 +32,16 @@ InitialCD4Vector=exp(LogInitialCD4Vector);
 
 clf;%clear the current figure ready for plotting
 subplot(1, 5, [2 3 4 5])
-hmed=plot(t, MedianVec, 'Color' , [0.0 0.0 0.0],'LineWidth',3);
+
 hold on;
 hIQR=plot(t, UQRVec, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');
 plot(t, LQRVec, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');    
 h95=plot(t, UCIVec, 'Color' , [0.5 0.5 0.5],'LineWidth',1, 'LineStyle', '--');
 plot(t, LCIVec, 'Color' , [0.5 0.5 0.5],'LineWidth',1, 'LineStyle', '--');    
+hmed=plot(t, MedianVec, 'Color' , [0.0 0.0 0.0],'LineWidth',3);
 hold off;
-xlim([-0.01 15]);
-%set(gca,'XTick',0:15)
+xlim([-0.01 EndYear]);
+set(gca,'XTick',0:EndYear)
 ylim([0 1800]);
 xlabel('Time since infection (years)','fontsize', 22);
 ylabel('CD4 count (cells/\muL)','fontsize', 22);
@@ -75,5 +76,5 @@ print('-dpng ','-r300','ResultsPlots/Figure 1 Trend of CD4 decay.png')
 disp('Figure 1')
 disp(['The healthy CD4 count distribution had a median of ' num2str(exp(Px.MedianLogHealthyCD4), '%.0f') ' and standard deviation of ' num2str(Px.StdLogHealthyCD4, '%.3f')]);
 disp('')
-disp(['The time it takes for the median CD4 count to reach 500 is '  num2str(3.1)  ' years.'])
-disp(['The time it takes for the median CD4 count to reach 200 is '  num2str(7.3)  ' years.'])
+%disp(['The time it takes for the median CD4 count to reach 500 is '  num2str(1.7)  ' years.'])
+%disp(['The time it takes for the median CD4 count to reach 200 is '  num2str(6.2)  ' years.'])
