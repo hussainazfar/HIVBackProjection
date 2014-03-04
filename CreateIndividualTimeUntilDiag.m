@@ -19,6 +19,7 @@ IdealPopTimesStore=zeros(SimulatedPopSize, NumberOfTimeSamples);
 
 % For each specific vaiable combination
 parfor CurrentParamNumber=1:NumberOfTimeSamples
+% for CurrentParamNumber=1:NumberOfTimeSamples
     % Seed the random number generator
     set(RandomNumberStream,'Substream',CurrentParamNumber);
     

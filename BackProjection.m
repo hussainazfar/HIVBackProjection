@@ -3,7 +3,7 @@
 TimeALL=tic;
 
 %% Seed the random variables
-RandomNumberStream = RandStream('mlfg6331_64','Seed',158943);
+RandomNumberStream = RandStream('mlfg6331_64','Seed',1385646);
 RandStream.setGlobalStream(RandomNumberStream);
 
 %Use the below code in any parfor loop to use appropriate substreams for the rand generator (i is the loop number)
@@ -92,10 +92,10 @@ if ConsiderRecentInfection==true
 %% Determine the time between infection and diagnosis
 disp('Determining the time between infection and diagnosis');
 TicOptimisation=tic;
-NumberOfTimeSamples=100;
+NumberOfTimeSamples=200;
 
 disp( 'Starting parallel Matlab...');
-matlabpool(getenv( 'NUMBER_OF_PROCESSORS' ));%this may not work in all processors
+matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
 
 [Px]=LoadBackProjectionParameters(NumberOfTimeSamples, 1);
 Px.ConsiderRecentInfection=ConsiderRecentInfection;
@@ -261,8 +261,7 @@ end
 %remove all those elements that are not used
 InfectionTimeMatrix(:, NoPatientInRange+1:NumberOfPatients)=[];
 timevalue=toc;
-msgSubject='Code message';
-msgBody=['Ran for ' num2str(timevalue)];
+
 
 HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)-StepSize));
 

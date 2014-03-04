@@ -42,12 +42,12 @@ nCD4Healthy=nCD4Healthy*100;%multiply by 100 to ensure that we get the true mean
 
 varianceCD4Healthy=stdCD4Healthyvec.^2;
 mu=log(meanCD4Healthyvec.^2./sqrt(varianceCD4Healthy+meanCD4Healthyvec.^2));
-sigma=sqrt(log(varianceCD4Healthy./(meanCD4Healthyvec.^2)+1));
+sigma=sqrt(log(varianceCD4Healthy./(meanCD4Healthyvec.^2)+1)); 
 
 
 BootStrappedCD4s=[];
 i=0;
-for Dummy=mu
+for Dummy=mu %for the numer of entries in mu
     i=i+1;
     %Create numbers at random which would fall into the distribution
     SamplesToAdd=lognrnd(mu(i),sigma(i), 1, nCD4Healthy(i));
@@ -102,9 +102,23 @@ Px.StdLogHealthyCD4=StdLogBootStrappedCD4s;
 Px.FractionalDeclineToTrough=418/MedianHealthyCD4; %
 Px.TimeUntilTrough=17/365.25;
 Px.TimeUntilRebound=40/365.25; % From Kaufmann 1999
-Px.FractionalDeclineToRebound=756/MedianHealthyCD4;
-% Px.FractionalDeclineTo1Year=470/MedianHealthyCD4;
-% Px.AssumedPostSeroconversionMedianCD4=756;
+%Px.FractionalDeclineToRebound=756/MedianHealthyCD4;% Kaufmann 1999 %Range 406-1326, N=53
+Px.FractionalDeclineToRebound=(24.982)^2/MedianHealthyCD4;%Lodi 2010
+
+% Below is a demonstration that shows how the standard deviation is
+% approximately what one would expect given the Median CD4 count calculated
+% above, 350-1500 range on CD4)
+% R = normrnd(Px.MedianLogHealthyCD4, Px.StdLogHealthyCD4, [1 53]);
+% NewCD4s=exp(R);
+% PostInfectionCD4s=NewCD4s*Px.FractionalDeclineToRebound;
+% [min(PostInfectionCD4s) max(PostInfectionCD4s)]
+
+
+
+
+
+
+
 
 
 % Post-primary infection CD4
@@ -168,9 +182,9 @@ if MajorityOlderThan30==1
 else
     AgeFactor=0;
 end
-Px.SquareRootAnnualDecline=1.754+AgeFactor;
+Px.SquareRootAnnualDecline=1.758+AgeFactor;
 %The following indicates the range in which we believe the population parameter to be with 95% confidence
-Px.SquareRootAnnualDeclineStdev=(1.820-1.688)/2/1.96;
+Px.SquareRootAnnualDeclineStdev=(1.864-1.652)/2/1.96;
 
 % Create the distribution that that simulations will be working under
 m=Px.SquareRootAnnualDecline;

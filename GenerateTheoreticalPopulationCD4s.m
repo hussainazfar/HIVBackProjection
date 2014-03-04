@@ -54,7 +54,7 @@ mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 SQRDecline = lognrnd(mu,sigma,1,NumberThatReachSlowDecline);
 SQRDecline(SQRDecline<0.1*Pxi.SquareRootAnnualDeclineChosen)=0.1*Pxi.SquareRootAnnualDeclineChosen;%This is to avoid negative declines and divide by zero errors. Note that it is expected that around 0.9% of the population would have this level according to these calculations
-SQRDecline=Pxi.SquareRootAnnualDeclineChosen;
+
 
 TimeSpentInSQRTDecline=TimeUntilDiagnosis(IndexSlowDeclineNum)-Pxi.TimeUntilRebound;
 sqrtCalculatedCD4WithSQRTDecline=sqrtCD4AtRebound-SQRDecline.*TimeSpentInSQRTDecline;
@@ -81,7 +81,7 @@ TestingCD4(IndexSlowDecline)=CalculatedCD4WithSQRTDecline;
     if TotalExcluded==0
         %don't do anything
     elseif TotalRemaining==0
-        error('Possible problem: zero people avoided being at 0 CD4 for more than the maximum time');
+        %disp('Possible warning: zero people avoided being at 0 CD4 for more than the maximum time. This point should be avoided automatically by optimisation, however this could be an issue if the optimisation gets stuck.');
     else
         IndexExceedTimeNum=IndexSlowDeclineNum(IndexExceedTimeBinary);%this is indexed according to all people in the simulation
         % Delete the individuals who test more than 1 year after reaching 0 CD4
@@ -90,7 +90,17 @@ TestingCD4(IndexSlowDecline)=CalculatedCD4WithSQRTDecline;
         InitialCD4Vector(IndexExceedTimeNum)=[];
         %resample replacement from existing measurements to generate the IdealPopSize
         % create indices to resample from
+        
         IndiciesForResample=randsample(TotalRemaining, TotalExcluded, 1);
+        IndiciesForResample=IndiciesForResample';%this is to avoid errors where there is only one remaining individual to be sampled from and it cause a column vector to be made instead of a row vector
+%         %error output
+%         A=TestingCD4;
+%         B=TestingCD4(IndiciesForResample);
+%         
+%         disp('This error')
+%         disp([size(A), size(B)])
+%         disp([class(A), class(B)])
+        
         % add the relevant values on to the end of the vector
         TestingCD4=[TestingCD4 TestingCD4(IndiciesForResample)];
         TimeUntilDiagnosis=[TimeUntilDiagnosis TimeUntilDiagnosis(IndiciesForResample)];

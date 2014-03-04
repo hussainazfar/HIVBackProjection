@@ -18,7 +18,7 @@ CD4ForOptimisation=[CD4ForOptimisation CD4ForOptimisation CD4ForOptimisation CD4
 Ax=Px;
 Ax.ConsiderRecentInfection=0;
 disp( 'Starting parallel Matlab...');
-matlabpool(getenv( 'NUMBER_OF_PROCESSORS' ));%this may not work in all processors
+matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
 Samples=100;
 [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Ax, Samples, RandomNumberStream);
 matlabpool close;

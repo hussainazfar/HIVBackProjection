@@ -1,6 +1,6 @@
 clc; 
 clear;
-NumberOfTimeSamples=100;
+NumberOfTimeSamples=200;
 [Px]=LoadBackProjectionParameters(NumberOfTimeSamples, 1);
 ExampleData; %Load the example data, CD4ForOptimisation
 
