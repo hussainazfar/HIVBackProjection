@@ -42,7 +42,7 @@ hmed=plot(t, MedianVec, 'Color' , [0.0 0.0 0.0],'LineWidth',3);
 hold off;
 xlim([-0.01 EndYear]);
 set(gca,'XTick',0:EndYear)
-ylim([0 1800]);
+ylim([0 1500]);
 xlabel('Time since infection (years)','fontsize', 22);
 ylabel('CD4 count (cells/\muL)','fontsize', 22);
 set(gca,'Color',[1.0 1.0 1.0]);
@@ -62,9 +62,10 @@ X=1.1*maxXValue-X;
 plot(X, Centres, 'Color' , [0.0 0.0 0.0]);
 hold on;
 plot([1.1*maxXValue 1.1*maxXValue], [0 1800], 'Color' , [0.0 0.0 0.0]);
-ylim([0 1800]);
+ylim([0 1500]);
 xlabel('PDF','fontsize', 22);
 ylabel('CD4 count (cells/\muL)','fontsize', 22);
+set(gca,'YTick',0:100:1500)
 set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
