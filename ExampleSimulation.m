@@ -8,6 +8,11 @@ RandomNumberStream = RandStream('mlfg6331_64','Seed',158943);
 RandStream.setGlobalStream(RandomNumberStream);
 
 Px.ConsiderRecentInfection=0;
+%If you have evidence of some of the patient records containing evidence of
+%recent infection (last 12 months) the algorithm will automatically adjust
+%to place less of the infections within the last 12 months.
+%Px.ConsiderRecentInfection=1;
+%Px.PropWithRecentDiagDataPresentThisYear=0.3;
 
 disp( 'Starting parallel Matlab...');
 matlabpool(getenv( 'NUMBER_OF_PROCESSORS' ));%this may not work in all processors
