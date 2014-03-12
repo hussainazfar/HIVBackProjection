@@ -21,20 +21,25 @@ disp('Finding 100 times for each of the CD4 counts at diagnosis in the data set'
 [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, NumberOfTimeSamples, RandomNumberStream);
 matlabpool close;
 
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Display the results
+
 clf;%clear the figure
 hold on;
 for SimNum=1:NumberOfTimeSamples
     plot(CD4ForOptimisation, (Times(:, SimNum))', '.');
 end
 hold off;
+xlabel('CD4 at diagnosis','fontsize', 22);
+ylabel('Years between infection and diagnosis','fontsize', 22);
+print('-dpng ','-r300','ResultsPlots/Time vs CD4 of example data.png');
 
-print('-dpng ','-r300','ResultsPlots/Time vs CD4 of example data.png')
-
-
-
-
-
-
+%%%%%%%%%%%%%%
 TimeDitributionToSample=reshape(IdealPopTimesStore, 1, []);
 CD4DistributionToSample=reshape(IdealPopTestingCD4, 1, []);
 
