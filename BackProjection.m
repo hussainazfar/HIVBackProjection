@@ -95,7 +95,7 @@ TicOptimisation=tic;
 NumberOfTimeSamples=200;
 
 disp( 'Starting parallel Matlab...');
-matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
+matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-2);%this may not work in all processors
 
 [Px]=LoadBackProjectionParameters(NumberOfTimeSamples, 1);
 Px.ConsiderRecentInfection=ConsiderRecentInfection;
