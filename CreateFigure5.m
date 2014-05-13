@@ -58,6 +58,9 @@ for Year=TimeSinceInfectionYearIndex
     TimeSinceInfectionMedian(YearIndex)=median(TimeSinceInfection(YearIndex).v);
     TimeSinceInfectionLQR(YearIndex)=prctile(TimeSinceInfection(YearIndex).v, 25);
     TimeSinceInfectionUQR(YearIndex)=prctile(TimeSinceInfection(YearIndex).v, 75);
+    
+    TimeSinceInfectionMean(YearIndex)=mean(TimeSinceInfection(YearIndex).v);
+
 end
 
 clf;%clear the current figure ready for plotting
@@ -91,9 +94,12 @@ disp('Figure 5b')
 [~, YearIndex]=min(abs(YearVectorLabel-2012));
 String2012Time=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
 disp([' The median time between infection and diagnosis for people diagnosed in 2012 was estimated at ' String2012Time ' years.']);
+disp(['Mean time between infection and diagnosis in 2012 was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);
+
 [~, YearIndex]=min(abs(YearVectorLabel-1985));
 String1985Time=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
 disp([' This is a substantial reduction from 1985, where median time until diagnosis was estimated to be ' String1985Time ' years.']);
+disp(['Mean time between infection and diagnosis in 1985 was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);
 
 
 

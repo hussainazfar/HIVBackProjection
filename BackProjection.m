@@ -449,7 +449,8 @@ CreateFigure3
 CreateFigure4
 CreateFigure5
 CreateOtherPlots
-%OutputPlots
+CreateUncertaintyAroundTime
+%OutputPlots %old plots output
 toc(TimeALL)
 
 %% Return diagnosed overseas to the population
