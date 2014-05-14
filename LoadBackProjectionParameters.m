@@ -121,7 +121,7 @@ sigma = sqrt(log(v/(m^2)+1));
 
 Px.SQRTBaselineCD4MedianVec=lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 
-Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec)^2/MedianHealthyCD4;
+Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec).^2/MedianHealthyCD4;
 
 
 
