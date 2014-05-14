@@ -25,8 +25,9 @@ parfor CurrentParamNumber=1:NumberOfTimeSamples
     
     %Choose the current parameterision
     Pxi=Px;
-    Pxi.SquareRootAnnualDeclineChosen=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
+    Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
     
+    Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
     
     
     [IdealPopTimes, IdealPopStartingCD4s, IdealPopTestingCD4, BestPEstimate]=OptimiseIdealPopulationToCD4(RealTestingCD4, Pxi, SimulatedPopSize);

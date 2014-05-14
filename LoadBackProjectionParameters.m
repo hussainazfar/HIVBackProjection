@@ -102,7 +102,31 @@ Px.StdLogHealthyCD4=StdLogBootStrappedCD4s;
 Px.FractionalDeclineToTrough=418/MedianHealthyCD4; %
 Px.TimeUntilTrough=17/365.25;
 Px.TimeUntilRebound=40/365.25; % From Kaufmann 1999
+
+% Lodi 2011
+if MajorityOlderThan30==1
+    AgeFactor=0.646;
+else
+    AgeFactor=0;
+end
+Px.SQRTBaselineCD4Median=(24.167-AgeFactor);
+
+Px.SQRTBaselineCD4Stdev=(1.243-1.075)/2/1.96;
+
+% Create the distribution average CD4 count declines
+m=Px.SQRTBaselineCD4Median;
+v=(Px.SQRTBaselineCD4Stdev)^2;
+mu = log((m^2)/sqrt(v+m^2));
+sigma = sqrt(log(v/(m^2)+1));
+
+Px.SQRTBaselineCD4MedianVec=lognrnd(mu,sigma,1,ParameterisationSpaceSize);
+
+Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec)^2/MedianHealthyCD4;
+
+
+
 %Px.FractionalDeclineToRebound=756/MedianHealthyCD4;% Kaufmann 1999 %Range 406-1326, N=53
+%Lodi 2010 sqr intercept for serconverters 24.982 (95% CI 24.721-25.242)
 Px.FractionalDeclineToRebound=(24.982)^2/MedianHealthyCD4;%Lodi 2010
 
 % Below is a demonstration that shows how the standard deviation is
@@ -162,7 +186,8 @@ Px.FractionalDeclineToRebound=(24.982)^2/MedianHealthyCD4;%Lodi 2010
 % Px.FractionalDeclineToReboundVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 
 % Px.FractionalDeclineTo1Year=470/MedianHealthyCD4;
-%Fidler (2007) AIDS 502 (471–535)
+%Fidler (2007) AIDS 502 (471-535) % this reault is not useful for our
+%requirements
 % The age range of CASCADE results from Fidler et al (32.9 (27.9–38.5)) compare favourably
 % with the Australian ranges 36.0 (28.3-42.2)
 % % Px.FractionalDeclineTo1Year=502/MedianHealthyCD4;
@@ -175,24 +200,58 @@ Px.FractionalDeclineToRebound=(24.982)^2/MedianHealthyCD4;%Lodi 2010
 
 %% Square root decline model 
 
-% % Lodi S, Phillips A, Touloumi G, Pantazis N, Bucher HC, et al. (2010) CD4 decline in seroconverter and seroprevalent individuals in the precombination of antiretroviral therapy era. AIDS 24: 2697-2704
-% %CASCADE
+% Lodi 2011
 if MajorityOlderThan30==1
-    AgeFactor=0.15;
+    AgeFactor=0.064;
 else
     AgeFactor=0;
 end
-Px.SquareRootAnnualDecline=1.758+AgeFactor;
+Px.MeanSquareRootAnnualDecline=1.159+AgeFactor; 
 %The following indicates the range in which we believe the population parameter to be with 95% confidence
-Px.SquareRootAnnualDeclineStdev=(1.864-1.652)/2/1.96;
+Px.SquareRootAnnualDeclineStdev=(1.243-1.075)/2/1.96;
 
-% Create the distribution that that simulations will be working under
-m=Px.SquareRootAnnualDecline;
+% Create the distribution average CD4 count declines
+m=Px.MeanSquareRootAnnualDecline;
 v=(Px.SquareRootAnnualDeclineStdev)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 
 Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% % % Lodi S, Phillips A, Touloumi G, Pantazis N, Bucher HC, et al. (2010) CD4 decline in seroconverter and seroprevalent individuals in the precombination of antiretroviral therapy era. AIDS 24: 2697-2704
+% % %CASCADE
+% if MajorityOlderThan30==1
+%     AgeFactor=0.15;
+% else
+%     AgeFactor=0;
+% end
+% Px.SquareRootAnnualDecline=1.758+AgeFactor; 
+% %The following indicates the range in which we believe the population parameter to be with 95% confidence
+% Px.SquareRootAnnualDeclineStdev=(1.864-1.652)/2/1.96;
+% 
+% % Create the distribution average CD4 count declines
+% m=Px.SquareRootAnnualDecline;
+% v=(Px.SquareRootAnnualDeclineStdev)^2;
+% mu = log((m^2)/sqrt(v+m^2));
+% sigma = sqrt(log(v/(m^2)+1));
+% 
+% Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 
 % Individual vaiablility in decline
 % The following represents the individual variability of CD4 declines. 

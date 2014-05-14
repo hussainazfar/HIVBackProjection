@@ -48,12 +48,12 @@ CD4AtReboundSlow=Pxi.FractionalDeclineToRebound*CD4AtStart;
 sqrtCD4AtRebound=sqrt(CD4AtReboundSlow);
 
 % Generate a squareroot decline for these individuals
-m=Pxi.SquareRootAnnualDeclineChosen;
+m=Pxi.SquareRootAnnualDecline;
 v=(Pxi.SDSQRDeclineIndividual)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 SQRDecline = lognrnd(mu,sigma,1,NumberThatReachSlowDecline);
-SQRDecline(SQRDecline<0.1*Pxi.SquareRootAnnualDeclineChosen)=0.1*Pxi.SquareRootAnnualDeclineChosen;%This is to avoid negative declines and divide by zero errors. Note that it is expected that around 0.9% of the population would have this level according to these calculations
+SQRDecline(SQRDecline<0.1*Pxi.SquareRootAnnualDecline)=0.1*Pxi.SquareRootAnnualDecline;%This is to avoid negative declines and divide by zero errors. Note that it is expected that around 0.9% of the population would have this level according to these calculations
 
 
 TimeSpentInSQRTDecline=TimeUntilDiagnosis(IndexSlowDeclineNum)-Pxi.TimeUntilRebound;
