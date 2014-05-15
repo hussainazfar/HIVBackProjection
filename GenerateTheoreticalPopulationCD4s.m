@@ -71,7 +71,8 @@ TestingCD4(IndexSlowDecline)=CalculatedCD4WithSQRTDecline;
     % if it is < 1 year, then store the CD4 as zero
     TimeAllowedBouncingAlongAtZeroCD4=1;%years
     
-    TimeWhenReachingZero=sqrtCD4AtRebound/SQRDecline;
+    TimeWhenReachingZero=sqrtCD4AtRebound./SQRDecline;
+
     DurationAtOrBelowZeroCD4=TimeSpentInSQRTDecline-TimeWhenReachingZero;
     
     IndexExceedTimeBinary=DurationAtOrBelowZeroCD4>TimeAllowedBouncingAlongAtZeroCD4;%this is the index of those who reach the sqrt decline
@@ -84,6 +85,7 @@ TestingCD4(IndexSlowDecline)=CalculatedCD4WithSQRTDecline;
         %disp('Possible warning: zero people avoided being at 0 CD4 for more than the maximum time. This point should be avoided automatically by optimisation, however this could be an issue if the optimisation gets stuck.');
     else
         IndexExceedTimeNum=IndexSlowDeclineNum(IndexExceedTimeBinary);%this is indexed according to all people in the simulation
+        
         % Delete the individuals who test more than 1 year after reaching 0 CD4
         TestingCD4(IndexExceedTimeNum)=[];
         TimeUntilDiagnosis(IndexExceedTimeNum)=[];
@@ -93,13 +95,7 @@ TestingCD4(IndexSlowDecline)=CalculatedCD4WithSQRTDecline;
         
         IndiciesForResample=randsample(TotalRemaining, TotalExcluded, 1);
         IndiciesForResample=IndiciesForResample';%this is to avoid errors where there is only one remaining individual to be sampled from and it cause a column vector to be made instead of a row vector
-%         %error output
-%         A=TestingCD4;
-%         B=TestingCD4(IndiciesForResample);
-%         
-%         disp('This error')
-%         disp([size(A), size(B)])
-%         disp([class(A), class(B)])
+
         
         % add the relevant values on to the end of the vector
         TestingCD4=[TestingCD4 TestingCD4(IndiciesForResample)];

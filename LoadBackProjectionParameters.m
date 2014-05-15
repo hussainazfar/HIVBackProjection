@@ -134,8 +134,6 @@ Px.SQRTBaselineCD4Median=sqrt(636);
 Px.SQRTBaselineCD4LCI=sqrt(586);
 Px.SQRTBaselineCD4UCI=sqrt(686);
 
-Px.SQRTBaselineCD4Median=(Px.SQRTBaselineCD4Median-AgeFactor);
-
 Px.SQRTBaselineCD4Stdev=(Px.SQRTBaselineCD4UCI-Px.SQRTBaselineCD4LCI)/2/1.96;
 
 % Create the distribution average CD4 count declines
@@ -398,7 +396,7 @@ Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 % and look for ranges of uncertainty this way. 
 CD4cellcountatcARTinitiation=[289 206 398];
 EstimatedprecARTCD4slope=[61 46 81]; %[median LQR UQR]
-CD4cellcount1yearbeforecARTinitiation=CD4cellcountatcARTinitiation(1)+EstimatedprecARTCD4slope;
+CD4cellcount1yearbeforecARTinitiation=CD4cellcountatcARTinitiation+EstimatedprecARTCD4slope;
 sqrCD4_1=sqrt(CD4cellcount1yearbeforecARTinitiation);
 sqrCD4_2=sqrt(CD4cellcountatcARTinitiation);
 sqrdecline=sqrCD4_1-sqrCD4_2;%+ve, [median LQR UQR]
