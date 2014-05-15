@@ -449,7 +449,7 @@ CreateFigure3
 CreateFigure4
 CreateFigure5
 CreateOtherPlots
-CreateUncertaintyAroundTime
+CreateResultUncertaintyAroundTime
 %OutputPlots %old plots output
 toc(TimeALL)
 

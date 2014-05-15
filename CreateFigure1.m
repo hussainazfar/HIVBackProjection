@@ -1,7 +1,8 @@
 %% Output plot of progression
 
 Ax=Px;
-Ax.SquareRootAnnualDeclineChosen=mean(Ax.SquareRootAnnualDeclineVec);
+Ax.SquareRootAnnualDecline=mean(Ax.SquareRootAnnualDeclineVec);
+Ax.FractionalDeclineToRebound=mean(Px.FractionalDeclineToReboundVec);
 [TimeUntilDiagnosis, ~, TestingCD4]=GenerateTheoreticalPopulationCD4s(20*rand(1, 1000000), Ax);
 testtime=TimeUntilDiagnosis;
 testCD4=TestingCD4;

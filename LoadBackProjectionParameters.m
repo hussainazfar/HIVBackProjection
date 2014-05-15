@@ -99,19 +99,44 @@ Px.StdLogHealthyCD4=StdLogBootStrappedCD4s;
 
 % Kaufmann GR, Cunningham P, Zaunders J, Law M, Vizzard J, Carr A, et al. Impact of Early HIV-1 RNA and T-Lymphocyte Dynamics During Primary HIV-1 Infection on the Subsequent Course of HIV-1 RNA Levels and CD4+ T-Lymphocyte Counts in the First Year of HIV-1 Infection. JAIDS Journal of Acquired Immune Deficiency Syndromes 1999,22:437-444.
 % says nadir 17 days after symptoms of 418 (mdeian), followed by a maximum median of 756 at day 40.
+% 62 seroconverters
 Px.FractionalDeclineToTrough=418/MedianHealthyCD4; %
 Px.TimeUntilTrough=17/365.25;
 Px.TimeUntilRebound=40/365.25; % From Kaufmann 1999
 
-% Lodi 2011
-if MajorityOlderThan30==1
-    AgeFactor=0.646;
-else
-    AgeFactor=0;
-end
-Px.SQRTBaselineCD4Median=(24.167-AgeFactor);
+% Lang et al 1989 Patterns of T Lymphocyte Changes with Human Immunodeficiency Virus Infection: From Seroconversion to the Development of AIDS
+% This study closely followed the trajectories of PLHIV in the early stages
+% of disease, and reports a median CD4 at a fixed time (6 months). As far
+% as reliability goes (without excessive modelling taking over) this model
+% is this best, as it is straight data (not modelled). In this study CD4 
+% is 636 at 6 months in seroconverters (of 37 seroconverters). This figure
+% agrees with: 
+% * Seroconverter CD4 intercepts in Lodi 2010 (624.1) 
+% * MSM <40 years CD4 intercepts (621 (609-634) or 631 (619-643)) in Cascade 2003 Differences in CD4 Cell Counts at Seroconversion and Decline Among 5739 HIV-1 Infected Individuals with Well-Estimated Dates of Seroconversion
 
-Px.SQRTBaselineCD4Stdev=(1.243-1.075)/2/1.96;
+% However, Kaufmann et al. (a study that closely follows the CD4 counts of 
+% individuals) states that the average highest point following infection is
+% 756. This result has samplng bias, as CD4 counts vary and choosing the
+% highest over a period will be higher than the expected mean at a set time
+% (e.g. at 3 months exactly)
+% Also from 2012 data of Australian recent infections (0-12 months) mean 
+% CD4 is 576.0619, which is somewhat lower, although once again this has 
+% sampling bias as this may include people in acute infection which we 
+% would expect to be somewhat lower and people who would be at 12 months 
+% who we may expect to be about 60-80 cells lower than the people who have 
+% had their CD4 rebound following primary infection. The Australian data 
+% observations are in agreenment with the simulated intercept of Lodi 2011 
+% (553 intercept for men over 30 years)
+
+% To compensate for the high levels of disagreement we will choose the
+% CD4 intercept (median, confidence intervals) to be 636 (586 - 686)
+Px.SQRTBaselineCD4Median=sqrt(636);
+Px.SQRTBaselineCD4LCI=sqrt(586);
+Px.SQRTBaselineCD4UCI=sqrt(686);
+
+Px.SQRTBaselineCD4Median=(Px.SQRTBaselineCD4Median-AgeFactor);
+
+Px.SQRTBaselineCD4Stdev=(Px.SQRTBaselineCD4UCI-Px.SQRTBaselineCD4LCI)/2/1.96;
 
 % Create the distribution average CD4 count declines
 m=Px.SQRTBaselineCD4Median;
@@ -124,10 +149,20 @@ Px.SQRTBaselineCD4MedianVec=lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec).^2/MedianHealthyCD4;
 
 
+% 
+% % Lodi 2011
+% if MajorityOlderThan30==1
+%     AgeFactor=0.646;
+% else
+%     AgeFactor=0;
+% end
+% 
+% 
+
 
 %Px.FractionalDeclineToRebound=756/MedianHealthyCD4;% Kaufmann 1999 %Range 406-1326, N=53
 %Lodi 2010 sqr intercept for serconverters 24.982 (95% CI 24.721-25.242)
-Px.FractionalDeclineToRebound=(24.982)^2/MedianHealthyCD4;%Lodi 2010
+% Px.FractionalDeclineToRebound=(24.982)^2/MedianHealthyCD4;%Lodi 2010
 
 % Below is a demonstration that shows how the standard deviation is
 % approximately what one would expect given the Median CD4 count calculated
@@ -210,6 +245,14 @@ Px.MeanSquareRootAnnualDecline=1.159+AgeFactor;
 %The following indicates the range in which we believe the population parameter to be with 95% confidence
 Px.SquareRootAnnualDeclineStdev=(1.243-1.075)/2/1.96;
 
+% Wolbers M, et al on behalf of the CASCADE Collaboration. Pretreatment CD4 Cell Slope and Progression to AIDS or Death in HIV-Infected Patients Initiating Antiretroviral Therapy—The CASCADE Collaboration: A Collaboration of 23 Cohort Studies.
+% 61 per year
+% CASCADE Collaboration. Differences in CD4 Cell Counts at Seroconversion and Decline Among 5739 HIV-1 Infected Individuals with Well-Estimated Dates of Seroconversion. J Acquir Immune Defic Syndr
+
+% Rodr?guez B, et al. Predictive Value of Plasma HIV RNA Level on Rate of CD4 T-Cell Decline in Untreated HIV Infection. JAMA 2006
+% 50.5 cells per year at average 525 CD4 
+% or estamted 1.118383757 sqrt cells per year
+
 % Create the distribution average CD4 count declines
 m=Px.MeanSquareRootAnnualDecline;
 v=(Px.SquareRootAnnualDeclineStdev)^2;
@@ -217,11 +260,6 @@ mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 
 Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
-
-
-
-
-
 
 
 
@@ -253,7 +291,7 @@ Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 % 
 % Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 
-% Individual vaiablility in decline
+%%  Individual vaiablility in decline
 % The following represents the individual variability of CD4 declines. 
 % Wolbers et al. Plos 2010 (table 1) to generate an interquartile range
 %For example, people at the 25th percentile may have a
@@ -281,7 +319,7 @@ MeanDistance=(MedianToUQR+MedianToLQR)/2;%0.4662
 %The following indicates the range in which we believe INDIVIDUAL variability to be contained
 Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the normal distrbution 25th percentile
     
-%Other studies
+%% Other studies
 % Lodi 2011 CASCADE
 % if MajorityOlderThan30==1
 %     AgeFactor=0.064;
@@ -336,7 +374,7 @@ Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the
 
 
 
-%Other studies 
+%Other studies which are not used in the simulation:
 % Malone, J.L. et al "Sources of variability in repeated T-helper Lymphocyte counts..." 1990 JAIDS 
 
 % Although CD4 counts vary in predictable ways over a long period, there is
@@ -364,69 +402,71 @@ Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the
 % % %     % Linear decline model 
 % % %     %This section deals with the systematic uncertainity in estimates for CD4 decline mean
 % % % 
-% % %     %Lee (1989)
-% % %     N_CD4Decline(1)=112;
-% % %     StudyDeclineRate(1)=68;
-% % %     % Veuglers (1997)
-% % %     % Vancouver
-% % %     N_CD4Decline(2)=129;
-% % %     StudyDeclineRate(2)=59.87;
-% % %     % Sydney
-% % %     N_CD4Decline(3)=79;
-% % %     StudyDeclineRate(3)=36.42;
-% % %     % Amsterdam
-% % %     N_CD4Decline(4)=140;
-% % %     StudyDeclineRate(4)=54.1;
-% % %     % San Francisco GeneralHospital
-% % %     N_CD4Decline(5)=19;
-% % %     StudyDeclineRate(5)=43.45;
-% % %     % San Francisco Men's Health
-% % %     N_CD4Decline(6)=46;
-% % %     StudyDeclineRate(6)=55.42;
-% % %     % Prins (1999)European Secroconvert Study
-% % %     N_CD4Decline(7)=221+443;
-% % %     StudyDeclineRate(7)=60;
-% % %     % Deeks (2004), San Francisco, USA
-% % %     N_CD4Decline(8)=68;
-% % %     StudyDeclineRate(8)=96;
-% % %     % Fidler (2007)Exluded because of overlap with other CASCADE STUDY
-% % %     %N_CD4Decline(9)=179;
-% % %     %StudyDeclineRate(9)=77;
-% % %     % Mellors (MACS, USA)
-% % %     N_CD4Decline(9)=1640;
-% % %     StudyDeclineRate(9)=64;
-% % %     % Drylewicz (2008) France
-% % %     N_CD4Decline(10)=98+320;
-% % %     StudyDeclineRate(10)=49;
-% % %     % Muller (2009) Switzerland
-% % %     N_CD4Decline(11)=463;
-% % %     StudyDeclineRate(11)=52.5;
-% % %     % Wolbers (2010) CASCADE
-% % %     N_CD4Decline(12)=2820;
-% % %     StudyDeclineRate(12)=61;
-% % %     % Lewden (2010) France
-% % %     N_CD4Decline(13)=373;
-% % %     StudyDeclineRate(13)=63;
-% % % 
-% % %     StudyCD4WeightedVector=[];
-% % %     for i=1:13
-% % %         StudyCD4WeightedVector=[StudyCD4WeightedVector StudyDeclineRate(i)*ones(1, N_CD4Decline(i))];
-% % %     end
-% % % 
-% % %     Decline=mean(StudyCD4WeightedVector);
-% % %     Sx.Decline=Decline;
-% % %     DeclineStudySD=std(StudyCD4WeightedVector);%The systematic variation in the study's results
-% % %     Sx.DeclineStudySD=DeclineStudySD;
-% % % 
-% % %     DeclineIQR=35; % -81 to –46, figure give in Cascade %The annual decline in CD4 per year, Wolbers, 2010, Pretreatment CD4 Cell Slope and Progression to AIDS or Death in HIV-Infected Patients Initiating Antiretroviral Therapy
-% % %     DeclineSD=DeclineIQR/2/0.674490;
-% % %     Sx.DeclineSD=DeclineSD;
-% % % 
-% % % 
-% % %     NDeclineStudy=2820;
-% % %     DeclineLCI=Decline-1.96*DeclineSD/sqrt(NDeclineStudy);%These values aren't used for anything, just interest's sake
-% % %     DeclineUCI=Decline+1.96*DeclineSD/sqrt(NDeclineStudy);%These values aren't used for anything, just interest's sake
+    %Lee (1989)
+    N_CD4Decline(1)=112;
+    StudyDeclineRate(1)=68;
+    % Veuglers (1997)
+    % Vancouver
+    N_CD4Decline(2)=129;
+    StudyDeclineRate(2)=59.87;
+    % Sydney
+    N_CD4Decline(3)=79;
+    StudyDeclineRate(3)=36.42;
+    % Amsterdam
+    N_CD4Decline(4)=140;
+    StudyDeclineRate(4)=54.1;
+    % San Francisco GeneralHospital
+    N_CD4Decline(5)=19;
+    StudyDeclineRate(5)=43.45;
+    % San Francisco Men's Health
+    N_CD4Decline(6)=46;
+    StudyDeclineRate(6)=55.42;
+    % Prins (1999)European Secroconvert Study
+    N_CD4Decline(7)=221+443;
+    StudyDeclineRate(7)=60;
+    % Deeks (2004), San Francisco, USA
+    N_CD4Decline(8)=68;
+    StudyDeclineRate(8)=96;
+    % Fidler (2007)Exluded because of overlap with other CASCADE STUDY
+    %N_CD4Decline(9)=179;
+    %StudyDeclineRate(9)=77;
+    % Mellors (MACS, USA)
+    N_CD4Decline(9)=1640;
+    StudyDeclineRate(9)=64;
+    % Drylewicz (2008) France
+    N_CD4Decline(10)=98+320;
+    StudyDeclineRate(10)=49;
+    % Muller (2009) Switzerland
+    N_CD4Decline(11)=463;
+    StudyDeclineRate(11)=52.5;
+    % Wolbers (2010) CASCADE
+    N_CD4Decline(12)=2820;
+    StudyDeclineRate(12)=61;
+    % Lewden (2010) France
+    N_CD4Decline(13)=373;
+    StudyDeclineRate(13)=63;
 
+    StudyCD4WeightedVector=[];
+    for i=1:13
+        StudyCD4WeightedVector=[StudyCD4WeightedVector StudyDeclineRate(i)*ones(1, N_CD4Decline(i))];
+    end
+
+    Decline=mean(StudyCD4WeightedVector);
+    Sx.Decline=Decline;
+    DeclineStudySD=std(StudyCD4WeightedVector);%The systematic variation in the study's results
+    Sx.DeclineStudySD=DeclineStudySD;
+
+    DeclineIQR=35; % -81 to –46, figure give in Cascade %The annual decline in CD4 per year, Wolbers, 2010, Pretreatment CD4 Cell Slope and Progression to AIDS or Death in HIV-Infected Patients Initiating Antiretroviral Therapy
+    DeclineSD=DeclineIQR/2/0.674490;
+    Sx.DeclineSD=DeclineSD;
+
+
+    NDeclineStudy=2820;
+    DeclineLCI=Decline-1.96*DeclineSD/sqrt(NDeclineStudy);%These values aren't used for anything, just interest's sake
+    DeclineUCI=Decline+1.96*DeclineSD/sqrt(NDeclineStudy);%These values aren't used for anything, just interest's sake
+
+    disp('The mean decline based on a linear decline across all the listed studies is:)
+    disp(Decline)% 61 cells per year, weighted average
 
 
 
