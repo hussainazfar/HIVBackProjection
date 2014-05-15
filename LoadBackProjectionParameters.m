@@ -306,7 +306,8 @@ Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec).^2/MedianHealthyC
 % Note that the result above is not exactly in alignment with two studies by Lodi et al. 
 % Firstly, Lodi 2010 found that in the seroconverter group, decline was
 % 1.758 per year in the baseline group (<30 years, MSM) and up to 1.908 in 
-% men older than 30 years. Alternately, Lodi 2011 foun
+% men older than 30 years. Alternately, Lodi 2011 found square root decline
+% to be 1.159 per year, a highly divergent result to the 2010 resuilts.
 
 % It should be noted that both of these model paramenter results are 
 % multi-parameter models. Lodi 2010 had a high starting CD4 and a fast CD4
@@ -321,10 +322,10 @@ Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec).^2/MedianHealthyC
 %Keller 2010 : 1.67 (Canada)
 
 % To choose an appropriate level of decline, we selected a mean square root
-% decline of 1.588, and a 95% confidence interval of 
+% decline of 1.6, and a 95% confidence interval of 1.4 to 1.8
 
-Px.MeanSquareRootAnnualDecline=1.588;
-Px.SquareRootAnnualDeclineStdev=(1.243-1.075)/2/1.96;
+Px.MeanSquareRootAnnualDecline=1.6;
+Px.SquareRootAnnualDeclineStdev=(1.8-1.4)/2/1.96;
 % Create the distribution average CD4 count declines
 m=Px.MeanSquareRootAnnualDecline;
 v=(Px.SquareRootAnnualDeclineStdev)^2;
@@ -361,15 +362,6 @@ Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 % 
 % 
 % 
-
-
-
-
-
-
-
-
-
 % % % Lodi S, Phillips A, Touloumi G, Pantazis N, Bucher HC, et al. (2010) CD4 decline in seroconverter and seroprevalent individuals in the precombination of antiretroviral therapy era. AIDS 24: 2697-2704
 % % %CASCADE
 % if MajorityOlderThan30==1
