@@ -1,6 +1,6 @@
 %% Output plot of progression
 
-PopulationSizeToSimulate=100000;%1000000;
+PopulationSizeToSimulate=1000000;%1000000;
 
 Ax=Px;
 Ax.SquareRootAnnualDecline=mean(Ax.SquareRootAnnualDeclineVec);

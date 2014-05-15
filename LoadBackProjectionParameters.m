@@ -394,15 +394,15 @@ Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 % one of the main explanatory factors, it is better to compare the upper
 % quartile reading of decline to the upper quartile reading of current CD4
 % and look for ranges of uncertainty this way. 
-CD4cellcountatcARTinitiation=[289 206 398];
+CD4cellcountatcARTinitiation=[289];% 206 398];
 EstimatedprecARTCD4slope=[61 46 81]; %[median LQR UQR]
 CD4cellcount1yearbeforecARTinitiation=CD4cellcountatcARTinitiation+EstimatedprecARTCD4slope;
 sqrCD4_1=sqrt(CD4cellcount1yearbeforecARTinitiation);
 sqrCD4_2=sqrt(CD4cellcountatcARTinitiation);
 sqrdecline=sqrCD4_1-sqrCD4_2;%+ve, [median LQR UQR]
 %now to find a rough stddev
-MedianToUQR=(sqrdecline(3)-sqrdecline(1));%0.4053
-MedianToLQR=(sqrdecline(1)-sqrdecline(2));%0.5271
+MedianToUQR=(sqrdecline(3)-sqrdecline(1));%0.5271
+MedianToLQR=(sqrdecline(1)-sqrdecline(2));%0.4053
 MeanDistance=(MedianToUQR+MedianToLQR)/2;%0.4662
 %The following indicates the range in which we believe INDIVIDUAL variability to be contained
 Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the normal distrbution 25th percentile
