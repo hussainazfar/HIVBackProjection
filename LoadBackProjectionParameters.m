@@ -1,4 +1,4 @@
-function [Px]=LoadBackProjectionParameters(ParameterisationSpaceSize, MajorityOlderThan30)
+function [Px]=LoadBackProjectionParameters(ParameterisationSpaceSize)
 
 %% Simulation settings
 MaxYears=20;%Max years is the maximum number of years a person can spend without being diagnosed with HIV. Although longer times are possible in real life, so few would occur that we can successfully ignore it in the name of simplicity and approximation
@@ -6,7 +6,7 @@ Px.MaxYears=MaxYears;
 StepSize=0.1;
 Px.StepSize=StepSize;
 
-%% The below results are from a meta-analysis of known studies of healthy CD4 counts 
+%% The below results are from a meta-analysis of studies of healthy CD4 counts 
 % MeanHealthyCD4=903;
 % Px.MeanHealthyCD4=MeanHealthyCD4;
 % SDHealthyCD4=305;

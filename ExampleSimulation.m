@@ -1,7 +1,7 @@
 clc; 
 clear;
 NumberOfTimeSamples=200;
-[Px]=LoadBackProjectionParameters(NumberOfTimeSamples, 1);
+[Px]=LoadBackProjectionParameters(NumberOfTimeSamples);
 ExampleData; %Load the example data, CD4ForOptimisation
 
 RandomNumberStream = RandStream('mlfg6331_64','Seed',158943);
