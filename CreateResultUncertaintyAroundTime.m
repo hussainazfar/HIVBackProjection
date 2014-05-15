@@ -64,13 +64,28 @@ for Year=TimeSinceInfectionYearIndex
         TimeSinceInfectionMatrix(YearIndex).LQR(SimNumber)=prctile(TimeSinceInfectionMatrix(YearIndex).Sim(SimNumber).Time, 25);
         TimeSinceInfectionMatrix(YearIndex).UQR(SimNumber)=prctile(TimeSinceInfectionMatrix(YearIndex).Sim(SimNumber).Time, 75);
     end
-    TimeSinceInfectionMatrix(YearIndex).MeanMean=mean(TimeSinceInfectionMatrix(YearIndex).Mean);
-    TimeSinceInfectionMatrix(YearIndex).MeanLCI=prctile(TimeSinceInfectionMatrix(YearIndex).Mean, 2.5);
-    TimeSinceInfectionMatrix(YearIndex).MeanUCI=prctile(TimeSinceInfectionMatrix(YearIndex).Mean, 97.5);
+    TimeSinceInfectionMeanMean(YearIndex)=mean(TimeSinceInfectionMatrix(YearIndex).Mean);
+    TimeSinceInfectionMeanLCI(YearIndex)=prctile(TimeSinceInfectionMatrix(YearIndex).Mean, 2.5);
+    TimeSinceInfectionMeanUCI(YearIndex)=prctile(TimeSinceInfectionMatrix(YearIndex).Mean, 97.5);
     
-    TimeSinceInfectionMatrix(YearIndex).MedianMean=mean(TimeSinceInfectionMatrix(YearIndex).Median);
-    TimeSinceInfectionMatrix(YearIndex).MedianLCI=prctile(TimeSinceInfectionMatrix(YearIndex).Median, 2.5);
-    TimeSinceInfectionMatrix(YearIndex).MedianUCI=prctile(TimeSinceInfectionMatrix(YearIndex).Median, 97.5);
+    TimeSinceInfectionMedianMean(YearIndex)=mean(TimeSinceInfectionMatrix(YearIndex).Median);
+    TimeSinceInfectionMedianLCI(YearIndex)=prctile(TimeSinceInfectionMatrix(YearIndex).Median, 2.5);
+    TimeSinceInfectionMedianUCI(YearIndex)=prctile(TimeSinceInfectionMatrix(YearIndex).Median, 97.5);
 end
 
+clf;
 
+plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanMean, 'b-');
+hold on;
+plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanLCI, 'b--');
+plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanUCI, 'b--');
+
+plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianMean, 'r-');
+plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianLCI, 'r--');
+plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianUCI, 'r--');
+hold off;
+
+print('-dpng ','-r300','ResultsPlots/Appendix Uncertainty in time until diagnosis.png')
+
+disp(['The mean time between infection and diagnosis in the final year of simulation is etimated to be ' num2str( TimeSinceInfectionMeanMean(end)) '(' num2str( TimeSinceInfectionMeanLCI(end)) '-' num2str( TimeSinceInfectionMeanUCI(end)) ') years.']);
+disp(['The median time between infection and diagnosis in the final year of simulation is etimated to be ' num2str( TimeSinceInfectionMedianMean(end)) '(' num2str( TimeSinceInfectionMedianLCI(end)) '-' num2str( TimeSinceInfectionMedianUCI(end)) ') years.']);
