@@ -46,7 +46,9 @@ for iCD4=PlotSettings.ListOfCD4sToPlot
     Index=(CD4DistributionToSample<iCD4+10)&(CD4DistributionToSample>iCD4-10);
     
     MedianTimeUntilDiagnosisAtCD4=median(TimeDitributionToSample(Index));
-    disp(['The median estimated time between infection and diagnosis was ' num2str(MedianTimeUntilDiagnosisAtCD4, '%.1f') ' years for diagnoses with CD4 counts of ' num2str(iCD4) 'cells/microL at diagnosis.']);
+    LQRTimeUntilDiagnosisAtCD4=prctile(TimeDitributionToSample(Index), 25);
+    UQRTimeUntilDiagnosisAtCD4=prctile(TimeDitributionToSample(Index), 75);
+    disp(['The median estimated time between infection and diagnosis was ' num2str(MedianTimeUntilDiagnosisAtCD4, '%.1f') ' (IQR: ' num2str(LQRTimeUntilDiagnosisAtCD4, '%.1f') '-' num2str(UQRTimeUntilDiagnosisAtCD4, '%.1f') ') years for diagnoses with CD4 counts of ' num2str(iCD4) 'cells/microL at diagnosis.']);
     
     Output=hist(TimeDitributionToSample(Index), CD4TimeHistPlotSpacing);
     Output=Output/sum(Output)/StepSize;%Normalise, divide by StepSize to make it look better
