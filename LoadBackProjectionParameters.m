@@ -107,10 +107,9 @@ Px.TimeUntilRebound=40/365.25; % From Kaufmann 1999
 % Lang et al 1989 Patterns of T Lymphocyte Changes with Human Immunodeficiency Virus Infection: From Seroconversion to the Development of AIDS
 % This study closely followed the trajectories of PLHIV in the early stages
 % of disease, and reports a median CD4 at a fixed time (6 months). As far
-% as reliability goes (without excessive modelling taking over) this model
-% is this best, as it is straight data (not modelled). In this study CD4 
-% is 636 at 6 months in seroconverters (of 37 seroconverters). This figure
-% agrees with: 
+% as reliability goes this estimate is this best, as it is straight data 
+% (not modelled). In this study CD4 is 636 at 6 months in seroconverters 
+% (of 37 seroconverters). This figure agrees with: 
 % * Seroconverter CD4 intercepts in Lodi 2010 (624.1) 
 % * MSM <40 years CD4 intercepts (621 (609-634) or 631 (619-643)) in Cascade 2003 Differences in CD4 Cell Counts at Seroconversion and Decline Among 5739 HIV-1 Infected Individuals with Well-Estimated Dates of Seroconversion
 

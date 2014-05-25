@@ -80,5 +80,52 @@ print('-dpng ','-r300','ResultsPlots/Figure 1 Trend of CD4 decay.png')
 disp('Figure 1')
 disp(['The healthy CD4 count distribution had a median of ' num2str(exp(Px.MedianLogHealthyCD4), '%.0f') ' and standard deviation of ' num2str(Px.StdLogHealthyCD4, '%.3f')]);
 disp('')
-%disp(['The time it takes for the median CD4 count to reach 500 is '  num2str(1.7)  ' years.'])
-%disp(['The time it takes for the median CD4 count to reach 200 is '  num2str(6.2)  ' years.'])
+
+PopulationSizeToSimulate=10000;
+Median500=[];
+Median350=[];
+Median200=[];
+for CurrentParamNumber=1:NumberOfSamples
+    CurrentParamNumber
+    Pxi=Px;
+    Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
+    Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
+    [TimeUntilDiagnosis, ~, TestingCD4]=GenerateTheoreticalPopulationCD4s(20*rand(1, PopulationSizeToSimulate), Pxi);
+    
+    % search for elements with approximately the right CD4 count
+    Year=0.4;%to avoid the problem of the rapid decline
+    CD4200Found=false;
+    CD4350Found=false;
+    CD4500Found=false;
+    while (CD4200Found==false && Year<30)
+        Year=Year+0.1;
+        CurrentMedian=median(TestingCD4(Year-0.05<=TimeUntilDiagnosis & TimeUntilDiagnosis<Year+0.05));
+        if CurrentMedian<500 && CD4500Found==false
+            Median500(CurrentParamNumber)=Year;
+            CD4500Found=true;
+        end
+        if CurrentMedian<350 && CD4350Found==false
+            Median350(CurrentParamNumber)=Year;
+            CD4350Found=true;
+        end
+        if CurrentMedian<200 && CD4200Found==false
+            Median200(CurrentParamNumber)=Year;
+            CD4200Found=true;
+        end
+    end
+end
+
+MedianMedian500=median(Median500);
+LCIMedian500=prctile(Median500, 2.5);
+UCIMedian500=prctile(Median500, 97.5);
+MedianMedian350=median(Median350);
+LCIMedian350=prctile(Median350, 2.5);
+UCIMedian350=prctile(Median350, 97.5);
+MedianMedian200=median(Median200);
+LCIMedian200=prctile(Median200, 2.5);
+UCIMedian200=prctile(Median200, 97.5);
+
+
+disp(['The time it takes for the median CD4 count to reach 500 is '  num2str(MedianMedian500) '(' num2str(LCIMedian500) '-' num2str(UCIMedian500) ') years.'])
+disp(['The time it takes for the median CD4 count to reach 350 is '  num2str(MedianMedian350) '(' num2str(LCIMedian350) '-' num2str(UCIMedian350) ') years.'])
+disp(['The time it takes for the median CD4 count to reach 200 is '  num2str(MedianMedian200) '(' num2str(LCIMedian200) '-' num2str(UCIMedian200) ') years.'])

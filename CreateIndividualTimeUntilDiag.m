@@ -1,4 +1,4 @@
-function [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4Store ]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, NumberOfTimeSamples, RandomNumberStream)
+function [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4Store ]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, NumberOfParameterisations, RandomNumberStream)
 % CurrentDistribution - vector of CD4 values in the population (size=1*NumberOfPeople)
 % DeclineAssumptions - a structure that includes the decline rates at various points
 % NumberOfTimeSamples - the number of time samples per person
@@ -11,14 +11,14 @@ SimulatedPopSize=10000;
 ClosestN=SimulatedPopSize/100;%This should sample from the 1% of simulations that are closest
 
 [~, NumberOfPeople]=size(RealTestingCD4);
-Times=zeros(NumberOfPeople, NumberOfTimeSamples);
-StartingCD4=zeros(NumberOfPeople, NumberOfTimeSamples);
-TestingProbVec=zeros(1, NumberOfTimeSamples);
+Times=zeros(NumberOfPeople, NumberOfParameterisations);
+StartingCD4=zeros(NumberOfPeople, NumberOfParameterisations);
+TestingProbVec=zeros(1, NumberOfParameterisations);
 
-IdealPopTimesStore=zeros(SimulatedPopSize, NumberOfTimeSamples);
+IdealPopTimesStore=zeros(SimulatedPopSize, NumberOfParameterisations);
 
 % For each specific vaiable combination
-parfor CurrentParamNumber=1:NumberOfTimeSamples
+parfor CurrentParamNumber=1:NumberOfParameterisations
 % for CurrentParamNumber=1:NumberOfTimeSamples
     % Seed the random number generator
     set(RandomNumberStream,'Substream',CurrentParamNumber);

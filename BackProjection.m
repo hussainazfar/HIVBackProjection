@@ -92,12 +92,12 @@ if ConsiderRecentInfection==true
 %% Determine the time between infection and diagnosis
 disp('Determining the time between infection and diagnosis');
 TicOptimisation=tic;
-NumberOfTimeSamples=200;
+NumberOfSamples=200;
 
 disp( 'Starting parallel Matlab...');
 matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-2);%this may not work in all processors
 
-[Px]=LoadBackProjectionParameters(NumberOfTimeSamples);
+[Px]=LoadBackProjectionParameters(NumberOfSamples);
 Px.ConsiderRecentInfection=ConsiderRecentInfection;
 
 % Sort individuals by year of diagnosis
@@ -143,7 +143,7 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     PatientRef(PatientRef<0)=[];
     
     %Perform an optimisation
-    [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, NumberOfTimeSamples, RandomNumberStream);
+    [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, NumberOfSamples, RandomNumberStream);
     
     OptimisationResults(YearIndex).Year=Year;
     OptimisationResults(YearIndex).TestingProbVec=TestingProbVec;
@@ -188,7 +188,7 @@ toc(TicOptimisation)
 % Set the number of samples in the distribution of times until diagnosis to the number of optimised points found
 % Here we set the number of samples per person to the number of found optimised points
 % % % % % NumberOfSamples=NoOptimisedPoints;
-NumberOfSamples=NumberOfTimeSamples;
+NumberOfSamples=NumberOfSamples;
  
     
     
