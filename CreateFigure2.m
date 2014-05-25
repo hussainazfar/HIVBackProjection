@@ -49,13 +49,13 @@ for iCD4=PlotSettings.ListOfCD4sToPlot
     disp(['The median estimated time between infection and diagnosis was ' num2str(MedianTimeUntilDiagnosisAtCD4, '%.1f') ' years for diagnoses with CD4 counts of ' num2str(iCD4) 'cells/microL at diagnosis.']);
     
     Output=hist(TimeDitributionToSample(Index), CD4TimeHistPlotSpacing);
-    Output=Output/sum(Output);%Normalise
+    Output=Output/sum(Output)/StepSize;%Normalise, divide by StepSize to make it look better
     PlotHandle{Count}=plot(CD4TimeHistPlotSpacing, Output, 'Color' , ColourHolder{Count},'LineWidth',2);
 end
 
 
 xlabel('Time between infection and diagnosis (years)','fontsize', 22);
-ylabel('Probability','fontsize', 22);
+ylabel('Annual probability','fontsize', 22);
 set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
@@ -64,7 +64,7 @@ box off;
 xlim([0 15])
 set(gca,'XTick',0:15)
     
-h_legend=legend([PlotHandle{1} PlotHandle{2} PlotHandle{3}], [num2str(PlotSettings.ListOfCD4sToPlot(1)) '  (cells/\muL)'], [num2str(PlotSettings.ListOfCD4sToPlot(2)) '  (cells/\muL)'] , [num2str(PlotSettings.ListOfCD4sToPlot(3)) '  (cells/\muL)'], 'Location','NorthEast');
+h_legend=legend([PlotHandle{1} PlotHandle{2} PlotHandle{3}], [num2str(PlotSettings.ListOfCD4sToPlot(1)) '  cells/\muL'], [num2str(PlotSettings.ListOfCD4sToPlot(2)) '  cells/\muL'] , [num2str(PlotSettings.ListOfCD4sToPlot(3)) '  cells/\muL'], 'Location','NorthEast');
 set(h_legend, 'fontsize', 16)
 %Make a title for the legend
 h_title=get(h_legend, 'title');
