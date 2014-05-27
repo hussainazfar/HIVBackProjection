@@ -44,8 +44,8 @@ plot(UCI)
 plot(LCI)
 hold off;
 
-
-
+Year=FirstYear:LastYear;
+CreateUncertaintyPlot(Year, MeanCD4, UCI, LCI)
 
 plot(MedianCD4)
 hold on;
