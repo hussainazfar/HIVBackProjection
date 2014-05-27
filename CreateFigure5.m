@@ -19,7 +19,7 @@
 
     
     xlabel('Year','fontsize', 22);
-    ylabel({'Annual probability of testing' 'in people with undiagnosed HIV'},'fontsize', 22);
+    ylabel({'Annual probability of testing' 'among people with undiagnosed HIV'},'fontsize', 22);
     set(gca,'Color',[1.0 1.0 1.0]);
     set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
     set(gca, 'fontsize', 18)
