@@ -108,8 +108,9 @@ Px.TimeUntilRebound=40/365.25; % From Kaufmann 1999
 % This study closely followed the trajectories of PLHIV in the early stages
 % of disease, and reports a median CD4 at a fixed time (6 months). As far
 % as reliability goes this estimate is this best, as it is straight data 
-% (not modelled). In this study CD4 is 636 at 6 months in seroconverters 
-% (of 37 seroconverters). This figure agrees with: 
+% (not modelled). In this study CD4 is 636 at 12 months in seroconverters 
+% (of 37 seroconverters), which is when CD4 counts stabilise and resemble 
+% CD4 count decline of the seroprevalent population. This figure agrees with: 
 % * Seroconverter CD4 intercepts in Lodi 2010 (624.1) 
 % * MSM <40 years CD4 intercepts (621 (609-634) or 631 (619-643)) in Cascade 2003 Differences in CD4 Cell Counts at Seroconversion and Decline Among 5739 HIV-1 Infected Individuals with Well-Estimated Dates of Seroconversion
 
@@ -121,11 +122,15 @@ Px.TimeUntilRebound=40/365.25; % From Kaufmann 1999
 % Also from 2012 data of Australian recent infections (0-12 months) mean 
 % CD4 is 576.0619, which is somewhat lower, although once again this has 
 % sampling bias as this may include people in acute infection which we 
-% would expect to be somewhat lower and people who would be at 12 months 
+% would expect to be lower than rebound CD4 levels and people who would be at 12 months 
 % who we may expect to be about 60-80 cells lower than the people who have 
-% had their CD4 rebound following primary infection. The Australian data 
-% observations are in agreenment with the simulated intercept of Lodi 2011 
-% (553 intercept for men over 30 years)
+% had their CD4 rebound following primary infection. 
+% Assuming a square root decline over 12 months of 1.6 (see below), and an 
+% equal distribution of testing over those 12 months, CD4=576 (sqrCD4=24) 
+% should, on average, occur at 6 months, meaning the starting sqrCD4 is
+% approximately 24+1.6/2=24.8, which gives a starting CD4 of 615. 
+% The Australian data observations are in agreement with the simulated intercept of Lodi 2011 
+% (553 intercept for men over 30 years).
 
 % To compensate for the high levels of disagreement we will choose the
 % CD4 intercept (median, confidence intervals) to be 636 (586 - 686)
