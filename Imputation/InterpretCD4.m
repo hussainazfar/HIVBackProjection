@@ -37,19 +37,26 @@ end
 
 UCI=MeanCD4+1.96*STDCD4./sqrt(NCD4);
 LCI=MeanCD4-1.96*STDCD4./sqrt(NCD4);
+Year=FirstYear:LastYear;
 
-plot(MeanCD4)
-hold on;
-plot(UCI)
-plot(LCI)
-hold off;
+CreateUncertaintyPlot(Year, MeanCD4, UCI, LCI);
+xlabel('Year of diagnosis','fontsize', 22);
+ylabel('Mean CD4 count at diagnosis (95% CI)','fontsize', 22);
+set(gca,'XTick',1980:5:2015)
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+box off;
+print('-dpng ','-r300','Appendix2 Mean95%CI CD4.png')
+
 
 Year=FirstYear:LastYear;
-CreateUncertaintyPlot(Year, MeanCD4, UCI, LCI)
-
-plot(MedianCD4)
-hold on;
-plot(UQRCD4)
-plot(LQRCD4)
-hold off;
-% Plot the out put
+CreateUncertaintyPlot(Year, MedianCD4, UQRCD4, LQRCD4);
+xlabel('Year of diagnosis','fontsize', 22);
+ylabel('Median CD4 count at diagnosis (IQR)','fontsize', 22);
+set(gca,'XTick',1980:5:2015)
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+box off;
+print('-dpng ','-r300','Appendix2 MedianIQR CD4.png')

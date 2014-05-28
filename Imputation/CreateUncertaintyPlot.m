@@ -4,7 +4,7 @@ clf;
 plot(x, Mid, 'o', 'LineWidth', 2);
 hold on;
 [~, sizex]=size(x);
-d=(max(x)-min(x)+1)/sizex/8;
+d=(max(x)-min(x)+1)/sizex/4;
 i=0;
 for xi=x
    i=i+1;
