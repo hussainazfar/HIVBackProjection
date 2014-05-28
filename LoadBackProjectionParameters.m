@@ -115,14 +115,17 @@ Px.TimeUntilRebound=40/365.25; % From Kaufmann 1999
 % * MSM <40 years CD4 intercepts (621 (609-634) or 631 (619-643)) in Cascade 2003 Differences in CD4 Cell Counts at Seroconversion and Decline Among 5739 HIV-1 Infected Individuals with Well-Estimated Dates of Seroconversion
 
 % However, Kaufmann et al. (a study that closely follows the CD4 counts of 
-% individuals) states that the average highest point following infection is
-% 756. This result has samplng bias, as CD4 counts vary and choosing the
+% seroconverters) states that the average highest point following infection is
+% 756. This result has sampling bias, as CD4 counts vary and choosing the
 % highest over a period will be higher than the expected mean at a set time
-% (e.g. at 3 months exactly)
-% Also from 2012 data of Australian recent infections (0-12 months) mean 
-% CD4 is 576.0619, which is somewhat lower, although once again this has 
+% (e.g. at 3 months exactly). This hypothesis is supported by the result 
+% for median CD4 count at 12 months which is reported as 470 cells/microL.
+
+% The 2012 surveillance data of Australian recent infections (0-12 months) had a mean 
+% CD4 of 576.0619, which is somewhat lower, although once again this has 
 % sampling bias as this may include people in acute infection which we 
-% would expect to be lower than rebound CD4 levels and people who would be at 12 months 
+% would expect to be lower than rebound CD4 levels. It also includes people
+% who would be  p to 12 months past their primary infection 
 % who we may expect to be about 60-80 cells lower than the people who have 
 % had their CD4 rebound following primary infection. 
 % Assuming a square root decline over 12 months of 1.6 (see below), and an 
@@ -311,7 +314,7 @@ Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec).^2/MedianHealthyC
 % men older than 30 years. Alternately, Lodi 2011 found square root decline
 % to be 1.159 per year, a highly divergent result to the 2010 resuilts.
 
-% It should be noted that both of these model paramenter results are 
+% It should be noted that both of these model parameter results are 
 % multi-parameter models. Lodi 2010 had a high starting CD4 and a fast CD4
 % decline, while Lodi 2011 had a low starting CD4 and a slow CD4 decline,
 % implying that the fitting function was converging to similar times and
