@@ -491,3 +491,6 @@ SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
 % clear OtherOutput;
 % save('PatientSaveFiles/SimulationState.mat');
 toc(TimeALL)
+
+%publication commit message
+% Publication commit BP002
