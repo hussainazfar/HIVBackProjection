@@ -39,8 +39,25 @@ xlabel('CD4 at diagnosis','fontsize', 22);
 ylabel('Years between infection and diagnosis','fontsize', 22);
 print('-dpng ','-r300','ResultsPlots/Time vs CD4 of example data.png');
 
+
+
+%%%%%%%%%%%%%%%%%%%%
+
+clf;%clear the figure
+
+TimeAllSims=reshape(Times, 1, []);
+
+hist(TimeAllSims, 0.5:1:20.5);
+xlim([0 20])
+xlabel('Time between infection and diagnosis','fontsize', 22);
+ylabel('Probability density','fontsize', 22);
+print('-dpng ','-r300','ResultsPlots/Expected time distribution of example data.png');
+
+
+
+
 %%%%%%%%%%%%%%
-TimeDitributionToSample=reshape(IdealPopTimesStore, 1, []);
+TimeDistributionToSample=reshape(IdealPopTimesStore, 1, []);
 CD4DistributionToSample=reshape(IdealPopTestingCD4, 1, []);
 
 PlotSettings.ListOfCD4sToPlot=[200 350 500];
@@ -63,10 +80,10 @@ for iCD4=PlotSettings.ListOfCD4sToPlot
     Count=Count+1;
     Index=(CD4DistributionToSample<iCD4+10)&(CD4DistributionToSample>iCD4-10);
     
-    MedianTimeUntilDiagnosisAtCD4=median(TimeDitributionToSample(Index));
+    MedianTimeUntilDiagnosisAtCD4=median(TimeDistributionToSample(Index));
     disp(['The median estimated time between infection and diagnosis was ' num2str(MedianTimeUntilDiagnosisAtCD4, '%.1f') ' years for diagnoses with CD4 counts of ' num2str(iCD4) 'cells/microL at diagnosis.']);
     
-    Output=hist(TimeDitributionToSample(Index), CD4TimeHistPlotSpacing);
+    Output=hist(TimeDistributionToSample(Index), CD4TimeHistPlotSpacing);
     Output=Output/sum(Output);%Normalise
     PlotHandle{Count}=plot(CD4TimeHistPlotSpacing, Output, 'Color' , ColourHolder{Count},'LineWidth',2);
 end

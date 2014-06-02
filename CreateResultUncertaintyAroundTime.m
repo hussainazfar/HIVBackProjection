@@ -74,18 +74,32 @@ for Year=TimeSinceInfectionYearIndex
 end
 
 clf;
-
-plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanMean, 'b-');
 hold on;
-plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanLCI, 'b--');
-plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanUCI, 'b--');
+MeanHandle=CreateUncertaintyPlot(TimeSinceInfectionYearIndex-0.1, TimeSinceInfectionMeanMean, TimeSinceInfectionMeanUCI, TimeSinceInfectionMeanLCI, 'r');
+hold on;
+MedianHandle=CreateUncertaintyPlot(TimeSinceInfectionYearIndex+0.1, TimeSinceInfectionMedianMean, TimeSinceInfectionMedianUCI, TimeSinceInfectionMedianLCI, 'b');
+xlim([1982.5 2013])
+xlabel('Year of diagnosis','fontsize', 22);
+ylabel({'Time between infection and diagnosis', '(95% confidence interval)'},'fontsize', 22);
+set(gca,'YTick',0:100:1500)
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+h_legend=legend([ MeanHandle MedianHandle], {'Mean', 'Median'} ,  'Location','NorthEast');
 
-plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianMean, 'r-');
-plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianLCI, 'r--');
-plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianUCI, 'r--');
-hold off;
+
+% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanMean, 'b-');
+% hold on;
+% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanLCI, 'b--');
+% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanUCI, 'b--');
+% 
+% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianMean, 'r-');
+% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianLCI, 'r--');
+% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianUCI, 'r--');
+% hold off;
 
 print('-dpng ','-r300','ResultsPlots/Appendix Uncertainty in time until diagnosis.png')
 
+disp('Note that this section calculates the uncertainty in the mean and median estimate, and does not represent the distribution of individuals within a particular simulation');
 disp(['The mean time between infection and diagnosis in the final year of simulation is etimated to be ' num2str( TimeSinceInfectionMeanMean(end)) '(' num2str( TimeSinceInfectionMeanLCI(end)) '-' num2str( TimeSinceInfectionMeanUCI(end)) ') years.']);
 disp(['The median time between infection and diagnosis in the final year of simulation is etimated to be ' num2str( TimeSinceInfectionMedianMean(end)) '(' num2str( TimeSinceInfectionMedianLCI(end)) '-' num2str( TimeSinceInfectionMedianUCI(end)) ') years.']);
