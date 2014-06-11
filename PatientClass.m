@@ -32,6 +32,38 @@ classdef PatientClass %< handle
       
       CD4CountAtDiagnosis;
       ExposureRoute;
+      
+            % Code Exposure category
+            % 1    Male homosexual/bisexual contact
+            % 2    Male homosexual/bisexual contact and IDU
+            % 3    IDU + Heterosexual
+            % 4    IDU Not further specified
+            % 5    Heterosexual Sex with IDU
+            % 6    Heterosexual Sex with bisexual male
+            % 7    Heterosexual From a high prevalence country
+            % 8    Heterosexual Sex with person from a high prevalence country
+            % 9    Heterosexual Sex with person with medically acquired HIV
+            % 10   Heterosexual Sex with HIV infected person, exposure not specified
+            % 11   Heterosexual Not further specified
+            % 12   Haemophilia/coagulation disorder
+            % 13   Receipt of blood/tissue
+            % 14   Health care setting
+            % 15   Mother with/at risk for HIV infection
+            % 16   Other/undetermined
+            % 
+            % Code Sex
+            % 1    Male
+            % 2    Female
+            % 3    Transgender
+            % 
+            % Code Recent infection
+            % 0    No
+            % 1    Yes
+
+      
+      
+      
+      
 %       DateOfDeath;
 %       DateOfDeathContinuous;
       YearOfDeath;%this is the only death flag (decimal year)
