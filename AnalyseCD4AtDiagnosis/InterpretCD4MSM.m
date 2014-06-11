@@ -1,49 +1,49 @@
 clear
 % Read in data and sort
-[~, DateOfDiagnosis, ~]=xlsread('DateOfHIV.xlsx', 'Sheet4','A2:A15525');
-CD4Value=xlsread('DateOfHIV.xlsx', 'Combined', 'B2:B15525');
+[~, DateOfDiagnosis, ~]=xlsread('DateOfHIV.xlsx', 'Combined','A2:A15525');
+All.CD4Value=xlsread('DateOfHIV.xlsx', 'Combined', 'B2:B15525');
 
 % interpret date
 YearOfDiagnosis=year(datenum(DateOfDiagnosis, 'dd/mm/yyyy'));
 DaysInYear = yeardays(YearOfDiagnosis, 0);
-
-DateOfDiagnosisContinuous=YearOfDiagnosis+  (datenum(DateOfDiagnosis, 'dd/mm/yyyy')-datenum(YearOfDiagnosis, 1,1))./yeardays(YearOfDiagnosis);
+All.DateOfDiagnosisContinuous=YearOfDiagnosis+  (datenum(DateOfDiagnosis, 'dd/mm/yyyy')-datenum(YearOfDiagnosis, 1,1))./yeardays(YearOfDiagnosis);
 
 % Select MSM
 %1, 2, 4, 11, 16
 
+% Read in data and sort
+[~, DateOfDiagnosis, ~]=xlsread('DateOfHIV.xlsx', 'MSMCategories','A2:A12651');
+MSM.CD4Value=xlsread('DateOfHIV.xlsx', 'MSMCategories', 'B2:B12651');
 
-%sort by date
+% interpret date
+YearOfDiagnosis=year(datenum(DateOfDiagnosis, 'dd/mm/yyyy'));
+DaysInYear = yeardays(YearOfDiagnosis, 0);
+MSM.DateOfDiagnosisContinuous=YearOfDiagnosis+  (datenum(DateOfDiagnosis, 'dd/mm/yyyy')-datenum(YearOfDiagnosis, 1,1))./yeardays(YearOfDiagnosis);
 
-FirstYear=floor(min(DateOfDiagnosisContinuous));
-LastYear=floor(max(DateOfDiagnosisContinuous));
-NumberOfYears=LastYear-FirstYear+1;
+% Read in data and sort
+[~, DateOfDiagnosis, ~]=xlsread('DateOfHIV.xlsx', 'NonMSMCategories','A2:A2875');
+NonMSM.CD4Value=xlsread('DateOfHIV.xlsx', 'NonMSMCategories', 'B2:B2875');
 
-MeanCD4=zeros(1, NumberOfYears);
-MedianCD4=zeros(1, NumberOfYears);
-STDCD4=zeros(1, NumberOfYears);
-NCD4=zeros(1, NumberOfYears);
-UQRCD4=zeros(1, NumberOfYears);
-LQRCD4=zeros(1, NumberOfYears);
-YearCount=1;
-for Year=FirstYear:LastYear
-    Index=(Year<=DateOfDiagnosisContinuous) & (DateOfDiagnosisContinuous<Year+1);
-    CD4ThisYear=CD4Value(Index);
-    MeanCD4(YearCount)=mean(CD4ThisYear);
-    MedianCD4(YearCount)=median(CD4ThisYear);
-    STDCD4(YearCount)=std(CD4ThisYear);
-    [NCD4(YearCount), ~]=size(CD4ThisYear);
-    UQRCD4(YearCount)=prctile(CD4ThisYear, 75);
-    LQRCD4(YearCount)=prctile(CD4ThisYear, 25);
-    
-    YearCount=YearCount+1;
-end
+% interpret date
+YearOfDiagnosis=year(datenum(DateOfDiagnosis, 'dd/mm/yyyy'));
+DaysInYear = yeardays(YearOfDiagnosis, 0);
+NonMSM.DateOfDiagnosisContinuous=YearOfDiagnosis+  (datenum(DateOfDiagnosis, 'dd/mm/yyyy')-datenum(YearOfDiagnosis, 1,1))./yeardays(YearOfDiagnosis);
 
-UCI=MeanCD4+1.96*STDCD4./sqrt(NCD4);
-LCI=MeanCD4-1.96*STDCD4./sqrt(NCD4);
+FirstYear=floor(min(All.DateOfDiagnosisContinuous));
+LastYear=floor(max(All.DateOfDiagnosisContinuous));
+
+% Sort by date
+[All.MeanCD4, All.UCI, All.LCI, All.MedianCD4, All.UQRCD4, All.LQRCD4]=CalculateStatistics(FirstYear, LastYear, All.DateOfDiagnosisContinuous, All.CD4Value);
+[MSM.MeanCD4, MSM.UCI, MSM.LCI, MSM.MedianCD4, MSM.UQRCD4, MSM.LQRCD4]=CalculateStatistics(FirstYear, LastYear, MSM.DateOfDiagnosisContinuous, MSM.CD4Value);
+[NonMSM.MeanCD4, NonMSM.UCI, NonMSM.LCI, NonMSM.MedianCD4, NonMSM.UQRCD4, NonMSM.LQRCD4]=CalculateStatistics(FirstYear, LastYear, NonMSM.DateOfDiagnosisContinuous, NonMSM.CD4Value);
+% [MeanCD4, UCI, LCI, MedianCD4, UQRCD4, LQRCD4]=CalculateStatistics(FirstYear, LastYear, DateOfDiagnosisContinuous, CD4Value);
+% [MeanCD4, UCI, LCI, MedianCD4, UQRCD4, LQRCD4]=CalculateStatistics(FirstYear, LastYear, DateOfDiagnosisContinuous, CD4Value);
+%[MeanCD4, UCI, LCI, MedianCD4, UQRCD4, LQRCD4]=CalculateStatistics(FirstYear, LastYear, DateOfDiagnosisContinuous, CD4Value);
+
+
 Year=FirstYear:LastYear;
-
-CreateUncertaintyPlot(Year, MeanCD4, UCI, LCI);
+clf;
+CreateUncertaintyPlot(Year, All.MeanCD4, All.UCI, All.LCI, 'b');
 xlabel('Year of diagnosis','fontsize', 22);
 ylabel('Mean CD4 count at diagnosis (95% CI)','fontsize', 22);
 set(gca,'XTick',1980:5:2015)
@@ -53,9 +53,25 @@ set(gca, 'fontsize', 18)
 box off;
 print('-dpng ','-r300','Appendix2 Mean95%CI CD4.png')
 
+clf;
+CreateUncertaintyPlot(Year-0.1, MSM.MeanCD4, MSM.UCI, MSM.LCI, 'b');
+hold on;
+CreateUncertaintyPlot(Year+0.1, NonMSM.MeanCD4, NonMSM.UCI, NonMSM.LCI, 'r');
+xlabel('Year of diagnosis','fontsize', 22);
+ylabel('Mean CD4 count at diagnosis (95% CI)','fontsize', 22);
+set(gca,'XTick',1980:5:2015)
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+box off;
+h_legend=legend([ MeanHandle MedianHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthEast');
+print('-dpng ','-r300','MSMvsNonMSM Mean95%CI CD4.png')
 
+
+
+clf;
 Year=FirstYear:LastYear;
-CreateUncertaintyPlot(Year, MedianCD4, UQRCD4, LQRCD4);
+CreateUncertaintyPlot(Year, All.MedianCD4, All.UQRCD4, All.LQRCD4, 'b');
 xlabel('Year of diagnosis','fontsize', 22);
 ylabel('Median CD4 count at diagnosis (IQR)','fontsize', 22);
 set(gca,'XTick',1980:5:2015)
@@ -64,3 +80,18 @@ set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
 box off;
 print('-dpng ','-r300','Appendix2 MedianIQR CD4.png')
+
+clf;
+Year=FirstYear:LastYear;
+CreateUncertaintyPlot(Year-0.1, MSM.MedianCD4, MSM.UQRCD4, MSM.LQRCD4, 'b');
+hold on;
+CreateUncertaintyPlot(Year+0.1, NonMSM.MedianCD4, NonMSM.UQRCD4, NonMSM.LQRCD4, 'r');
+xlabel('Year of diagnosis','fontsize', 22);
+ylabel('Median CD4 count at diagnosis (IQR)','fontsize', 22);
+set(gca,'XTick',1980:5:2015)
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+box off;
+h_legend=legend([ MeanHandle MedianHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthEast');
+print('-dpng ','-r300','MSMvsNonMSM MedianIQR CD4.png')
