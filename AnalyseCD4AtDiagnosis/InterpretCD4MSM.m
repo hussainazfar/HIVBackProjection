@@ -54,9 +54,9 @@ box off;
 print('-dpng ','-r300','Appendix2 Mean95%CI CD4.png')
 
 clf;
-CreateUncertaintyPlot(Year-0.1, MSM.MeanCD4, MSM.UCI, MSM.LCI, 'b');
+MSMHandle=CreateUncertaintyPlot(Year-0.1, MSM.MeanCD4, MSM.UCI, MSM.LCI, 'b');
 hold on;
-CreateUncertaintyPlot(Year+0.1, NonMSM.MeanCD4, NonMSM.UCI, NonMSM.LCI, 'r');
+NonMedianHandle=CreateUncertaintyPlot(Year+0.1, NonMSM.MeanCD4, NonMSM.UCI, NonMSM.LCI, 'r');
 xlabel('Year of diagnosis','fontsize', 22);
 ylabel('Mean CD4 count at diagnosis (95% CI)','fontsize', 22);
 set(gca,'XTick',1980:5:2015)
@@ -64,7 +64,7 @@ set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
 box off;
-h_legend=legend([ MeanHandle MedianHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthEast');
+h_legend=legend([ MSMHandle NonMedianHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthEast');
 print('-dpng ','-r300','MSMvsNonMSM Mean95%CI CD4.png')
 
 
@@ -83,9 +83,9 @@ print('-dpng ','-r300','Appendix2 MedianIQR CD4.png')
 
 clf;
 Year=FirstYear:LastYear;
-CreateUncertaintyPlot(Year-0.1, MSM.MedianCD4, MSM.UQRCD4, MSM.LQRCD4, 'b');
+MSMHandle=CreateUncertaintyPlot(Year-0.1, MSM.MedianCD4, MSM.UQRCD4, MSM.LQRCD4, 'b');
 hold on;
-CreateUncertaintyPlot(Year+0.1, NonMSM.MedianCD4, NonMSM.UQRCD4, NonMSM.LQRCD4, 'r');
+NonMedianHandle=CreateUncertaintyPlot(Year+0.1, NonMSM.MedianCD4, NonMSM.UQRCD4, NonMSM.LQRCD4, 'r');
 xlabel('Year of diagnosis','fontsize', 22);
 ylabel('Median CD4 count at diagnosis (IQR)','fontsize', 22);
 set(gca,'XTick',1980:5:2015)
@@ -93,5 +93,5 @@ set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
 box off;
-h_legend=legend([ MeanHandle MedianHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthEast');
+h_legend=legend([ MSMHandle NonMedianHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthEast');
 print('-dpng ','-r300','MSMvsNonMSM MedianIQR CD4.png')
