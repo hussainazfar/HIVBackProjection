@@ -273,7 +273,7 @@ for SimNumber=1:NumberOfSamples
     [~, TotalInTimeVector]=size(ExpectedTimesVector);
     
         ProportionOfExpectedTimesVectorExpectedPerStep=StepSize/(RangeOfCD4Averages(2)-RangeOfCD4Averages(1));
-        TotalInStepResample=round(TotalInTimeVector*ProportionOfExpectedTimesVectorExpectedPerStep);
+        TotalInStepResample=round(TotalInTimeVector*ProportionOfExpectedTimesVectorExpectedPerStep);%this parameter is not acually used in any meaningful way in this code
         
         % Find an estimate for the number of infections which are undiagnosed
         [~, LastPositionInArray]=size(HistYearSlots);
