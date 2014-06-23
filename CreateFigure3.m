@@ -74,7 +74,7 @@ xlim([PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)])
 ylim([0 ceil((max(DiagnosesByYear))/100)*100])
 
 %h_legend=legend([DiagnosesHandle BackProjectedInfectionsHandle TotalEstimatedInfectionsHandle], 'Diagnoses                    ', 'Diagnosed infections' , 'All infections', 'Location','NorthEast');
-h_legend=legend([DiagnosesHandle TotalEstimatedInfectionsHandle, UncertaintyHandle], 'Diagnoses',  'Estimated incidence', '95% range', 'Location','NorthEast');
+h_legend=legend([DiagnosesHandle TotalEstimatedInfectionsHandle, UncertaintyHandle], 'Diagnoses',  'Estimated incidence', '95% uncertainty bound', 'Location','NorthEast');
 
 set(h_legend,'FontSize',16);
 

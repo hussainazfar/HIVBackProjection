@@ -26,7 +26,7 @@
     box off;
     
     xlim([1980 2013])
-    h_legend=legend([hmed hquart], {'Median', '95% range'},  'Location','SouthEast');
+    h_legend=legend([hmed hquart], {'Median', '95% uncertainty bound'},  'Location','SouthEast');
     set(h_legend,'FontSize',16);
     legend('boxoff');
     print('-dpng ','-r300','ResultsPlots/Figure 5a ProbabilityOfTestingByYear.png')
