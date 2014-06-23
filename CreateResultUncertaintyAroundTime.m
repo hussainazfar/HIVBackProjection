@@ -80,7 +80,7 @@ hold on;
 MedianHandle=CreateUncertaintyPlot(TimeSinceInfectionYearIndex+0.1, TimeSinceInfectionMedianMean, TimeSinceInfectionMedianUCI, TimeSinceInfectionMedianLCI, 'b');
 xlim([1982.5 2013])
 xlabel('Year of diagnosis','fontsize', 22);
-ylabel({'Time between infection and diagnosis', '(95% confidence interval)'},'fontsize', 22);
+ylabel({'Time between infection and diagnosis', '(95% range)'},'fontsize', 22);
 set(gca,'YTick',0:100:1500)
 set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white

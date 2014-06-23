@@ -22,7 +22,7 @@ set(gca, 'fontsize', 18)
 box off;
 xlim([PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)])
 
-h_legend=legend([hmed h95], {'Median', '95% Confidence Interval'},  'Location','NorthEast');
+h_legend=legend([hmed h95], {'Median', '95% range'},  'Location','NorthEast');
 set(h_legend,'FontSize',16);
 legend('boxoff');
 print('-dpng ','-r300','ResultsPlots/Figure 4 TotalUndiagnosedByTime.png')
