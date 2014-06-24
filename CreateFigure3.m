@@ -30,7 +30,7 @@ xlim([PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)])
 ylim([0 ceil((max(DiagnosesByYear))/100)*100])
 
 
-h_legend=legend([DiagnosesHandle BackProjectedInfectionsHandle BackProjectedInfectionsHandle UncertaintyHandle], 'Diagnoses', 'Back-projected incidence', 'of diagnosed cases', '95% range',  'Location','NorthEast');
+h_legend=legend([DiagnosesHandle BackProjectedInfectionsHandle BackProjectedInfectionsHandle UncertaintyHandle], 'Diagnoses', 'Back-projected incidence', 'of diagnosed cases', '95% uncertainty bound',  'Location','NorthEast');
 set(h_legend,'FontSize',16);
 
 
