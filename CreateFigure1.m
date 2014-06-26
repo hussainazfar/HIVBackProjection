@@ -168,6 +168,6 @@ disp(['The time it takes for the median CD4 count to reach 500 is '  num2str(Med
 disp(['The time it takes for the median CD4 count to reach 350 is '  num2str(MedianMedian350) '(' num2str(LCIMedian350) '-' num2str(UCIMedian350) ') years.'])
 disp(['The time it takes for the median CD4 count to reach 200 is '  num2str(MedianMedian200) '(' num2str(LCIMedian200) '-' num2str(UCIMedian200) ') years.'])
 
-clf
-MedianMedianByYear=squeeze(median(CurrentMedianStore, 1));
-plot(CurrentMedianStore')
+% clf
+% MedianMedianByYear=squeeze(median(CurrentMedianStore, 1));
+% plot(CurrentMedianStore')
