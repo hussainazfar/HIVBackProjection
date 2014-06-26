@@ -80,8 +80,8 @@ print('-dpng ','-r300','ResultsPlots/Figure 1 Trend of CD4 decay.png')
 disp('Figure 1')
 disp(['The healthy CD4 count distribution had a median of ' num2str(exp(Px.MedianLogHealthyCD4), '%.0f') ' and standard deviation of ' num2str(Px.StdLogHealthyCD4, '%.3f')]);
 HealthyCD4VecTest=exp(normrnd(Px.MedianLogHealthyCD4, Px.StdLogHealthyCD4, [1 100000]));
-HealthyCD4LQR=prctile(InitialCD4VecTestA, 25);
-HealthyCD4UQR=prctile(InitialCD4VecTestA, 75);
+HealthyCD4LQR=prctile(HealthyCD4VecTest, 25);
+HealthyCD4UQR=prctile(HealthyCD4VecTest, 75);
 disp(['The healthy CD4 count distribution had an interquartile range of (' num2str(HealthyCD4LQR, '%.0f') '-' num2str(HealthyCD4UQR, '%.0f') ')' ]);
 
 
