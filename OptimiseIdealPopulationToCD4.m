@@ -22,7 +22,7 @@ for LoopNumber=1:MaximumLoops
     end
     
     
-    [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosisVaiable(SimulatedPopSize, CurrentPAttempt, NumberOfCD4s, Pxi);
+    [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosis(SimulatedPopSize, CurrentPAttempt, NumberOfCD4s, Pxi);
     
     [TimeUntilDiagnosis, StartingCD4, SimulatedTestingCD4]=GenerateTheoreticalPopulationCD4s(TimeUntilDiagnosis, Pxi);
     

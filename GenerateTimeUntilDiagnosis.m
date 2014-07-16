@@ -1,4 +1,4 @@
-function [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosisVaiable(SimulatedPopSize, CurrentPAttempt, NumberOfCD4s, Pxi)
+function [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosis(SimulatedPopSize, CurrentPAttempt, NumberOfCD4s, Pxi)
 
 % Using the testing rate, determine the time until testing. 
     % The exponential cummulative distribution for this is:
