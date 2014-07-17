@@ -35,7 +35,7 @@ function [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosis(SimulatedPopSize, Curre
             TimeUntilDiagnosis=[TimeUntilDiagnosisFirstYear TimeUntilDiagnosisOtherYears];
             % Randomly shuffle results
             TimeUntilDiagnosis=TimeUntilDiagnosis(randperm(size(TimeUntilDiagnosis,2)));
-        else % there are sufficient people with evidence of 
+        else % there are more people diagnosed in the first year than we would expect from the flat testing rate
             %for those to be simulated, add one year
             TimeUntilDiagnosis=1+log(1-rand(1,SimulatedPopSize))/log(1-CurrentPAttempt);
         end
