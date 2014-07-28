@@ -1,5 +1,5 @@
 PROC IMPORT OUT= WORK.imputation
-            DATAFILE= "\Data\Diagnoses2014WithExposureCoding-3.xls" 
+            DATAFILE= "C:\Users\jjansson\Documents\GitHub\HIVBackProjection\Imputation\Data\notifications2014exposure.xls" 
             DBMS=EXCEL REPLACE;
      SHEET="Sheet1"; 
      GETNAMES=YES;
@@ -12,7 +12,7 @@ RUN;
 data imputation_sqr;
 set imputation;
 cd4_sqrt=sqrt(cd4count );
-age=datehivdec-yearbirth; 
+age=datehivdec-yearbirthdec; 
 run;
 
 
@@ -42,7 +42,7 @@ DATA subset;
   SET work.miout2;
 IF _Imputation_ = 1;
 
-PROC EXPORT DATA= WORK.subset OUTFILE= "\Data\Diagnoses2013WithImputation-4.xls" DBMS=XLS REPLACE;
+PROC EXPORT DATA= WORK.subset OUTFILE= "C:\Users\jjansson\Documents\GitHub\HIVBackProjection\Imputation\Data\notifications2014imputation.xls" DBMS=XLS REPLACE;
 SHEET="Dataset_1";
 RUN;
 
