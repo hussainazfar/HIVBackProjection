@@ -105,7 +105,7 @@ BackProjectStartSingleYearAnalysis=1984;
 
 [~, NumberInPatientCurrently]=size(Patient);
 YearIndex=0;
-for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
+for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
     YearIndex=YearIndex+1;
     disp(Year)
     % For indivudals diagnosed prior to 1985, process as a group (as we have insufficient data on these individuals anyway)
