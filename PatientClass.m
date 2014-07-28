@@ -4,6 +4,7 @@ classdef PatientClass %< handle
 %       AIDSStatus;
 %       Alive;
       YearBirth;
+      DOB;
       Sex;
       DateOfDiagnosis;%text
       DateOfDiagnosisContinuous;%decimal
@@ -34,6 +35,20 @@ classdef PatientClass %< handle
       ExposureRoute;
       
             % Code Exposure category
+            % MSM	1
+            % MSM IDU	2
+            % Bisexual male	3
+            % Bisexual male IDU	4
+            % Heterosexual	5
+            % Heterosexual, not further specified	6
+            % Heterosexual IDU	7
+            % High prevalence country	8
+            % IDU only	9
+            % Blood recipient only	10
+            % MTCT	11
+            % Unknown	12
+            
+            % OLD exposure coding
             % 1    Male homosexual/bisexual contact
             % 2    Male homosexual/bisexual contact and IDU
             % 3    IDU + Heterosexual

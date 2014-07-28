@@ -1,12 +1,12 @@
 %% Create a plot of the expected distributions of time until diagnosis for different CD4 counts in Australia
 
 
-%Select CD4s from 2012
+%Select CD4s from YearOfDiagnosedDataEnd
 CD4ForOptimisation=-ones(size(Patient));
 Count=0;
 for P=Patient
     Count=Count+1;
-    if (P.DateOfDiagnosisContinuous>=2012 && P.DateOfDiagnosisContinuous<2013)
+    if (P.DateOfDiagnosisContinuous>=YearOfDiagnosedDataEnd && P.DateOfDiagnosisContinuous<2013)
         CD4ForOptimisation(Count)=P.CD4CountAtDiagnosis;
     end
 end

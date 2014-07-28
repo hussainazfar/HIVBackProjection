@@ -12,7 +12,7 @@ RandStream.setGlobalStream(RandomNumberStream);
 
 %% Load settings for the simualtion
 % LoadSettings
-LoadSettings2013
+LoadSettings
 
 
 if InitialisePCToSRThisSim==false

@@ -26,20 +26,25 @@ if sum(strcmp(VariableName, 'id'))==1
     LineDataMatrix.ID=cell2mat(c(:,strcmp(VariableName, 'id')));
 end
 LineDataMatrix.YearBirth=cell2mat(c(:,strcmp(VariableName, 'yearbirth')));
+
+
 LineDataMatrix.Sex=cell2mat(c(:,strcmp(VariableName, 'sex')));
 %Determine time of diagnosis
 for i=1:NumberOfPatients%this needs to be done line by line because it is a string
     LineDataMatrix.DateOfDiagnosis(i)=c(i,strcmp(VariableName, 'datehiv'));
+    LineDataMatrix.DOB(i)=c(i,strcmp(VariableName, 'dob'));
 end
 LineDataMatrix.YearOfDiagnosis=year(datenum(LineDataMatrix.DateOfDiagnosis, 'dd/mm/yyyy'));
 LineDataMatrix.DateOfDiagnosisContinuous=LineDataMatrix.YearOfDiagnosis+  (datenum(LineDataMatrix.DateOfDiagnosis, 'dd/mm/yyyy')-datenum(LineDataMatrix.YearOfDiagnosis, 1,1))./yeardays(LineDataMatrix.YearOfDiagnosis);
 
-LineDataMatrix.IndigenousStatus=cell2mat(c(:,strcmp(VariableName, 'indigenous')));
+if sum(strcmp(VariableName, 'id'))==1
+    LineDataMatrix.IndigenousStatus=cell2mat(c(:,strcmp(VariableName, 'indigenous')));
+end
 LineDataMatrix.CD4CountAtDiagnosis=cell2mat(c(:,strcmp(VariableName, 'cd4base')));
 LineDataMatrix.ExposureRoute=cell2mat(c(:,strcmp(VariableName, 'exp')));
-LineDataMatrix.RecentInfection=cell2mat(c(:,strcmp(VariableName, 'primary')));
+LineDataMatrix.RecentInfection=cell2mat(c(:,strcmp(VariableName, 'recent')));
 % Load and clean up previously diagnoses overseas
-LineDataMatrix.PreviouslyDiagnosedOverseas=cell2mat(c(:,strcmp(VariableName, 'previous_os_diagnosis')));
+LineDataMatrix.PreviouslyDiagnosedOverseas=cell2mat(c(:,strcmp(VariableName, 'previ_diag_overseas')));
 LineDataMatrix.PreviouslyDiagnosedOverseas(isnan(LineDataMatrix.PreviouslyDiagnosedOverseas))=0;
 
 

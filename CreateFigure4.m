@@ -32,7 +32,7 @@ print('-dpng ','-r300','ResultsPlots/Figure 4 TotalUndiagnosedByTime.png')
 String1985max=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
 [~, YearIndex]=min(abs(YearVectorLabel-1998.6));
 String1998min=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-[~, YearIndex]=min(abs(YearVectorLabel-2012.9));
-String2012=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
+[~, YearIndex]=min(abs(YearVectorLabel-(YearOfDiagnosedDataEnd-0.1)));
+StringLastYearData=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
 disp(['The model estimates that the number of people living with undiagnosed HIV peaked in 1985 at ' String1985max ', before falling to a low of ' String1998min ' people in 1998.' ...
-    ' It is estimated that at the end of 2012, ' String2012 ' people were living with undiagnosed HIV.']);
+    ' It is estimated that at the end of the last year of data, ' StringLastYearData ' people were living with undiagnosed HIV.']);

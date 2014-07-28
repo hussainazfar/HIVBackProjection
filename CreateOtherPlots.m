@@ -2,9 +2,9 @@
 clf;
 % HistogramCD4Centres=12.5:25:4987.5;
 HistogramCD4Centres=25:50:4987.5;
-a=CD4ComparisonLookup;%to minimise code
-RealTestingCD4=[CD4Comparison(a==2008).RealTestingCD4 CD4Comparison(a==2009).RealTestingCD4 CD4Comparison(a==2010).RealTestingCD4 CD4Comparison(a==2011).RealTestingCD4 CD4Comparison(a==2012).RealTestingCD4 ];
-SimulatedTestingCD4=[CD4Comparison(a==2008).SimulatedTestingCD4 CD4Comparison(a==2009).SimulatedTestingCD4 CD4Comparison(a==2010).SimulatedTestingCD4 CD4Comparison(a==2011).SimulatedTestingCD4 CD4Comparison(a==2012).SimulatedTestingCD4 ];
+a=CD4ComparisonLookup;%to minimise code size
+RealTestingCD4=[ CD4Comparison(a==2009).RealTestingCD4 CD4Comparison(a==2010).RealTestingCD4 CD4Comparison(a==2011).RealTestingCD4 CD4Comparison(a==2012).RealTestingCD4 CD4Comparison(a==2013).RealTestingCD4];
+SimulatedTestingCD4=[ CD4Comparison(a==2009).SimulatedTestingCD4 CD4Comparison(a==2010).SimulatedTestingCD4 CD4Comparison(a==2011).SimulatedTestingCD4 CD4Comparison(a==2012).SimulatedTestingCD4 CD4Comparison(a==2013).SimulatedTestingCD4];
 
 [SimulatedCD4Histogram, X] =hist(reshape(SimulatedTestingCD4, 1, []), HistogramCD4Centres);%Collapse all the simulations into a single variable to get something analoguous to a "mean"
 [RealCD4Histogram, X] =hist(RealTestingCD4, HistogramCD4Centres);
@@ -28,7 +28,7 @@ set(h_legend,'FontSize',16);
 
 legend('boxoff')
 
-print('-dpng ','-r300','ResultsPlots/Appendix Figure 1 CD4AtDiagnosisComparison2008to2012.png')
+print('-dpng ','-r300','ResultsPlots/Appendix Figure 1 CD4AtDiagnosisComparison2009to2013.png')
 
 
 %% Output the same figure by tenths of a year
@@ -141,7 +141,7 @@ bar(1:1:MaxYears, MeanTimeDistribution);%, 'k.','MarkerSize',20);
 %% output median CD4 count at diagnosis
 clf;%clear the current figure ready for plotting
 YearIndex=0;
-YearsToPlot=1980:2012;
+YearsToPlot=1980:YearOfDiagnosedDataEnd;
 for Year=YearsToPlot
     disp(Year)
     YearIndex=YearIndex+1;

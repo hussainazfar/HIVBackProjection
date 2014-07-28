@@ -13,17 +13,19 @@ for i=1:LineDataMatrix.NumberOfPatients
     
     
     Patient(i).YearBirth=LineDataMatrix.YearBirth(i);
+    Patient(i).DOB=LineDataMatrix.DOB(i);
     Patient(i).Sex=LineDataMatrix.Sex(i);
     Patient(i).DateOfDiagnosis=LineDataMatrix.DateOfDiagnosis(i);
     Patient(i).YearOfDiagnosis=LineDataMatrix.YearOfDiagnosis(i);
     Patient(i).DateOfDiagnosisContinuous=LineDataMatrix.DateOfDiagnosisContinuous(i);
-    Patient(i).IndigenousStatus=LineDataMatrix.IndigenousStatus(i);
     Patient(i).CD4CountAtDiagnosis=LineDataMatrix.CD4CountAtDiagnosis(i);
     Patient(i).ExposureRoute=LineDataMatrix.ExposureRoute(i);
     Patient(i).RecentInfection=LineDataMatrix.RecentInfection(i);
     Patient(i).CountryOfBirth=LineDataMatrix.CountryOfBirth(i);
     Patient(i).PreviouslyDiagnosedOverseas=LineDataMatrix.PreviouslyDiagnosedOverseas(i);
     Patient(i).SimulatedIndividual=0;
+    
+    %Patient(i).IndigenousStatus=LineDataMatrix.IndigenousStatus(i);
     
 end
 

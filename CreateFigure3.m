@@ -38,9 +38,9 @@ legend('boxoff')
 
 print('-dpng ','-r300','ResultsPlots/Figure 3a Backprojected Infections and Diagnoses.png')
 
-[~, YearIndex]=min(abs(YearVectorLabel-2012));
-String2012=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-disp(['the number of infections that are placed in 2012 is ' String2012]);
+[~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));
+InfectionsString=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
+disp(['the number of infections that are placed in 2013 is ' InfectionsString]);
 
 %% Figure 3b
 
@@ -94,9 +94,9 @@ Infections1997=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(Y
 disp(['Following this peak, infections reached a low of ' Infections1997 ' in 1997.']);
 
 
-[~, YearIndex]=min(abs(YearVectorLabel-2012));
-Infections2012=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-Diagnoses2012=num2str(round(DiagnosesByYear(YearIndex)), '%i');
-disp(['There were ' Infections2012 ' infections in 2012, which is slightly higher than the ' Diagnoses2012 ' diagnoses in 2012, ... ']);
+[~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));
+InfectionsString=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
+DiagnosesString=num2str(round(DiagnosesByYear(YearIndex)), '%i');
+disp(['There were ' InfectionsString ' infections in the final year of data, which is slightly higher than the ' DiagnosesString ' diagnoses in the final year of data, ... ']);
 
 

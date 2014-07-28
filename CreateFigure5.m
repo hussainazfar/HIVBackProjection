@@ -35,12 +35,12 @@
 disp('Figure 5a')
 [~, YearIndex]=min(abs(YearVectorLabel-1999));
 String1999TestingProbability=[num2str(Median(YearIndex), '%.2f') ' [' num2str(LCI(YearIndex), '%.2f'), '-', num2str(UCI(YearIndex), '%.2f'), ']'];
-[~, YearIndex]=min(abs(YearVectorLabel-2012));
-String2012TestingProbability=[num2str(Median(YearIndex), '%.2f') ' (' num2str(LCI(YearIndex), '%.2f'), '-', num2str(UCI(YearIndex), '%.2f'), ')'];
+[~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));
+StringFinalTestingProbability=[num2str(Median(YearIndex), '%.2f') ' (' num2str(LCI(YearIndex), '%.2f'), '-', num2str(UCI(YearIndex), '%.2f'), ')'];
 
 
 disp(['The model estimates that the annual testing probabilty fell to the lowest point (p=' String1999TestingProbability ') in 1999, the year which coincides with the lowest number of diagnoses. ' ...
-    'Testing probailities are calculated to have increased since then, with the annual testing probability in 2012 at p=' String2012TestingProbability '. ']);
+    'Testing probailities are calculated to have increased since then, with the annual testing probability in the final year of data at p=' StringFinalTestingProbability '. ']);
 
 
 %% Output time until diagnosis by year
@@ -91,10 +91,10 @@ clf;%clear the current figure ready for plotting
     
 %% Output paper sentence
 disp('Figure 5b')
-[~, YearIndex]=min(abs(YearVectorLabel-2012));
-String2012Time=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
-disp([' The median time between infection and diagnosis for people diagnosed in 2012 was estimated at ' String2012Time ' years.']);
-disp(['Mean time between infection and diagnosis in 2012 was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);
+[~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));
+StringFinalYearTime=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
+disp([' The median time between infection and diagnosis for people diagnosed in the last year of data was estimated at ' StringFinalYearTime ' years.']);
+disp(['Mean time between infection and diagnosis in the final year of data was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);
 
 [~, YearIndex]=min(abs(YearVectorLabel-1985));
 String1985Time=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
