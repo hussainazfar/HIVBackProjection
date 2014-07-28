@@ -56,7 +56,7 @@ end
 %% test this location 100 times, determine the median error
 ErrorVec=zeros(1, 100);
 for i=1:100
-    [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosisVaiable(SimulatedPopSize, CurrentPAttempt, NumberOfCD4s, Pxi);
+    [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosis(SimulatedPopSize, CurrentPAttempt, NumberOfCD4s, Pxi);
     [TimeUntilDiagnosis, StartingCD4, SimulatedTestingCD4]=GenerateTheoreticalPopulationCD4s(TimeUntilDiagnosis, Pxi);
     SelectedSimulatedCD4s = datasample(SimulatedTestingCD4,NumberOfCD4s,'Replace',true);
     SimulatedMedianCD4=median(SelectedSimulatedCD4s);
@@ -68,7 +68,7 @@ ThisError=10^50;% a large number
 while ThisError>MedianErrorAtPoint
     %keep sampling uniformly until you find one simulated P which beats the median
     CurrentPAttempt=rand();
-    [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosisVaiable(SimulatedPopSize, CurrentPAttempt, NumberOfCD4s, Pxi);
+    [TimeUntilDiagnosis]=GenerateTimeUntilDiagnosis(SimulatedPopSize, CurrentPAttempt, NumberOfCD4s, Pxi);
     [TimeUntilDiagnosis, StartingCD4, SimulatedTestingCD4]=GenerateTheoreticalPopulationCD4s(TimeUntilDiagnosis, Pxi);
     SelectedSimulatedCD4s = datasample(SimulatedTestingCD4,NumberOfCD4s,'Replace',true);
     SimulatedMedianCD4=median(SelectedSimulatedCD4s);
