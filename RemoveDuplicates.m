@@ -27,7 +27,7 @@ for SexUnderAnalysis=1:2
         DOB={};
         % Select patients with birthdates in the year
         for i=1:NoPatients
-            if Patient(i).YearOfBirth==ThisBirthYear && Patient(i).Sex==SexUnderAnalysis
+            if Patient(i).YearBirth==ThisBirthYear && Patient(i).Sex==SexUnderAnalysis
                 IndexInMain=[IndexInMain i];
                 DOB=[DOB Patient(i).DOB];
                 
@@ -40,12 +40,12 @@ for SexUnderAnalysis=1:2
             PossibleDates=365;
         end    
             
-        
+        DOB
         UniqueDateVector=unique(DOB);
         [~, NoUniqueDates]=size(UniqueDateVector);
 
         
-        NoToKeep=PossibleDates*LN(PossibleDates/(PossibleDates-NoUniqueDates));
+        NoToKeep=PossibleDates*log(PossibleDates/(PossibleDates-NoUniqueDates));
         
         % For each date remove the first diagnosis on a date
         for ThisDate=UniqueDateVector
@@ -91,6 +91,11 @@ hist(DateDiagnosisAll, 1980.5:2013.5)
 subplot(1,3, 2);
 hist(DateDiagnosisAll(IncludeIndex), 1980.5:2013.5)
 
+NumWithDuplicates=hist(DateDiagnosisAll, 1980.5:2013.5);
+NumWithoutDuplicates=hist(DateDiagnosisAll(IncludeIndex), 1980.5:2013.5);
+Prop=NumWithoutDuplicates./NumWithDuplicates;
+subplot(1,3, 3);
+plot(1980:2013, Prop);
 
  
 
