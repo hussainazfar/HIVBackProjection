@@ -19,25 +19,47 @@ b=b(2:NumberOfPatients+1, :);
 %read dob, year of diagnosis
 
 DOB=b(:,strcmp(VariableName, 'dob'));
-YOB=datenum(DOB, 'dd/mm/yyyy');
+EmptyDOBs=strcmp(DOB, '');
+
+
+YOB=year(DOB, 'dd/mm/yyyy');
+
+
+
 DateHIV=b(:,strcmp(VariableName, 'datehiv'));
+
+SampleYearHIV=YearHIV;
+SampleYearHIV(EmptyDOBs)=[];
+SampleYOB=YOB;
+SampleYOB(EmptyDOBs)=[];
+
 % for each person
-for i=1:NumberOfPatients
-    % if a person has a NaN entry for their DOB
-    if (isnan(DOB{i})) %this is extremely hacky 
-        disp(['Replacing record ' num2str(i)]);
-        % find records with the same year and with an actual DOB
-        [NoOfSamples, ~]=size(aaaaa);
-        if NoOfSamples==0
-            %choose a year at random from  the whole data set
-        else
-        
-            % select at random a year of birth
-            % create a random date
-            % set it to the empty record
-        end
+ithEmpty=0;
+for Index=1:EmptyDOBs
+    ithEmpty=ithEmpty+1;
+    
+    disp(['Replacing record ' num2str(ithEmpty)]);
+    % find records with the same year and with an actual DOB
+    
+    YOBsDiagThisYear=SampleYOB(SampleYearHIV==
+    [NoOfSamples, ~]=size(YOBsDiagThisYear);
+    if NoOfSamples==0
+        %choose a year at random from  the whole data set
+        EmptyYOB(ithEmpty)=randsample(SampleYOB, 1);
+    else
+        EmptyYOB(ithEmpty)=randsample(YOBsDiagThisYear, 1);
     end
+    
+    % create a random date in that year
+    
+    % set it to the empty record
+    
+
 end
+
+NewDOB=DOB;
+NewDOB(EmptyDOBs)=
+
 
 
 % Save file to excel
