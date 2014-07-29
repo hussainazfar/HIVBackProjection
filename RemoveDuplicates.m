@@ -30,7 +30,6 @@ for SexUnderAnalysis=1:2
             if Patient(i).YearBirth==ThisBirthYear && Patient(i).Sex==SexUnderAnalysis
                 IndexInMain=[IndexInMain i];
                 DOB=[DOB Patient(i).DOB];
-                
             end
         end
         

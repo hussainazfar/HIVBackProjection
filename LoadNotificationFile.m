@@ -11,7 +11,7 @@ disp('Openning the Excel file');
 VariableName=c(1, :);
 LineDataMatrix.VariableNames=VariableName;
 %Determine the number of people in the data file
-[NumberOfPatients, ~]=size(a);
+[NumberOfPatients, ~]=size(c);
 NumberOfPatients=NumberOfPatients-1;
 LineDataMatrix.NumberOfPatients=NumberOfPatients;
 LocationDataMatrix.NumberOfPatients=NumberOfPatients;
