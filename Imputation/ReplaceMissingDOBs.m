@@ -19,45 +19,63 @@ b=b(2:NumberOfPatients+1, :);
 %read dob, year of diagnosis
 
 DOB=b(:,strcmp(VariableName, 'dob'));
+% Determine which records don't have DOB data
 EmptyDOBLogicalIndex=strcmp(DOB, '');
 EmptyDOBsIndex=1:NumberOfPatients;
 EmptyDOBsIndex=EmptyDOBsIndex(EmptyDOBLogicalIndex);
 
-YOB=year(DOB, 'dd/mm/yyyy');
+
 
 DateHIV=b(:,strcmp(VariableName, 'datehiv'));
+YearHIV=year(DateHIV, 'dd/mm/yyyy');
+
+
 
 SampleYearHIV=YearHIV;
-SampleYearHIV(~EmptyDOBLogicalIndex)=[];
-SampleYOB=YOB;
-SampleYOB(~EmptyDOBLogicalIndex)=[];
+SampleYearHIV(EmptyDOBLogicalIndex)=[];%Remove elements with empty data
+SampleDOB=DOB;
+SampleDOB(EmptyDOBLogicalIndex)=[];%Remove elements with empty data
 
-% for each person
+SampleYOB=year(SampleDOB, 'dd/mm/yyyy');
+
+
+EmptyDOBStrings={};
 ithEmpty=0;
-for Index=1:EmptyDOBsIndex
+for Index=1:EmptyDOBsIndex %for all people without a DOB
     ithEmpty=ithEmpty+1;
     
     disp(['Replacing record ' num2str(ithEmpty)]);
     % find records with the same year and with an actual DOB
     
-    YOBsDiagThisYear=SampleYOB(SampleYearHIV==ithEmptyYOB)
+    YOBsDiagThisYear=SampleYOB(SampleYearHIV==ithEmptyYOB);
     [NoOfSamples, ~]=size(YOBsDiagThisYear);
     if NoOfSamples==0
         %choose a year at random from  the whole data set
-        EmptyYOB(ithEmpty)=randsample(SampleYOB, 1);
+        EmptyYOB=randsample(SampleYOB, 1);
     else
-        EmptyYOB(ithEmpty)=randsample(YOBsDiagThisYear, 1);
+        EmptyYOB=randsample(YOBsDiagThisYear, 1);
     end
     
     % create a random date in that year
+    DateNumber = datenum(EmptyYOB,1,1);
+    
+    if (mod(EmptyYOB, 4)==0)
+        RandDays=floor(366*rand);
+    else
+        RandDays=floor(365*rand);
+    end
+    
+    DateNumber=DateNumber+RandDays;
+    
+    DateString = datestr(DateNumber, 'dd/mm/yyyy');
     
     % set it to the empty record
-    
+    EmptyDOBStrings(ithEmpty)=DateString;
 
 end
 
-NewDOB=DOB;
-NewDOB(EmptyDOBs)=
+NewDOB=DOB;%copy in the original DOB strings
+NewDOB(EmptyDOBsIndex)=EmptyDOBStrings;
 
 
 
