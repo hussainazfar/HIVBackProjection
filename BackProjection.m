@@ -54,6 +54,9 @@ PreviouslyDiagnosedOverseasPatient=Patient(OverseasDiagID);
 Patient(OverseasDiagID)=[];
 toc(PatientSplitTimer)
 
+%% Remove records to adjust for duplicate diagnoses
+[Patient, DuplicatePatient]=RemoveDuplicates(Patient);
+
 
 %% Sort Patients into those who have an infection known to be in the last 12 months, and those who have not. 
 if ConsiderRecentInfection==true
