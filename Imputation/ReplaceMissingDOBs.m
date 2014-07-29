@@ -41,13 +41,15 @@ SampleYOB=year(SampleDOB, 'dd/mm/yyyy');
 
 EmptyDOBStrings={};
 ithEmpty=0;
-for Index=1:EmptyDOBsIndex %for all people without a DOB
+for Index=EmptyDOBsIndex %for all people without a DOB
     ithEmpty=ithEmpty+1;
     
-    disp(['Replacing record ' num2str(ithEmpty)]);
+    ithEmptyYearOfDiagnosis=YearHIV(Index);
+    
+    disp(['Replacing record ' num2str(Index) ' with year of diagnosis ' num2str(ithEmptyYearOfDiagnosis)]);
     % find records with the same year and with an actual DOB
     
-    YOBsDiagThisYear=SampleYOB(SampleYearHIV==ithEmptyYOB);
+    YOBsDiagThisYear=SampleYOB(SampleYearHIV==ithEmptyYearOfDiagnosis);
     [NoOfSamples, ~]=size(YOBsDiagThisYear);
     if NoOfSamples==0
         %choose a year at random from  the whole data set
@@ -70,7 +72,7 @@ for Index=1:EmptyDOBsIndex %for all people without a DOB
     DateString = datestr(DateNumber, 'dd/mm/yyyy');
     
     % set it to the empty record
-    EmptyDOBStrings(ithEmpty)=DateString;
+    EmptyDOBStrings{ithEmpty}=DateString;
 
 end
 
