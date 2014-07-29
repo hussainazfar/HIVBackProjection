@@ -25,14 +25,12 @@ EmptyDOBsIndex=EmptyDOBsIndex(EmptyDOBLogicalIndex);
 
 YOB=year(DOB, 'dd/mm/yyyy');
 
-
-
 DateHIV=b(:,strcmp(VariableName, 'datehiv'));
 
 SampleYearHIV=YearHIV;
-SampleYearHIV(EmptyDOBsIndex)=[];
+SampleYearHIV(~EmptyDOBLogicalIndex)=[];
 SampleYOB=YOB;
-SampleYOB(EmptyDOBsIndex)=[];
+SampleYOB(~EmptyDOBLogicalIndex)=[];
 
 % for each person
 ithEmpty=0;
@@ -42,7 +40,7 @@ for Index=1:EmptyDOBsIndex
     disp(['Replacing record ' num2str(ithEmpty)]);
     % find records with the same year and with an actual DOB
     
-    YOBsDiagThisYear=SampleYOB(SampleYearHIV==
+    YOBsDiagThisYear=SampleYOB(SampleYearHIV==ithEmptyYOB)
     [NoOfSamples, ~]=size(YOBsDiagThisYear);
     if NoOfSamples==0
         %choose a year at random from  the whole data set
