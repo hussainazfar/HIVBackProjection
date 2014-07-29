@@ -1,5 +1,5 @@
 PROC IMPORT OUT= WORK.imputation
-            DATAFILE= "C:\Users\jjansson\Documents\GitHub\HIVBackProjection\Imputation\Data\notifications2014exposure.xls" 
+            DATAFILE= "C:\Users\jjansson\Documents\GitHub\HIVBackProjection\Imputation\Data\notifications2014-3-exposureDOBreplaced.xls" 
             DBMS=EXCEL REPLACE;
      SHEET="Sheet1"; 
      GETNAMES=YES;

@@ -1,7 +1,7 @@
 clear;
 
 %open file
-FileName='Data/notifications2014exposure.xls';
+FileName='Data/notifications2014-2-exposure.xls';
 SheetName='Sheet1';
 [a, b, c]=xlsread(FileName,  SheetName);%Approx 2.3 seconds
 
@@ -79,6 +79,7 @@ end
 NewDOB=DOB;%copy in the original DOB strings
 NewDOB(EmptyDOBsIndex)=EmptyDOBStrings;
 
+xlswrite('Data\ReplacementDOBColumn.xls', NewDOB);
 
 
 % Save file to excel
