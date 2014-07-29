@@ -8,9 +8,9 @@ StepSize=0.1;
 Sx.StepSize=StepSize;
 
 %% Data settings
-YearOfDiagnosedDataEnd=2013;% for data that doesn't go beyond 2013
+YearOfDiagnosedDataEnd=2014;% for data that doesn't go beyond 2014
 CD4BackProjectionYears=[1965.0 YearOfDiagnosedDataEnd-StepSize];
-CD4BackProjectionYearsWhole=[1965 YearOfDiagnosedDataEnd];
+CD4BackProjectionYearsWhole=[1965 YearOfDiagnosedDataEnd-1];
 
 ConsiderRecentInfection=true;
 
@@ -29,8 +29,8 @@ UseGeneticAlgorithmOptimisation=true;
 
 
 
-NumberOfSamples=500;%Used in the old optmisation algorithm
-Sx.NumberOfSamples=NumberOfSamples;
+% NumberOfSamples=500;%Used in the old optmisation algorithm
+% Sx.NumberOfSamples=NumberOfSamples;
 RangeOfCD4Averages=[(YearOfDiagnosedDataEnd-5) YearOfDiagnosedDataEnd];%YearOfDiagnosedDataEnd not inclusive
 RangeOfCD4AveragesForForwardProjection=[(YearOfDiagnosedDataEnd-5) YearOfDiagnosedDataEnd];
 

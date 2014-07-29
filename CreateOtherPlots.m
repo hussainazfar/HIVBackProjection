@@ -194,3 +194,9 @@ xlabel({'Median CD4 count (cells/\muL)'},'fontsize', 22);
 
 
     print('-dpng ','-r300','ResultsPlots/Appendix Figure 3 Stochasticity of the CD4 Count.png');%(using fit times only)
+    
+    
+%% Outputting the total size of the duplicates
+[~, NumOfPatientInSim]=size(Patient);
+[~, NumberOfDuplicates]=size(DuplicatePatient);
+disp(['There were ' str2num(NumberOfDuplicates) ' duplicates and ' str2num(NumOfPatientInSim) ' records included in the final simulation.']);

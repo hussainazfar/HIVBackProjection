@@ -266,7 +266,7 @@ InfectionTimeMatrix(:, NoPatientInRange+1:NumberOfPatients)=[];
 timevalue=toc;
 
 
-HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)-StepSize));
+HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
 
 for SimNumber=1:NumberOfSamples
     disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NumberOfSamples)]);
@@ -308,7 +308,7 @@ for SimNumber=1:NumberOfSamples
                         CountSamples=CountSamples+1;
                         
                         NewTimeToAdd=RandomisedExpectedTimesVector(CountSamples);
-                        TimeToFind=(CD4BackProjectionYearsWhole(2)-YearStep);
+                        TimeToFind=(CD4BackProjectionYearsWhole(2)+1-YearStep);
 
                         if NewTimeToAdd<TimeToFind+StepSize/2%The StepSize/2 is because of an error being created by the random addition of small amounts to the expected times vector
                             NumberFoundDiagnosed=NumberFoundDiagnosed+1;
@@ -463,7 +463,7 @@ AllPatients=[Patient PreviouslyDiagnosedOverseasPatient];
 % use http://www.mathworks.com.au/help/matlab/ref/save.html#inputarg_version
 % v7.3 to save files above 2GB
 YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);
-HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)-StepSize));
+HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
 disp('In the following section, data is to be saved to put into a file for reuse later');
 BackProjectedResults.DistributionDiagnosedInfections=DistributionDiagnosedInfections;
 BackProjectedResults.DistributionUndiagnosedInfections=DistributionUndiagnosedInfections;
