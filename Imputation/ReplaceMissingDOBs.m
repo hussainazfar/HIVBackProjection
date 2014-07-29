@@ -19,8 +19,9 @@ b=b(2:NumberOfPatients+1, :);
 %read dob, year of diagnosis
 
 DOB=b(:,strcmp(VariableName, 'dob'));
-EmptyDOBs=strcmp(DOB, '');
-
+EmptyDOBLogicalIndex=strcmp(DOB, '');
+EmptyDOBsIndex=1:NumberOfPatients;
+EmptyDOBsIndex=EmptyDOBsIndex(EmptyDOBLogicalIndex);
 
 YOB=year(DOB, 'dd/mm/yyyy');
 
@@ -29,13 +30,13 @@ YOB=year(DOB, 'dd/mm/yyyy');
 DateHIV=b(:,strcmp(VariableName, 'datehiv'));
 
 SampleYearHIV=YearHIV;
-SampleYearHIV(EmptyDOBs)=[];
+SampleYearHIV(EmptyDOBsIndex)=[];
 SampleYOB=YOB;
-SampleYOB(EmptyDOBs)=[];
+SampleYOB(EmptyDOBsIndex)=[];
 
 % for each person
 ithEmpty=0;
-for Index=1:EmptyDOBs
+for Index=1:EmptyDOBsIndex
     ithEmpty=ithEmpty+1;
     
     disp(['Replacing record ' num2str(ithEmpty)]);
