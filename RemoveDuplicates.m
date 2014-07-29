@@ -99,8 +99,16 @@ PatientsRemoved=Patient(Duplicates);
 TotalDiagnoses=hist(DateDiagnosisAll, 1980.5:2013.5);
 NumDuplicates=hist(DateDiagnosisAll(Duplicates), 1980.5:2013.5);
 Prop=NumDuplicates./TotalDiagnoses;
-subplot(1,3, 3);
+
+clf;
 bar(1980:2013, Prop*100);
-
- 
-
+xlabel('Year','fontsize', 22);
+ylabel('Estimated duplicate diagnoses (%)','fontsize', 22);
+    set(gca,'Color',[1.0 1.0 1.0]);
+    set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+    set(gca, 'fontsize', 18)
+    box off;
+    
+    xlim([1980 2014])
+    
+    print('-dpng ','-r300','ResultsPlots/Appendix figure duplicates.png')
