@@ -18,11 +18,11 @@ end
 
 for SexUnderAnalysis=1:2
     Sexindex=SexUnderAnalysis==SexAll;
-    MinBirthYear=min(YearBirthAll(Sexindex));
-    MaxBirthYear=max(YearBirthAll(Sexindex));
 
+    UniqueBirthYears=unique(YearBirthAll(Sexindex));%Used to avoid years in which there are no people born in that year which may cause problems later in the codes
+    
     %for each year in the data
-    for ThisBirthYear=MinBirthYear:MaxBirthYear
+    for ThisBirthYear=UniqueBirthYears
         IndexInMain=[];
         DOB={};
         % Select patients with birthdates in the year
@@ -54,6 +54,14 @@ for SexUnderAnalysis=1:2
             
             
             [~, MinIndex]=min(DateDiagnosisAll(IndicesOnThisDay));
+            
+            IndexInMain
+            SubIndex
+            IndicesOnThisDay
+            MinIndex
+            ThisDate
+            UniqueDateVector
+            
             
             IncludeIndex(MinIndex)=1;
             %remove this index from the dates that might be duplicates
