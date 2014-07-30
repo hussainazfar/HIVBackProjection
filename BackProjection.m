@@ -108,7 +108,7 @@ BackProjectStartSingleYearAnalysis=1984;
 
 [~, NumberInPatientCurrently]=size(Patient);
 YearIndex=0;
-for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
+for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     YearIndex=YearIndex+1;
     disp(Year)
     % For indivudals diagnosed prior to 1985, process as a group (as we have insufficient data on these individuals anyway)
@@ -341,7 +341,7 @@ for SimNumber=1:NumberOfSamples
     end
     
     %State the histogram year centres
-    YearCentres=(CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1))+0.5;
+    YearCentres=(CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)))+0.5;
     %Find the infections that have already been diagnosed
     DistributionForThisSimulationDiagnosedInfections=hist(DateMatrix(SimNumber, :), YearCentres);
    
@@ -354,7 +354,7 @@ end
 SizeOfDiagnosisVector=ceil((CD4BackProjectionYears(2)-CD4BackProjectionYears(1))/StepSize);
 
 Diagnoses=zeros(1, SizeOfDiagnosisVector);
-DiagnosesByYear=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)));
+DiagnosesByYear=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
 
 [~, NumberOfPatients]=size(Patient);
 

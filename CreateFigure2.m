@@ -6,7 +6,7 @@ CD4ForOptimisation=-ones(size(Patient));
 Count=0;
 for P=Patient
     Count=Count+1;
-    if (P.DateOfDiagnosisContinuous>=YearOfDiagnosedDataEnd && P.DateOfDiagnosisContinuous<2013)
+    if (P.DateOfDiagnosisContinuous>=YearOfDiagnosedDataEnd-5 && P.DateOfDiagnosisContinuous<YearOfDiagnosedDataEnd)
         CD4ForOptimisation(Count)=P.CD4CountAtDiagnosis;
     end
 end
@@ -20,6 +20,7 @@ Ax.ConsiderRecentInfection=0;
 disp( 'Starting parallel Matlab...');
 matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
 
+NumberOfTimeSamples=100;
 [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Ax, NumberOfTimeSamples, RandomNumberStream);
 matlabpool close;
 TimeDitributionToSample=reshape(IdealPopTimesStore, 1, []);
