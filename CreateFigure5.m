@@ -91,7 +91,7 @@ clf;%clear the current figure ready for plotting
     
 %% Output paper sentence
 disp('Figure 5b')
-[~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));
+[~, YearIndex]=min(abs(YearVectorLabel-CD4BackProjectionYearsWhole(2)));
 StringFinalYearTime=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
 disp([' The median time between infection and diagnosis for people diagnosed in the last year of data was estimated at ' StringFinalYearTime ' years.']);
 disp(['Mean time between infection and diagnosis in the final year of data was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);

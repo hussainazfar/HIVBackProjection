@@ -431,7 +431,7 @@ end
 %For all of the years
 for i=1:NumberOfPatients
     YearIndex=0;
-    for Year=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1)
+    for Year=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2)
         YearIndex=YearIndex+1;
         if Patient(i).DateOfDiagnosisContinuous>= Year && Patient(i).DateOfDiagnosisContinuous< Year+1
             TimeSinceInfection(YearIndex).v((i-1)*NumSims+1:i*NumSims)=Patient(i).TimeFromInfectionToDiagnosis;
