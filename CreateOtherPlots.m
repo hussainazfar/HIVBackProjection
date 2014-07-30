@@ -33,7 +33,7 @@ print('-dpng ','-r300','ResultsPlots/Appendix Figure 1 CD4AtDiagnosisComparison2
 
 %% Output the same figure by tenths of a year
 clf;%clear the current figure ready for plotting
-    PreciseYearVectorLabel=CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)-StepSize);
+    PreciseYearVectorLabel=CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize);
     
     %finding the uncertainty in the 0.1 year intervals
     %find the mean and the 95% confidence interval
@@ -84,7 +84,7 @@ clf;%clear the current figure ready for plotting
     
     %% Output the forward projected estimates
  clf;%clear the current figure ready for plotting
-    YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);
+    YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));
     
     %find the mean and the 95% confidence interval
     UCI=prctile(DistributionUndiagnosedInfections, 97.5, 1);

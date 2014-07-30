@@ -5,7 +5,7 @@
 %% Output undiagnosed testing probabilities
     
     clf;%clear the current figure ready for plotting
-    YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);
+    YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));
     
     %find the mean and the 95% confidence interval
     UCI=prctile(YearlyEffectiveTestingRate, 97.5, 1);
@@ -64,7 +64,7 @@ for Year=TimeSinceInfectionYearIndex
 end
 
 clf;%clear the current figure ready for plotting
-    YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);  
+    YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));  
 
     PlotIndex=TimeSinceInfectionYearIndex>StartYearForTimeUntilDiagnosisPlot-0.5;
     

@@ -332,7 +332,7 @@ for SimNumber=1:NumberOfSamples
     YearIndex=0;
     StepIndex=0;
     DistributionForThisSimulationUndiagnosedInfections=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)));
-    for Year=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1)
+    for Year=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2)
         YearIndex=YearIndex+1;
         for TenSteps=1:10
             StepIndex=StepIndex+1;
@@ -341,7 +341,7 @@ for SimNumber=1:NumberOfSamples
     end
     
     %State the histogram year centres
-    YearCentres=(CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)))+0.5;
+    YearCentres=(CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2))+0.5;
     %Find the infections that have already been diagnosed
     DistributionForThisSimulationDiagnosedInfections=hist(DateMatrix(SimNumber, :), YearCentres);
    

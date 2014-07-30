@@ -1,7 +1,7 @@
 %% Output total undiagnosed with time
     
 clf;%clear the current figure ready for plotting
-YearVectorLabel=CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)-StepSize);
+YearVectorLabel=CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize);
 
 %find the median and the 95% confidence interval
 UCI=prctile(TotalUndiagnosedByTime, 97.5, 1);

@@ -1,6 +1,6 @@
 %Pre-allocating memory
 YearIndex=0;
-TimeSinceInfectionYearIndex=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);
+TimeSinceInfectionYearIndex=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2);
 for Year=TimeSinceInfectionYearIndex
     YearIndex=YearIndex+1;
     for SimNumber=1:NumSims

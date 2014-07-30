@@ -44,7 +44,7 @@ disp(['the number of infections that are placed in 2013 is ' InfectionsString]);
 
 %% Figure 3b
 
-YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);
+YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));
 
 %add the two variables together to get a final result
 DistributionTotal=DistributionDiagnosedInfections+DistributionUndiagnosedInfections;
