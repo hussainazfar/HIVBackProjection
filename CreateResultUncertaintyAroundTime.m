@@ -53,7 +53,8 @@ hold on;
 MeanHandle=CreateUncertaintyPlot(TimeSinceInfectionYearIndex-0.1, TimeSinceInfectionMeanMean, TimeSinceInfectionMeanUCI, TimeSinceInfectionMeanLCI, 'r');
 hold on;
 MedianHandle=CreateUncertaintyPlot(TimeSinceInfectionYearIndex+0.1, TimeSinceInfectionMedianMean, TimeSinceInfectionMedianUCI, TimeSinceInfectionMedianLCI, 'b');
-xlim([1982.5 2013])
+xlim([1982.5 CD4BackProjectionYearsWhole(2)+1])
+ylim([0 15])
 xlabel('Year of diagnosis','fontsize', 22);
 ylabel({'Time between infection and diagnosis', '(95% uncertainty bound)'},'fontsize', 22);
 set(gca,'YTick',0:1:15)
