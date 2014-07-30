@@ -88,7 +88,7 @@ disp(['The healthy CD4 count distribution had an interquartile range of (' num2s
 
 
 
-
+%% Create uncertainty in time between infection and diagnosis
 
 PopulationSizeToSimulate=200000;%makesure there are at least 1000 samples per point
 Median500=[];
@@ -147,3 +147,32 @@ disp(['The time it takes for the median CD4 count to reach 500 is '  num2str(Med
 disp(['The time it takes for the median CD4 count to reach 350 is '  num2str(MedianMedian350) '(' num2str(LCIMedian350) '-' num2str(UCIMedian350) ') years.'])
 disp(['The time it takes for the median CD4 count to reach 200 is '  num2str(MedianMedian200) '(' num2str(LCIMedian200) '-' num2str(UCIMedian200) ') years.'])
 
+MedianCD4WithTime=CurrentMedianStore(:, 10:10:100);%select yearly data
+MedianCD4WithTimeMedian=median(MedianCD4WithTime,1);
+MedianCD4WithTimeMedianLCI=prctile(MedianCD4WithTime, 2.5,1);
+MedianCD4WithTimeMedianUCI=prctile(MedianCD4WithTime, 97.5,1);
+TimeForPlot=1:10;
+clf;
+CreateUncertaintyPlot(TimeForPlot, MedianCD4WithTimeMedian', MedianCD4WithTimeMedianUCI', MedianCD4WithTimeMedianLCI', 'r');
+xlabel('Time since infection (years)','fontsize', 22);
+ylabel({'Median CD4 count', '(95% uncertainty bound of the median)'},'fontsize', 22);
+set(gca,'XTick', 1:10);
+set(gca,'YTick', 0:100:800);
+xlim([0 11]);
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+box off;
+print('-dpng ','-r300','ResultsPlots/Appendix uncertainty of median CD4 between simulations with time.png');
+
+clf;
+plot(0.1:0.5:10.1, CurrentMedianStore(1:10, 1:5:101)')
+xlabel('Time since infection (years)','fontsize', 22);
+ylabel({'Median CD4 count'},'fontsize', 22);
+set(gca,'XTick', 1:10);
+set(gca,'YTick', 0:100:800);
+xlim([0 11]);
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+print('-dpng ','-r300','ResultsPlots/Otehr Individual simulations of median CD4.png');
