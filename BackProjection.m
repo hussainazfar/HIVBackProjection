@@ -331,7 +331,7 @@ for SimNumber=1:NumberOfSamples
     %Sum up the results for the undiagnosed infections into year blocks
     YearIndex=0;
     StepIndex=0;
-    DistributionForThisSimulationUndiagnosedInfections=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)));
+    DistributionForThisSimulationUndiagnosedInfections=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
     for Year=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2)
         YearIndex=YearIndex+1;
         for TenSteps=1:10
