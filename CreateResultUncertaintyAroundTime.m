@@ -8,34 +8,9 @@ for Year=TimeSinceInfectionYearIndex
     end
 end
 
-% for i=1:NumberOfPatients
-%     if mod(i, 1000)==0
-%         disp(i)
-%     end
-%     YearIndex=0;
-%     for Year=TimeSinceInfectionYearIndex
-%         YearIndex=YearIndex+1;
-%         if Patient(i).DateOfDiagnosisContinuous>= Year && Patient(i).DateOfDiagnosisContinuous< Year+1
-%             for SimNumber=1:NumSims
-%                 TimeSinceInfectionMatrix(YearIndex).Sim(SimNumber).Time(i)=Patient(i).TimeFromInfectionToDiagnosis(SimNumber);
-%             end
-%         end
-%     end
-% end
 
 for i=1:NumberOfPatients
-    if mod(i, 1000)==0
-        disp(i)
-    end
-%     YearIndex=0;
-%     for Year=TimeSinceInfectionYearIndex
-%         YearIndex=YearIndex+1;
-%         if Patient(i).DateOfDiagnosisContinuous>= Year && Patient(i).DateOfDiagnosisContinuous< Year+1
-%             for SimNumber=1:NumSims
-%                 TimeSinceInfectionMatrix(YearIndex).Sim(SimNumber).Time(i)=Patient(i).TimeFromInfectionToDiagnosis(SimNumber);
-%             end
-%         end
-%     end
+
     
     YearIndex=Patient(i).DateOfDiagnosisContinuous>= TimeSinceInfectionYearIndex & Patient(i).DateOfDiagnosisContinuous< TimeSinceInfectionYearIndex+1;
     for SimNumber=1:NumSims
@@ -88,15 +63,6 @@ set(gca, 'fontsize', 18)
 h_legend=legend([ MeanHandle MedianHandle], {'Mean', 'Median'} ,  'Location','NorthEast');
 
 
-% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanMean, 'b-');
-% hold on;
-% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanLCI, 'b--');
-% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMeanUCI, 'b--');
-% 
-% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianMean, 'r-');
-% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianLCI, 'r--');
-% plot(TimeSinceInfectionYearIndex, TimeSinceInfectionMedianUCI, 'r--');
-% hold off;
 
 print('-dpng ','-r300','ResultsPlots/Appendix Uncertainty in time until diagnosis.png')
 

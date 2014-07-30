@@ -199,4 +199,4 @@ xlabel({'Median CD4 count (cells/\muL)'},'fontsize', 22);
 %% Outputting the total size of the duplicates
 [~, NumOfPatientInSim]=size(Patient);
 [~, NumberOfDuplicates]=size(DuplicatePatient);
-disp(['There were ' str2num(NumberOfDuplicates) ' duplicates and ' str2num(NumOfPatientInSim) ' records included in the final simulation.']);
+disp(['There were ' num2str(NumberOfDuplicates) ' duplicates and ' num2str(NumOfPatientInSim) ' records included in the final simulation.']);

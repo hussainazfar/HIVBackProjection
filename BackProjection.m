@@ -423,7 +423,7 @@ end
 %Set all year times to zero 
 YearIndex=0;
 TimeSinceInfection=[];
-TimeSinceInfectionYearIndex=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);
+TimeSinceInfectionYearIndex=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2);
 for Year=TimeSinceInfectionYearIndex
     YearIndex=YearIndex+1;
     TimeSinceInfection(YearIndex).v=-ones(1, NumberOfPatients*NumSims);
