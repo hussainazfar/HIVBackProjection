@@ -175,4 +175,4 @@ xlim([0 11]);
 set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
-print('-dpng ','-r300','ResultsPlots/Otehr Individual simulations of median CD4.png');
+print('-dpng ','-r300','ResultsPlots/Other Individual simulations of median CD4.png');
