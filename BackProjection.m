@@ -124,10 +124,9 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
         RecentDataTotal=sum(MinYear<=RecentDiagnosisDates & RecentDiagnosisDates<MaxYear);
         NoRecentDataTotal=sum(MinYear<=NotRecentDiagnosisDates & NotRecentDiagnosisDates<MaxYear);
         Px.PropWithRecentDiagDataPresentThisYear=RecentDataTotal/(RecentDataTotal+NoRecentDataTotal);
-        
     end
     
-    CD4ForOptimisation=-1*ones(1, NumberInPatientCurrently);
+    CD4ForOptimisation=-1*ones(1, NumberInPatientCurrently);%to indicate empty fields
     % Select individuals that are in the year group
     PatientRef=-1*ones(1, NumberInPatientCurrently);
     CountRef=0;
