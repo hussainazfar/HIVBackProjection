@@ -1,4 +1,4 @@
-function [OptimisedParameters]=StochasticOptimise(FunctionPointer, ParameterBounds,  InitalValues, ExpectedOutput, OptimisationSettings, KnownParametersMean, KnownParametersSD, KnownParametersMinMax, NoUnknownParameters, )
+function [OptimisedParameters]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, OptimisationSettings, ExpectedOutput)
 
 % FunctionPointer: FunctionPointer = @functionname
 
@@ -25,6 +25,12 @@ end
 if Parallelise==true
     matlabpool(getenv('NUMBER_OF_PROCESSORS'));%this may not work in all processors
 end
+
+
+
+
+
+
 
 % The output of this function are a group of parameter sets which
 % distributed based on their probability of beating the best estimate
@@ -93,35 +99,30 @@ end
 % is knowing what to do with the singular point estimate in the model once
 % we 
 
-[NoKnownParamsToVary, ~]=size(KnownParametersMinMax);
-% We have removed this, and will allow the user to do whatever tranform they
-% feel on a normal distribution instead
-% 
-% if NoKnownParamsToVary>0
-%     KnownParametersVar=KnownParametersSD.^2;
-%     mu=log(KnownParametersMean.^2./sqrt(KnownParametersVar+KnownParametersMean.^2));
-%     sigma=sqrt(log(KnownParametersVar./(KnownParametersMean.^2)+1));
-% else
-%     KnownParametersVar=[];
-%     mu=[];
-%     sigma=[];
-% end
-
-
 
 %Optimisation parameters
-FullyExhaustiveSearch=false;
-FractionToKeep=0.1;
-%NumberOfSamplesPerRound=10^NoUnknownParameters;%used for finding singular best value
-NumberOfSamplesPerRound=4^NoUnknownParameters;%used for finding singular best value
-%NumberOfSamplesPerRound=7^NoUnknownParameters;
-%NumberOfRounds=50;%used for finding singular best value
-NumberOfSamplesBestPoint=100;
+FractionToKeep=0.5;
+NumberPerDimension=4;
+NumberOfSamplesPerRound=NumberPerDimension^NoUnknownParameters;%used for finding singular best value
 NumberOfRounds=40;%used for finding singular best value
 NoToKeep=floor(NumberOfSamplesPerRound*FractionToKeep);
 Resolution=100;%100 points per dimension. In this case 1% accuracy on the bounds of the unknown variable minmax
 
-ChosenDistance=(UnknownParametersMinMax(:, 2)-UnknownParametersMinMax(:, 1))./NumberOfSamplesPerRound.^(1./NoUnknownParameters);
+%Sims per round
+% Choose random values between the bounds
+    % 4 per dimension
+    
+    % choose the best 50%
+    % find the range between the max and min of each dimension
+    % the variable distance around each point is range/4*2
+    % Choose 2 new points per existing point, randomly spaced
+
+
+
+
+
+
+ChosenDistance=(ParameterBounds(:, 2)-ParameterBounds(:, 1))./NumberOfSamplesPerRound.^(1./NoUnknownParameters);
 ChosenDistance=ChosenDistance*4;%Double the distance (so that the mean distance of a randomly selected point r=(0,1) mean=0.5 gives the right distance and double again to make the reduction work properly)
 % DistanceReduction=0.9;
 DistanceReduction=0.8;
@@ -131,27 +132,12 @@ PlotLastStep=true;
 
 
 
-
-%initialise the multi-processor settings
-%if ~matlabpool('size'); 
-    disp('Starting parallel Matlab...');
-%     UseAutoAssignProcessors=true; 
-%     if UseAutoAssignProcessors
-%         disp('Auto assigning processors for backprojection optimisation');
-        matlabpool(getenv('NUMBER_OF_PROCESSORS'));%this may not work in all processors
-%     else
-%         disp('Hard setting processors for backprojection optimisation');
-%         matlabpool(4);%this may not work in all processors
-%     end
-%end
-
-
 %% Find the position of the very best point
 OptimisationTimer=tic;
 % Create initial unknown parameter sampling
 
 for i=1:NoUnknownParameters
-    ChosenParametersUnknown(:,i)=(UnknownParametersMinMax(i, 2)-UnknownParametersMinMax(i, 1))*rand(1, NumberOfSamplesPerRound)+UnknownParametersMinMax(i, 1);
+    ChosenParametersUnknown(:,i)=(ParameterBounds(i, 2)-UnknownParametersMinMax(i, 1))*rand(1, NumberOfSamplesPerRound)+UnknownParametersMinMax(i, 1);
 end
 for RoundCount=1:NumberOfRounds
     disp(['Starting step ' num2str(RoundCount) ' of ' num2str(NumberOfRounds) ' ' num2str(toc(OptimisationTimer)) ' seconds elapsed']);
@@ -173,15 +159,13 @@ for RoundCount=1:NumberOfRounds
         ChosenParametersKnown(:, i)=SelectionForThisParam;
     end
     
-    %Put the two sets of parameters together
-    ChosenParameters=[ChosenParametersKnown ChosenParametersUnknown];
+
     
     SimResultVector=[];
     % Run the Simulation
-    parfor SimCount=1:NumberOfSamplesPerRound
-    %for SimCount=1:NumberOfSamplesPerRound
+    for SimCount=1:NumberOfSamplesPerRound
         
-        [SimulatedOutputThisSim, OtherOutput]=Model(InitalValues, ChosenParameters(SimCount, :), SimulationSettings);
+        [SimulatedOutputThisSim, OtherOutput]=FunctionPointer(FunctionInput, ChosenParametersUnknown(SimCount, :));
         SimResultVector(SimCount, :)=SimulatedOutputThisSim;
         % Find the error from the given final results
         ErrorVector(SimCount)=  ErrorFunction(ExpectedOutput, SimulatedOutputThisSim) ;  %sum((SimulatedOutputThisSim-ExpectedOutput).^2);%Error is square error (variance)
@@ -236,9 +220,16 @@ for RoundCount=1:NumberOfRounds
 
     %% Choose a vector of values for the unknown parameters
     ChosenDistance=ChosenDistance*DistanceReduction;
+    
+    for NumberOfDimensions
+        %Find the min and max in each dimension
+        
+        /NumberPerDimension;
+        
+    end
 
-    NewPoint=0;
-    while NewPoint<NumberOfSamplesPerRound
+    NewPointCount=0;
+    while NewPointCount<NumberOfSamplesPerRound
         %Choose a good point 
         GoodIndex=randsample(NoToKeep, 1);
         %vary it
@@ -246,9 +237,9 @@ for RoundCount=1:NumberOfRounds
         TestPoint=BestUnknownParameters(GoodIndex, :)+ChosenDistance'.*(1-2*rand(1, NoUnknownParameters));
 
         if TestPoint'>=UnknownParametersMinMax(:, 1) & TestPoint'<=UnknownParametersMinMax(:, 2)      %if within bounds keep
-            NewPoint=NewPoint+1;
+            NewPointCount=NewPointCount+1;
             %Add to vector
-            ChosenParametersUnknown(NewPoint, :)=TestPoint;
+            ChosenParametersUnknown(NewPointCount, :)=TestPoint;
         end    %else do nothing
     end
 
@@ -324,265 +315,7 @@ MedianErrorOfBestPoint=median(ErrorVector);
 
 
 
-%% Run the simualtion across all possible positions in the unknown parameter ranges (going to need a lot of these)
-% The parameter selection here needs to be uniform to ensure that when a
-% point is selected, it indicates the probability of beating the 'best'
-% parameter selection
 
-
-if FullyExhaustiveSearch==false
-
-    % Run the simulation across the section of the grid with the best point
-    % Find if the number of points that were successful in that section of the
-    % grid execeded a certain level (usually 1 good simulation is enough
-    % evidence to try all of the surrounding areas. 
-
-    clear ErrorVector;
-    
-    GridResolution=10; 
-    TestsPerGridPosition=100;
-    GridElementsInEachDimension=GridResolution.*ones(1, NoUnknownParameters);
-    GridToTestNext=zeros(GridElementsInEachDimension);
-    GridAlreadyTested=zeros(GridElementsInEachDimension);
-
-    TotalGridSize=UnknownParametersMinMax(:, 2)-UnknownParametersMinMax(:, 1);
-    GridSize=TotalGridSize/GridResolution;
-    for DimCount=1:NoUnknownParameters
-        GridMin(DimCount, :)=UnknownParametersMinMax(DimCount, 1):GridSize(DimCount):UnknownParametersMinMax(DimCount, 2)-GridSize(DimCount);%Find the minimums
-        GridMax(DimCount, :)=UnknownParametersMinMax(DimCount, 1)+GridSize(DimCount):GridSize(DimCount):UnknownParametersMinMax(DimCount, 2);%Find the maximums
-    end
-
-
-    for DimCount=1:NoUnknownParameters
-        BestPointCoordInGrid(DimCount)=find(MeanOfBestPoints(DimCount)>GridMin(DimCount, :) & MeanOfBestPoints(DimCount)<=GridMax(DimCount, :));
-    end
-    
-    CellIndices=num2cell(BestPointCoordInGrid);
-    GridToTestNext(CellIndices{:})=1;
-    GridToTestNextCoord=FindXDim(GridToTestNext);
-    
-
-    
-    [NumberOfGridToTestNext, ~]=size(GridToTestNextCoord);
-    
-    OptimisedUnknownParameters=[];
-    OptimisedKnownParameters=[];
-    AllTestedUnknownParameters=[];
-    AllTestedKnownParameters=[];
-    ChosenParametersKnown =[];
-    ChosenParametersUnknown=[];
-
-    % The while loop does not loop over NumberOfGridToTestNext. Rather, it
-    % keeps looping while NumberOfGridToTestNext>0. 
-    NumberOfGridPositionsSimulated=0;
-    GridSimulationTimePointer=tic;
-
-    
-    while NumberOfGridToTestNext>0
-        
-        %Zero the GridToPossiblyTestNext, to use as a flag for the next possible simulation
-        GridToPossiblyTestNext=zeros(GridElementsInEachDimension);
-        
-        
-        %for all of the NumberOfGridToTestNext
-        %create the random points to be sample with
-        for GridCount=1:NumberOfGridToTestNext
-            NumberOfGridPositionsSimulated=NumberOfGridPositionsSimulated+1;
-            ThisGridCoord=GridToTestNextCoord(GridCount, :);
-            
-            
-            GridTime=toc(GridSimulationTimePointer);
-            disp([num2str(NumberOfGridPositionsSimulated) '; ' num2str(GridTime) ' seconds; Grid location to simulate within:']);
-            disp(ThisGridCoord);
-            
-            %Indicate that this point has already been tested
-                %Put into a form that matlab can use as indices
-                CellIndices=num2cell(ThisGridCoord);
-            GridAlreadyTested(CellIndices{:})=1;
-    
-            
-            %Create a known parameter distribution
-            [NumberofKnownParamters, ~]=size(KnownParametersMinMax);
-            ChosenParametersKnown=zeros(TestsPerGridPosition, NumberofKnownParamters);
-%             i=0;
-%             for Dummy=mu%For each of the parameters
-%                 i=i+1;
-            for i=1:NoKnownParamsToVary
-                %Create numbers at random which would fall into the distribution
-                %SelectionForThisParam=lognrnd(mu(i),sigma(i), 1, TestsPerGridPosition);%choose 1x1 matrix of these values
-                SelectionForThisParam=normrnd(KnownParametersMean(i),KnownParametersSD(i), 1, TestsPerGridPosition);%choose nx1 matrix of these values
-                
-                % Keep the parameters in the desired range
-                SelectionForThisParam(SelectionForThisParam<KnownParametersMinMax(i, 1))=KnownParametersMinMax(i, 1);
-                SelectionForThisParam(SelectionForThisParam>KnownParametersMinMax(i, 2))=KnownParametersMinMax(i, 2);
-
-                ChosenParametersKnown(:, i)= SelectionForThisParam;
-            end
-            
-            
-            %Create the unknown parameter distribution for this grid position
-            for DimCount=1:NoUnknownParameters
-                MinThisGrid(DimCount)=GridMin(DimCount, ThisGridCoord(DimCount));
-                MaxThisGrid(DimCount)=GridMax(DimCount, ThisGridCoord(DimCount));
-            end
-            
-            for SimCount=1:TestsPerGridPosition
-                ChosenParametersUnknown(SimCount, :)=MinThisGrid+(MaxThisGrid-MinThisGrid).*rand(1, NoUnknownParameters);
-            end
-            
-            if NoKnownParamsToVary>0
-                ChosenParameters=[ChosenParametersKnown ChosenParametersUnknown];
-            else
-                ChosenParameters=ChosenParametersUnknown;
-            end
-                
-            parfor SimCount=1:TestsPerGridPosition
-                
-                [OutputThisSim, OtherOutput]=Model(InitalValues, ChosenParameters(SimCount, :), SimulationSettings);
-                % Select ones that beat the median of the best point
-                % Find the error from the given final results
-                %SimResultVector(SimCount, :)=OutputThisSim;
-                ErrorVector(SimCount)=ErrorFunction(ExpectedOutput, OutputThisSim); %sum((OutputThisSim-ExpectedOutput).^2);%Error is square error (variance)
-            end
-            
-            %Find sims which beat the median error, and store
-            SuccessfulSimIndex=ErrorVector<=MedianErrorOfBestPoint;
-            OptimisedUnknownParameters=[OptimisedUnknownParameters; ChosenParametersUnknown(SuccessfulSimIndex, :)];
-            AllTestedUnknownParameters=[AllTestedUnknownParameters; ChosenParametersUnknown];
-            if NoKnownParamsToVary>0
-                OptimisedKnownParameters=[OptimisedKnownParameters; ChosenParametersKnown(SuccessfulSimIndex, :)];
-                AllTestedKnownParameters=[AllTestedKnownParameters; ChosenParametersKnown];
-            end
-            
-            
-            
-            disp(['Success rate=' num2str(sum(SuccessfulSimIndex)/TestsPerGridPosition)]);
-            
-            if PlotAllSteps==true
-                clf;
-                hold on;
-                plot(AllTestedUnknownParameters(:, 1), AllTestedUnknownParameters(:, 2), 'b.'); 
-                plot(OptimisedUnknownParameters(:, 1), OptimisedUnknownParameters(:, 2), 'r.'); %this only plots the first 2 dimensions
-
-                xlabel('Parameter 1','fontsize', 22);
-                ylabel('Parameter 2','fontsize', 22);
-                set(gca,'Color',[1.0 1.0 1.0]);
-                set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
-                set(gca, 'fontsize', 18)
-                box off;
-                xlim([0 1]);
-                ylim([0 1]);
-                print('-dpng ','-r300',['OptimisationPlots/UncertaintyGrid' num2str(NumberOfGridPositionsSimulated) '.png'])
-            end
-            
-            
-            % Find the next grid positions to inspect
-            if sum(SuccessfulSimIndex)>0 %if (there is at least one point that beat the median count)
-                VariationVec=[-1 1];
-                % for each dimension
-                for DimCount=1:NoUnknownParameters
-                    for Variation=VariationVec
-                        % determine the grid cell to move to
-                        Move=ThisGridCoord;
-                        Move(DimCount)=Move(DimCount)+Variation;
-                        
-                        %Determine if the grid cell is allowable
-                        if Move(DimCount)<=GridResolution && Move(DimCount)>0
-                            %Put into a form that matlab can use as indices
-                            CellIndices=num2cell(Move);
-                            GridToPossiblyTestNext(CellIndices{:})=1;
-                            
-                        end %else ignore that point
-                    end
-                end
-            end 
-
-        end    
-            
-        
-        %Find the next Grid points to test
-        GridToTestNext = GridToPossiblyTestNext & ~GridAlreadyTested; %Possibly test next AND NOT already tested
-        GridToTestNextCoord=FindXDim(GridToTestNext);
-        [NumberOfGridToTestNext, ~]=size(GridToTestNextCoord);
-        
-    end
-else
-
-
-
-    disp('Finding all equally likely points in the simualtion');
-
-    TotalPointsToSample=Resolution^NoUnknownParameters;
-
-    clear ErrorVector;
-    %Create a known parameter distribution
-    ChosenParametersKnown=[];
-%     i=0;
-%     for Dummy=mu%For each of the parameters
-%         i=i+1;
-    for i=1:NoKnownParamsToVary
-        %Create numbers at random which would fall into the distribution
-        %SelectionForThisParam=lognrnd(mu(i),sigma(i), 1, TotalPointsToSample);%choose 1x1 matrix of these values
-        SelectionForThisParam=normrnd(KnownParametersMean(i),KnownParametersSD(i), 1, TotalPointsToSample);%choose nx1 matrix of these values
-        
-        % Keep the parameters in the desired range
-        SelectionForThisParam(SelectionForThisParam<KnownParametersMinMax(i, 1))=KnownParametersMinMax(i, 1);
-        SelectionForThisParam(SelectionForThisParam>KnownParametersMinMax(i, 2))=KnownParametersMinMax(i, 2);
-
-        ChosenParametersKnown(:, i)= SelectionForThisParam;
-    end
-
-    % Create unknown parameter sampling
-    ChosenParametersUnknown=[];
-    for i=1:NoUnknownParameters
-        ChosenParametersUnknown(:,i)=(UnknownParametersMinMax(i, 2)-UnknownParametersMinMax(i, 1))*rand(1, TotalPointsToSample)+UnknownParametersMinMax(i, 1);
-    end
-
-    if NoKnownParamsToVary>0
-        ChosenParameters=[ChosenParametersKnown ChosenParametersUnknown];
-    else
-        ChosenParameters=[ ChosenParametersUnknown];
-    end
-    SimResultVector=[];
-    % Run the Simulation
-    ErrorVector=[];
-    FinalTimer=tic;
-    parfor SimCount=1:TotalPointsToSample
-        if mod(SimCount, 1000)==0
-            disp([num2str(SimCount) ' of ' num2str(TotalPointsToSample) ' time: ' num2str(toc(FinalTimer))]);
-        end
-
-        [SimulatedOutputThisSim, OtherOutput]=Model(InitalValues, ChosenParameters(SimCount, :), SimulationSettings);
-        % Find the error from the given final results
-        SimResultVector(SimCount, :)=SimulatedOutputThisSim;
-        ErrorVector(SimCount)=ErrorFunction(ExpectedOutput, SimulatedOutputThisSim); % sum((SimulatedOutputThisSim-ExpectedOutput).^2);%Error is square error (variance)
-    end
-
-    LikelyPointIndex=ErrorVector<=MedianErrorOfBestPoint;
-
-    sum(LikelyPointIndex)
-
-    OptimisedUnknownParameters=ChosenParametersUnknown(LikelyPointIndex, :);
-    OptimisedKnownParameters=ChosenParametersKnown(LikelyPointIndex, :);
-end 
-
-%Plot and save the chosen results
-        clf;
-        hold on;
-        %plot(ChosenParametersUnknown(:, 1), ChosenParametersUnknown(:, 2), 'r.'); 
-        plot(OptimisedUnknownParameters(:, 1), OptimisedUnknownParameters(:, 2), 'b.'); %this only plots the first 2 dimensions
-
-        xlabel('Parameter 1','fontsize', 22);
-        ylabel('Parameter 2','fontsize', 22);
-        set(gca,'Color',[1.0 1.0 1.0]);
-        set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
-        set(gca, 'fontsize', 18)
-        box off;
-        xlim([0 1]);
-        ylim([0 1]);
-        print('-dpng ','-r300',['OptimisationPlots/DistributionOfLikelyParameterFits.png'])
-
-matlabpool close;
 
 end 
 
