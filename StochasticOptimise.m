@@ -1,4 +1,4 @@
-function [BestOptimisedParameterSet, OptimisedParametersVector]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, OptimisationSettings, ExpectedOutput)
+function [OptimisedParameters, OptimisedParametersVector]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, ExpectedOutput, OptimisationSettings)
 
 % FunctionPointer: FunctionPointer = @functionname
 
@@ -228,6 +228,9 @@ while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<
         ParameterEstimates(NewPointCount, :)=TestPoint;
     end
 end
+
+OptimisedParameters=BestParameterEstimates(1, :);
+OptimisedParametersVector=BestParameterEstimates;
 
 
 end 
