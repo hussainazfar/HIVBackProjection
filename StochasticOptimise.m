@@ -144,7 +144,7 @@ Resolution=100;%100 points per dimension. In this case 1% accuracy on the bounds
 %% Find the position of the very best point
 % Create initial unknown parameter sampling
 for i=1:NoUnknownParameters
-    ChosenParametersUnknown(:,i)=(ParameterBounds(i, 2)-ParameterBounds(i, 1))*rand(1, NumberOfSamplesPerRound)+ParameterBounds(i, 1);
+    ParameterEstimates(:,i)=(ParameterBounds(i, 2)-ParameterBounds(i, 1))*rand(1, NumberOfSamplesPerRound)+ParameterBounds(i, 1);
 end
 
 MeanDistanceBetweenPoints=zeros(1, NumberOfDimensions);
@@ -158,7 +158,7 @@ while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<
 
     % Run the Simulation
     for SimCount=1:NumberOfSamplesPerRound
-        [SimulatedOutputThisSim, OtherOutput]=FunctionPointer(FunctionInput, ChosenParametersUnknown(SimCount, :));
+        [SimulatedOutputThisSim, OtherOutput]=FunctionPointer(FunctionInput, ParameterEstimates(SimCount, :));
         % Find the error from the given final results
         if CustomErrorFunction==true
             ErrorVector(SimCount)=  ErrorFunction(ExpectedOutput, SimulatedOutputThisSim) ;  
@@ -173,15 +173,15 @@ while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<
     
     %Select the ones with best errors
     BestIndex=ErrorIndex(1:NumberToKeep);
-    BestUnknownParameters=ChosenParametersUnknown(BestIndex, :);
+    BestParameterEstimates=ParameterEstimates(BestIndex, :);
 
 
     %% Plot and save the best results
     if PlotParameters==true 
         clf;
         hold on;
-        plot(ChosenParametersUnknown(:, 1), ChosenParametersUnknown(:, 2), 'r.'); 
-        plot(BestUnknownParameters(:, 1), BestUnknownParameters(:, 2), 'b.'); %this only plots the first 2 dimensions
+        plot(ParameterEstimates(:, 1), ParameterEstimates(:, 2), 'r.'); 
+        plot(BestParameterEstimates(:, 1), BestParameterEstimates(:, 2), 'b.'); %this only plots the first 2 dimensions
 
         xlabel('Parameter 1','fontsize', 22);
         ylabel('Parameter 2','fontsize', 22);
@@ -204,8 +204,8 @@ while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<
     % 
     for Dim=1:NumberOfDimensions
         %Find the min and max in each dimension
-        MinVal=min(BestUnknownParameters(:, Dim));
-        MaxVal=max(BestUnknownParameters(:, Dim));
+        MinVal=min(BestParameterEstimates(:, Dim));
+        MaxVal=max(BestParameterEstimates(:, Dim));
         MeanDistanceBetweenPoints(Dim)=(MaxVal-MinVal)/(NumberPerDimension-1);
     end
 
@@ -218,14 +218,14 @@ while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<
         for Dim=1:NumberOfDimensions
             PointInRange=false;
             while PointInRange==false
-                TestPoint(Dim)=BestUnknownParameters(GoodIndex, :)+ChosenDistance'.*(1-2*rand(1, NumberOfDimensions));
+                TestPoint(Dim)=BestParameterEstimates(GoodIndex, Dim)+MeanDistanceBetweenPoints(Dim).*(2-4*rand(1, NumberOfDimensions)); %double the mean distance to allow for expansion
                 if TestPoint(Dim)>=ParameterBounds(:, 1) && TestPoint(Dim)<=ParameterBounds(:, 2)      %if within bounds keep
                     PointInRange=true;
                 end 
             end
         end
         %Add to vector
-        ChosenParametersUnknown(NewPointCount, :)=TestPoint;
+        ParameterEstimates(NewPointCount, :)=TestPoint;
     end
 end
 
