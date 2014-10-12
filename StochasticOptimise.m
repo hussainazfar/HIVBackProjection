@@ -1,6 +1,8 @@
-function [OptimisedParameters]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, OptimisationSettings, ExpectedOutput)
+function [BestOptimisedParameterSet, OptimisedParametersVector]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, OptimisationSettings, ExpectedOutput)
 
 % FunctionPointer: FunctionPointer = @functionname
+
+% FunctionInput Other information passed to the function 
 
 % ParameterBounds - a matrix with a maximum and a minimum for each
 % parameter
@@ -8,28 +10,50 @@ function [OptimisedParameters]=StochasticOptimise(FunctionPointer, FunctionInput
 % OptimisationSettings: This determines the methods that are used by the
 % simulation, such as the error function. 
 
-MaxTime=-1;
+% OptimisationSettings.MaxTime - stops after MaxTime seconds
+% OptimisationSettings.Parallel - not yet implemented
+% OptimisationSettings.ErrorFunction - a custom error function that can be used to determine the 
+% OptimisationSettings.OutputPlotFunction - used to plot the optimised parameters
+% OptimisationSettings.PlotParameters - (true or false) 
+
+
 try
     MaxTime=OptimisationSettings.MaxTime; % in seconds, time until the optimisation stops on its own
     TimeOut=true;
 catch
+    MaxTime=-1;
     TimeOut=false;
 end
 
+% try
+%     Parallelise=OptimisationSettings.Parallel; % set to true to true to run the simulation over multiple cores
+% catch
+%     Parallelise=false;
+% end
+% if Parallelise==true
+%     matlabpool(getenv('NUMBER_OF_PROCESSORS'));%this may not work in all processors
+% end
+
+
 try
-    Parallelise=OptimisationSettings.Parallel; % set to true to true to run the simulation over multiple cores
+    ErrorFunction=OptimisationSettings.ErrorFunction; % if someone has set the error function error function should be of the form ErrorFunction(ThisOutput, ExpectedOutput)
+    CustomErrorFunction=true;
 catch
-    Parallelise=false;
+    CustomErrorFunction=false; % use simple additive error over the vector
 end
 
-if Parallelise==true
-    matlabpool(getenv('NUMBER_OF_PROCESSORS'));%this may not work in all processors
+try
+    OutputPlotFunction=OptimisationSettings.OutputPlotFunction; 
+    PlotOutput=true;
+catch
+    PlotOutput=false; 
 end
 
-
-
-
-
+try
+    PlotParameters=OptimisationSettings.PlotParameters; 
+catch
+    PlotParameters=false; 
+end
 
 
 % The output of this function are a group of parameter sets which
@@ -118,57 +142,30 @@ Resolution=100;%100 points per dimension. In this case 1% accuracy on the bounds
     % Choose 2 new points per existing point, randomly spaced
 
 
-
-
-
-
-ChosenDistance=(ParameterBounds(:, 2)-ParameterBounds(:, 1))./NumberOfSamplesPerRound.^(1./NoUnknownParameters);
-ChosenDistance=ChosenDistance*4;%Double the distance (so that the mean distance of a randomly selected point r=(0,1) mean=0.5 gives the right distance and double again to make the reduction work properly)
-% DistanceReduction=0.9;
-DistanceReduction=0.8;
-
-PlotAllSteps=true;
-PlotLastStep=true;
-
-
-
 %% Find the position of the very best point
 OptimisationTimer=tic;
 % Create initial unknown parameter sampling
 
 for i=1:NoUnknownParameters
-    ChosenParametersUnknown(:,i)=(ParameterBounds(i, 2)-UnknownParametersMinMax(i, 1))*rand(1, NumberOfSamplesPerRound)+UnknownParametersMinMax(i, 1);
+    ChosenParametersUnknown(:,i)=(ParameterBounds(i, 2)-ParameterBounds(i, 1))*rand(1, NumberOfSamplesPerRound)+ParameterBounds(i, 1);
 end
-for RoundCount=1:NumberOfRounds
-    disp(['Starting step ' num2str(RoundCount) ' of ' num2str(NumberOfRounds) ' ' num2str(toc(OptimisationTimer)) ' seconds elapsed']);
-    % Chose a vector of values for the known parameters using the mean and SD of the known parameters
-    ChosenParametersKnown=zeros(NumberOfSamplesPerRound, NoKnownParamsToVary);
-%     i=0;
-%     for Dummy=mu%For each of the parameters
-%         i=i+1;
-    for i=1:NoKnownParamsToVary
-        %Create numbers at random which would fall into the distribution
-        %SelectionForThisParam=lognrnd(mu(i),sigma(i), NumberOfSamplesPerRound, 1);%choose nx1 matrix of these values
-        SelectionForThisParam=normrnd(KnownParametersMean(i),KnownParametersSD(i), NumberOfSamplesPerRound, 1);%choose nx1 matrix of these values
-        
-        
-        % Keep the parameters in the desired range
-        SelectionForThisParam(SelectionForThisParam<KnownParametersMinMax(i, 1))=KnownParametersMinMax(i, 1);
-        SelectionForThisParam(SelectionForThisParam>KnownParametersMinMax(i, 2))=KnownParametersMinMax(i, 2);
-        
-        ChosenParametersKnown(:, i)=SelectionForThisParam;
-    end
-    
 
-    
-    SimResultVector=[];
+SimResultVector=[];
+
+RoundCount=0;
+while (RoundCount<NumberOfRounds) && (the standard deviation hasn't changed all that much) && (TimeOut==false || toc(OptimisationTimer)<MaxTime)
+	RoundCount=RoundCount+1;
+    disp(['Starting step ' num2str(RoundCount) ' of ' num2str(NumberOfRounds) ' ' num2str(toc(OptimisationTimer)) ' seconds elapsed']);
+
     % Run the Simulation
     for SimCount=1:NumberOfSamplesPerRound
-        
         [SimulatedOutputThisSim, OtherOutput]=FunctionPointer(FunctionInput, ChosenParametersUnknown(SimCount, :));
-        SimResultVector(SimCount, :)=SimulatedOutputThisSim;
         % Find the error from the given final results
-        ErrorVector(SimCount)=  ErrorFunction(ExpectedOutput, SimulatedOutputThisSim) ;  %sum((SimulatedOutputThisSim-ExpectedOutput).^2);%Error is square error (variance)
+        if CustomErrorFunction==true
+            ErrorVector(SimCount)=  ErrorFunction(ExpectedOutput, SimulatedOutputThisSim) ;  
+        else
+            ErrorVector(SimCount)=  ErrorFunction(ExpectedOutput, SimulatedOutputThisSim) ;  
+        end
     end
     
 
@@ -178,12 +175,12 @@ for RoundCount=1:NumberOfRounds
     %Select the ones with best errors
     BestIndex=ErrorIndex(1:NoToKeep);
     BestUnknownParameters=ChosenParametersUnknown(BestIndex, :);
-    BestKnownParameters=ChosenParametersKnown(BestIndex, :);
+
     
 
 
     %% Plot and save the best results
-    if PlotAllSteps==true || (PlotLastStep==true && RoundCount==NumberOfRounds)
+    if PlotParameters==true 
         clf;
         hold on;
         plot(ChosenParametersUnknown(:, 1), ChosenParametersUnknown(:, 2), 'r.'); 
@@ -198,28 +195,27 @@ for RoundCount=1:NumberOfRounds
         xlim([0 1]);
         ylim([0 1]);
         print('-dpng ','-r300',['OptimisationPlots/ParameterFit' num2str(RoundCount) '.png'])
-
-
+    end
+    if PlotOutput==true 
         %% Plot the function output
-%         clf;
-%         hold on;
-%         plot(SimResultVector(:, 1), SimResultVector(:, 2), 'r.'); 
-%         plot(ExpectedOutput( 1), ExpectedOutput( 2), 'b.'); %this only plots the first 2 dimensions
-% 
-%         xlabel('Parameter 1','fontsize', 22);
-%         ylabel('Parameter 2','fontsize', 22);
-%         set(gca,'Color',[1.0 1.0 1.0]);
-%         set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
-%         set(gca, 'fontsize', 18)
-%         box off;
-%         %xlim([0 1]);
-%         %ylim([0 1]);
-%         print('-dpng ','-r300',['OptimisationPlots/Model Results' num2str(RoundCount) '.png'])
+        clf;
+        hold on;
+        plot(SimResultVector(:, 1), SimResultVector(:, 2), 'r.'); 
+        plot(ExpectedOutput( 1), ExpectedOutput( 2), 'b.'); %this only plots the first 2 dimensions
+
+        xlabel('Parameter 1','fontsize', 22);
+        ylabel('Parameter 2','fontsize', 22);
+        set(gca,'Color',[1.0 1.0 1.0]);
+        set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+        set(gca, 'fontsize', 18)
+        box off;
+        %xlim([0 1]);
+        %ylim([0 1]);
+        print('-dpng ','-r300',['OptimisationPlots/Model Results' num2str(RoundCount) '.png'])
     end
 
 
-    %% Choose a vector of values for the unknown parameters
-    ChosenDistance=ChosenDistance*DistanceReduction;
+
     
     for NumberOfDimensions
         %Find the min and max in each dimension
@@ -243,8 +239,6 @@ for RoundCount=1:NumberOfRounds
         end    %else do nothing
     end
 
-    
-    
 end
 
 %% Run this particular point 100 times with all uncertainty to find the median error at the point. 
