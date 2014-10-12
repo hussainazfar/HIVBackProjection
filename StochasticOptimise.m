@@ -4,19 +4,18 @@ function [BestOptimisedParameterSet, OptimisedParametersVector]=StochasticOptimi
 
 % FunctionInput Other information passed to the function 
 
-% ParameterBounds - a matrix with a maximum and a minimum for each
-% parameter
+% ParameterBounds - a matrix with a maximum and a minimum for each parameter
 
-% OptimisationSettings: This determines the methods that are used by the
-% simulation, such as the error function. 
+% OptimisationSettings: This determines the methods that are used by the simulation, such as the error function. 
+    % OptimisationSettings.MaxTime - stops after MaxTime seconds
+    % OptimisationSettings.Parallel - not yet implemented
+    % OptimisationSettings.ErrorFunction - a custom error function that can be used to determine the 
+    % OptimisationSettings.OutputPlotFunction - used to plot the optimised parameters
+    % OptimisationSettings.PlotParameters - (true or false) 
 
-% OptimisationSettings.MaxTime - stops after MaxTime seconds
-% OptimisationSettings.Parallel - not yet implemented
-% OptimisationSettings.ErrorFunction - a custom error function that can be used to determine the 
-% OptimisationSettings.OutputPlotFunction - used to plot the optimised parameters
-% OptimisationSettings.PlotParameters - (true or false) 
+% ExpectedOutput - the values to compare against to check for the error
 
-
+%% Import all OptimisationSettings that exist
 try
     MaxTime=OptimisationSettings.MaxTime; % in seconds, time until the optimisation stops on its own
     TimeOut=true;
@@ -33,7 +32,6 @@ end
 % if Parallelise==true
 %     matlabpool(getenv('NUMBER_OF_PROCESSORS'));%this may not work in all processors
 % end
-
 
 try
     ErrorFunction=OptimisationSettings.ErrorFunction; % if someone has set the error function error function should be of the form ErrorFunction(ThisOutput, ExpectedOutput)
@@ -125,11 +123,12 @@ end
 
 
 %Optimisation parameters
+PointsPerDimension=4;
+[NumberOfDimensions, ~]=size(ParameterBounds);
 FractionToKeep=0.5;
-NumberPerDimension=4;
-NumberOfSamplesPerRound=NumberPerDimension^NoUnknownParameters;%used for finding singular best value
+NumberOfSamplesPerRound=PointsPerDimension^NoUnknownParameters;%used for finding singular best value
 NumberOfRounds=40;%used for finding singular best value
-NoToKeep=floor(NumberOfSamplesPerRound*FractionToKeep);
+NumberToKeep=floor(NumberOfSamplesPerRound*FractionToKeep);
 Resolution=100;%100 points per dimension. In this case 1% accuracy on the bounds of the unknown variable minmax
 
 %Sims per round
@@ -143,17 +142,17 @@ Resolution=100;%100 points per dimension. In this case 1% accuracy on the bounds
 
 
 %% Find the position of the very best point
-OptimisationTimer=tic;
 % Create initial unknown parameter sampling
-
 for i=1:NoUnknownParameters
     ChosenParametersUnknown(:,i)=(ParameterBounds(i, 2)-ParameterBounds(i, 1))*rand(1, NumberOfSamplesPerRound)+ParameterBounds(i, 1);
 end
 
-SimResultVector=[];
-
+MeanDistanceBetweenPoints=zeros(1, NumberOfDimensions);
+SimOutputVector=zeros(NumberOfSamplesPerRound, NumberOfDimensions);
+ErrorVector=zeros(1, NumberOfSamplesPerRound);
+OptimisationTimer=tic;
 RoundCount=0;
-while (RoundCount<NumberOfRounds) && (the standard deviation hasn't changed all that much) && (TimeOut==false || toc(OptimisationTimer)<MaxTime)
+while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<MaxTime) % && (the standard deviation hasn't changed all that much)
 	RoundCount=RoundCount+1;
     disp(['Starting step ' num2str(RoundCount) ' of ' num2str(NumberOfRounds) ' ' num2str(toc(OptimisationTimer)) ' seconds elapsed']);
 
@@ -166,17 +165,15 @@ while (RoundCount<NumberOfRounds) && (the standard deviation hasn't changed all 
         else
             ErrorVector(SimCount)=  ErrorFunction(ExpectedOutput, SimulatedOutputThisSim) ;  
         end
+        SimOutputVector(SimCount, :)=SimulatedOutputThisSim;
     end
     
-
     %Sort by error
     [~, ErrorIndex]=sort(ErrorVector);
     
     %Select the ones with best errors
-    BestIndex=ErrorIndex(1:NoToKeep);
+    BestIndex=ErrorIndex(1:NumberToKeep);
     BestUnknownParameters=ChosenParametersUnknown(BestIndex, :);
-
-    
 
 
     %% Plot and save the best results
@@ -197,118 +194,40 @@ while (RoundCount<NumberOfRounds) && (the standard deviation hasn't changed all 
         print('-dpng ','-r300',['OptimisationPlots/ParameterFit' num2str(RoundCount) '.png'])
     end
     if PlotOutput==true 
-        %% Plot the function output
         clf;
-        hold on;
-        plot(SimResultVector(:, 1), SimResultVector(:, 2), 'r.'); 
-        plot(ExpectedOutput( 1), ExpectedOutput( 2), 'b.'); %this only plots the first 2 dimensions
-
-        xlabel('Parameter 1','fontsize', 22);
-        ylabel('Parameter 2','fontsize', 22);
-        set(gca,'Color',[1.0 1.0 1.0]);
-        set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
-        set(gca, 'fontsize', 18)
-        box off;
-        %xlim([0 1]);
-        %ylim([0 1]);
-        print('-dpng ','-r300',['OptimisationPlots/Model Results' num2str(RoundCount) '.png'])
+        PlotOptimisationOutput(ExpectedOutput, SimOutputVector);
+        print('-dpng ','-r300',['OptimisationPlots/Model Results' num2str(RoundCount) '.png']);
     end
 
 
 
-    
-    for NumberOfDimensions
+    % 
+    for Dim=1:NumberOfDimensions
         %Find the min and max in each dimension
-        
-        /NumberPerDimension;
-        
+        MinVal=min(BestUnknownParameters(:, Dim));
+        MaxVal=max(BestUnknownParameters(:, Dim));
+        MeanDistanceBetweenPoints(Dim)=(MaxVal-MinVal)/(NumberPerDimension-1);
     end
 
-    NewPointCount=0;
-    while NewPointCount<NumberOfSamplesPerRound
+
+    for NewPointCount=1:NumberOfSamplesPerRound
         %Choose a good point 
-        GoodIndex=randsample(NoToKeep, 1);
+        GoodIndex=randsample(NumberToKeep, 1);
         %vary it
 
-        TestPoint=BestUnknownParameters(GoodIndex, :)+ChosenDistance'.*(1-2*rand(1, NoUnknownParameters));
-
-        if TestPoint'>=UnknownParametersMinMax(:, 1) & TestPoint'<=UnknownParametersMinMax(:, 2)      %if within bounds keep
-            NewPointCount=NewPointCount+1;
-            %Add to vector
-            ChosenParametersUnknown(NewPointCount, :)=TestPoint;
-        end    %else do nothing
+        for Dim=1:NumberOfDimensions
+            PointInRange=false;
+            while PointInRange==false
+                TestPoint(Dim)=BestUnknownParameters(GoodIndex, :)+ChosenDistance'.*(1-2*rand(1, NumberOfDimensions));
+                if TestPoint(Dim)>=ParameterBounds(:, 1) && TestPoint(Dim)<=ParameterBounds(:, 2)      %if within bounds keep
+                    PointInRange=true;
+                end 
+            end
+        end
+        %Add to vector
+        ChosenParametersUnknown(NewPointCount, :)=TestPoint;
     end
-
 end
-
-%% Run this particular point 100 times with all uncertainty to find the median error at the point. 
-%Find the mean point of the optimisation
-MeanOfBestPoints=mean(BestUnknownParameters, 1);
-%MeanPoint=BestUnknownParameters(1, :);
-MeanPointMat=ones([NumberOfSamplesBestPoint 1])*MeanOfBestPoints;
-
-%Create a known parameter distribution
-ChosenParametersKnown=[];
-
-% i=0;
-% for Dummy=mu%For each of the parameters
-%     i=i+1;
-for i=1:NoKnownParamsToVary
-    %Create numbers at random which would fall into the distribution
-    %SelectionForThisParam=lognrnd(mu(i),sigma(i), 1, NumberOfSamplesBestPoint);%choose 1x1 matrix of these values
-    SelectionForThisParam=normrnd(KnownParametersMean(i),KnownParametersSD(i), NumberOfSamplesBestPoint, 1);%choose nx1 matrix of these values
-    
-    % Keep the parameters in the desired range
-    SelectionForThisParam(SelectionForThisParam<KnownParametersMinMax(i, 1))=KnownParametersMinMax(i, 1);
-    SelectionForThisParam(SelectionForThisParam>KnownParametersMinMax(i, 2))=KnownParametersMinMax(i, 2);
-
-    ChosenParametersKnown(:, i)= SelectionForThisParam;
-end
-
-MeanPointMat
-ChosenParametersKnown
-
-size(MeanPointMat)
-size(ChosenParametersKnown)
-
-
-ChosenParameters=[ChosenParametersKnown MeanPointMat];
-SimResultVector=[];
-% Run the Simulation
-ErrorVector=[];
-parfor SimCount=1:NumberOfSamplesBestPoint
-        [SimulatedOutputThisSim, OtherOutput]=Model(InitalValues, ChosenParameters(SimCount, :), SimulationSettings);
-        % Find the error from the given final results
-        SimResultVector(SimCount, :)=SimulatedOutputThisSim;
-        ErrorVector(SimCount)=ErrorFunction(ExpectedOutput, SimulatedOutputThisSim); %sum((SimulatedOutputThisSim-ExpectedOutput).^2);%Error is square error (variance)
-end
-
-MedianErrorOfBestPoint=median(ErrorVector);
-
-
-
-
-
-
-% Plot the function output
-        clf;
-        hold on;
-        plot(SimResultVector(:, 1), SimResultVector(:, 2), 'r.'); 
-        plot(ExpectedOutput( 1), ExpectedOutput( 2), 'b.'); %this only plots the first 2 dimensions
-
-        xlabel('Parameter 1','fontsize', 22);
-        ylabel('Parameter 2','fontsize', 22);
-        set(gca,'Color',[1.0 1.0 1.0]);
-        set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
-        set(gca, 'fontsize', 18)
-        box off;
-        %xlim([0 1]);
-        %ylim([0 1]);
-        print('-dpng ','-r300',['OptimisationPlots/BestPoint.png'])
-
-
-
-
 
 
 end 
