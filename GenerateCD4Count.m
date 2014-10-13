@@ -4,8 +4,11 @@ function [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi)
 % so, it creates the number of people expected in the correct proportions
 % by CD4. 
 
-SymptomaticTestingRate=exp(log(Curvature)*CD4Count);
+SymptomaticTestingFunction=exp(log(Curvature)*CD4Count);
 % Curvature [0, 1]
+
+TestingRate=RegularTestingRate+(1-RegularTestingRate)*SymptomaticTestingFunction;
+
 
 %Start with 
 SimulatedPopSize=Pxi.SimulatedPopSize;
