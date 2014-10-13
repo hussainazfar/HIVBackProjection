@@ -1,4 +1,4 @@
-function PlotOptimisationOutput(ExpectedResults, PlotOptimisationOutput)
+function PlotOptimisationOutput(ExpectedOutput, SimResultVector, ParameterBounds)
     % Plot the function output
     
     hold on;
@@ -11,7 +11,6 @@ function PlotOptimisationOutput(ExpectedResults, PlotOptimisationOutput)
     set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
     set(gca, 'fontsize', 18);
     box off;
-    %xlim([0 1]);
-    %ylim([0 1]);
-    
+
+
 end

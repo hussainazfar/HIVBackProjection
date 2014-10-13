@@ -143,8 +143,8 @@ Resolution=100;%100 points per dimension. In this case 1% accuracy on the bounds
 
 %% Find the position of the very best point
 % Create initial unknown parameter sampling
-for i=1:NoUnknownParameters
-    ParameterEstimates(:,i)=(ParameterBounds(i, 2)-ParameterBounds(i, 1))*rand(1, NumberOfSamplesPerRound)+ParameterBounds(i, 1);
+for i=1:NumberOfDimensions
+    ParameterEstimates(:,i)=(ParameterBounds(i, 2)-ParameterBounds(i, 1)).*rand(1, NumberOfSamplesPerRound)+ParameterBounds(i, 1);
 end
 
 MeanDistanceBetweenPoints=zeros(1, NumberOfDimensions);
@@ -163,7 +163,7 @@ while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<
         if CustomErrorFunction==true
             ErrorVector(SimCount)=  ErrorFunction(ExpectedOutput, SimulatedOutputThisSim) ;  
         else
-            ErrorVector(SimCount)=  ErrorFunction(ExpectedOutput, SimulatedOutputThisSim) ;  
+            ErrorVector(SimCount)=  sum(abs(ExpectedOutput-SimulatedOutputThisSim));  
         end
         SimOutputVector(SimCount, :)=SimulatedOutputThisSim;
     end
@@ -180,23 +180,23 @@ while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<
     if PlotParameters==true 
         clf;
         hold on;
-        plot(ParameterEstimates(:, 1), ParameterEstimates(:, 2), 'r.'); 
-        plot(BestParameterEstimates(:, 1), BestParameterEstimates(:, 2), 'b.'); %this only plots the first 2 dimensions
-
+        plot(ParameterEstimates(:, 1), ParameterEstimates(:, 2), 'b.'); %this only plots the first 2 dimensions
+        plot(BestParameterEstimates(:, 1), BestParameterEstimates(:, 2), 'b.');
+        
         xlabel('Parameter 1','fontsize', 22);
         ylabel('Parameter 2','fontsize', 22);
         set(gca,'Color',[1.0 1.0 1.0]);
         set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
         set(gca, 'fontsize', 18)
         box off;
-        xlim([0 1]);
-        ylim([0 1]);
+        xlim([ParameterBounds(1, 1) ParameterBounds(1, 2)]);
+        ylim([ParameterBounds(2, 1) ParameterBounds(2, 2)]);
         print('-dpng ','-r300',['OptimisationPlots/ParameterFit' num2str(RoundCount) '.png'])
     end
     if PlotOutput==true 
         clf;
-        PlotOptimisationOutput(ExpectedOutput, SimOutputVector);
-        print('-dpng ','-r300',['OptimisationPlots/Model Results' num2str(RoundCount) '.png']);
+        OutputPlotFunction(ExpectedOutput, SimOutputVector, ParameterBounds);
+        print('-dpng ','-r300',['OptimisationPlots/ModelOutput' num2str(RoundCount) '.png']);
     end
 
 
