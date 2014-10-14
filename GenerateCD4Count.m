@@ -60,12 +60,41 @@ IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
 %Calculate the starting point of all the people (yes this is inefficient, but much cleaner for code)
 CD4AtRebound=InitialCD4Vector*Pxi.FractionalDeclineToReboundVec;
-CurrentTime=
+sqrCD4AtRebound=sqrt(CD4AtRebound);
+% Generate individualised decline rates
+####
+
+TimeSinceRebound=0;
 while (sum(IndexTest)<SimulatedPopSize)
+    TimeMidpoint=TimeSinceRebound+StepSize/2;
     
+    UntestedIndex=NumIndex(IndexTest==false);
+    UntestedDeclines=####(UntestedIndex)
+    
+    % Calculate CD4 at midpoint to find the average testing rate
+    % We don't need to worr about stochasticity at this point because the
+    % average CD4 is more likely to indicate health at a point in time than
+    % day to day variation.
+    
+    CD4AtMidpoint= sqrCD4AtMidpoint.^2;
+    
+    
+    DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, CD4AtMidpoint, StepSize);
+    NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
+    %Calculate the time
+    RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
+    TimeAtDiagnosis=Pxi.TimeUntilRebound+TimeSinceRebound+RandomDistanceAlongThisStep*StepSize;
+    DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
+    Data.Time(DiagnosedThisStepIndexInTheMainArray)=TimeAtDiagnosis;
+    Data.CD4(DiagnosedThisStepIndexInTheMainArray)=
+    IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
+
+    
+    
+    TimeSinceRebound=TimeSinceRebound+StepSize;
     
     %Finally, to catch problems with testing rates, if it has been more than 50 years, stop
-    if CurrentTime>50
+    if TimeSinceRebound>50
         warning('Some of the elements in the GenerateCD4Count reached 50 years, which is probably too long');
     end
 end
