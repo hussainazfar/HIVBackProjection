@@ -129,11 +129,11 @@ end
 % Hughes, M.D. et al "Within-Subject Variation in CD4..." 1994 JID
 % On the loge scale, the relationship between the within-subject SO and the underlying CD4 cell count of mu was given by (sigma = 0.930 - 0.110 loge(mu).
 
-mu=TestingCD4;
-logmu=log(mu+10);%plus 10 to avoid the problems associated with log zero
+mu=Data.CD4;
+logmu=log(mu+10);%plus 10 to avoid the problems associated with log zero. Note that for people with a CD4 of zero, this should be within range when selecting "nearest neighbours"
 sigma = 0.930 - 0.110*logmu;
 LogSamples=normrnd(logmu,sigma);
-TestingCD4=exp(LogSamples);
+Data.CD4=exp(LogSamples);
 
 
 
