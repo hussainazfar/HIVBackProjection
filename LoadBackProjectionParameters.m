@@ -342,7 +342,7 @@ Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 % Although this is very unlikely (given the above parameters) it needs to
 % be assumed that it is possible that declines of 10% could occur because
 % they are explicitly filtered in GenerateCD4Count
-Px.SquareRootAnnualDeclineVec (Px.SquareRootAnnualDeclineVec <0.1*Pxi.SquareRootAnnualDecline)=[];
+Px.SquareRootAnnualDeclineVec (Px.SquareRootAnnualDeclineVec <0.1*Px.MeanSquareRootAnnualDecline)=[];
 [~, NumberRemaining]=size(Px.SquareRootAnnualDeclineVec );
 if NumberRemaining<1
     error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');

@@ -7,8 +7,6 @@ function [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi)
 
 StepSize=0.1;
 
-
-
 %Start with the correct number of observations
 SimulatedPopSize=Pxi.SimulatedPopSize;
 
@@ -20,7 +18,7 @@ Data.CD4=zeros(1, SimulatedPopSize);
 % Generate an intital distribution
 LogInitialCD4Vector = normrnd(Pxi.MedianLogHealthyCD4, Pxi.StdLogHealthyCD4, [1 SimulatedPopSize]);
 InitialCD4Vector=exp(LogInitialCD4Vector);
-
+Data.InitialCD4=InitialCD4Vector;
 
 % Kaufmann 1999 
 % Kaufmann GR, Cunningham P, Zaunders J, Law M, Vizzard J, Carr A, et al. Impact of Early HIV-1 RNA and T-Lymphocyte Dynamics During Primary HIV-1 Infection on the Subsequent Course of HIV-1 RNA Levels and CD4+ T-Lymphocyte Counts in the First Year of HIV-1 Infection. JAIDS Journal of Acquired Immune Deficiency Syndromes 1999,22:437-444.
@@ -37,14 +35,14 @@ NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
 RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
 TimeAtDiagnosis=Pxi.TimeUntilTrough*RandomDistanceAlongThisStep;
 Data.Time(DiagnosedThisStepSubIndex)=TimeAtDiagnosis;
-Data.CD4(DiagnosedThisStepSubIndex)=InitialCD4Vector*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
+Data.CD4(DiagnosedThisStepSubIndex)=InitialCD4Vector(DiagnosedThisStepSubIndex).*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
 % Set those as having been diagnosed
 IndexTest(DiagnosedThisStepSubIndex)=true;
 
 
 % In the next step, only look at those who are undiagnosed
 UntestedIndex=NumIndex(IndexTest==false);
-MeanCD4Count=InitialCD4Vector(UntestedIndex)*(Pxi.FractionalDeclineToReboundVec+Pxi.FractionalDeclineToTrough)/2;
+MeanCD4Count=InitialCD4Vector(UntestedIndex)*(Pxi.FractionalDeclineToRebound+Pxi.FractionalDeclineToTrough)/2;
 Duration=Pxi.TimeUntilRebound-Pxi.TimeUntilTrough;
 DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
 DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
@@ -54,12 +52,12 @@ RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
 TimeAtDiagnosis=Pxi.TimeUntilTrough+(Pxi.TimeUntilRebound-Pxi.TimeUntilTrough)*RandomDistanceAlongThisStep;
 
 Data.Time(DiagnosedThisStepIndexInTheMainArray)=TimeAtDiagnosis;
-Data.CD4(DiagnosedThisStepIndexInTheMainArray)=InitialCD4Vector(DiagnosedThisStepIndexInTheMainArray)*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
+Data.CD4(DiagnosedThisStepIndexInTheMainArray)=InitialCD4Vector(DiagnosedThisStepIndexInTheMainArray).*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
 IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
 
 %Calculate the starting point of all the people (yes this is inefficient, but much cleaner for code)
-CD4AtRebound=InitialCD4Vector*Pxi.FractionalDeclineToReboundVec;
+CD4AtRebound=InitialCD4Vector.*Pxi.FractionalDeclineToRebound;
 SqrCD4AtRebound=sqrt(CD4AtRebound);
 
 % Generate a squareroot decline for these individuals
@@ -106,7 +104,7 @@ while (sum(IndexTest)<SimulatedPopSize)
     
     Data.Time(DiagnosedThisStepIndexInTheMainArray)=Pxi.TimeUntilRebound+TimeSinceReboundAtDiagnosis;
     
-    Data.CD4(DiagnosedThisStepIndexInTheMainArray)=CD4AtMidpoint;
+    Data.CD4(DiagnosedThisStepIndexInTheMainArray)=CD4AtMidpoint(DiagnosedThisStepSubIndex);
     IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
     
@@ -134,6 +132,7 @@ sigma = 0.930 - 0.110*logmu;
 LogSamples=normrnd(logmu,sigma);
 Data.CD4=exp(LogSamples);
 
-
+%% Return results
+CD4CountHistogram=hist(Data.CD4, 50:100:1950);
 
 end

@@ -6,7 +6,7 @@ SymptomaticTestingFunction=exp(log(Curvature)*CD4Count);
 % Curvature [0, 1], but will almost certainly be >e
 
 AnnualTestingProbability=RegularTestingRate+(1-RegularTestingRate)*SymptomaticTestingFunction;
-TestingProbability=AnnualTestingProbability^Duration;
+TestingProbability=AnnualTestingProbability.^Duration;
 
 DiagnosisResult=rand(size(CD4Count))<TestingProbability;
 

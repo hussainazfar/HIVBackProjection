@@ -15,7 +15,7 @@ ExpectedOutput=[23    54    38    17     7    38    92    92    34     5];
 
 
 % OptimisationSettings.ErrorFunction
-OptimisationSettings.OutputPlotFunction=@PlotOptimisationOutput;
+OptimisationSettings.OutputPlotFunction=@TestPlotOptimisationOutput;
 OptimisationSettings.PlotParameters=true;
 % OptimisationSettings=[];
 StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, ExpectedOutput, OptimisationSettings)
