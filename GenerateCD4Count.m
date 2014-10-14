@@ -16,6 +16,7 @@ TestingRate=RegularTestingRate+(1-RegularTestingRate)*SymptomaticTestingFunction
 SimulatedPopSize=Pxi.SimulatedPopSize;
 
 IndexTest=false(1, SimulatedPopSize);
+NumIndex=1:SimulatedPopSize;
 Data.Time=zeros(1, SimulatedPopSize);
 Data.CD4=zeros(1, SimulatedPopSize);
 
@@ -29,19 +30,45 @@ InitialCD4Vector=exp(LogInitialCD4Vector);
 % nadir 17 days after symptoms of 418, followed by 756 at day 40.        
 
 % For all people, find the probability of being diagnosed in the firt 17 days 
-MeanCD4Count=InitialCD4Vector*(1+Pxi.FractionalDeclineToTrough)/2;
-TestThisStepIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Pxi.TimeUntilTrough);
-NumberTestedThisStep=sum(TestThisStepIndex);
+MeanCD4Count=InitialCD4Vector(IndexTest==false)*(1+Pxi.FractionalDeclineToTrough)/2;
+Duration=Pxi.TimeUntilTrough;
+TestThisStepIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
+NumberDiagnosedThisStep=sum(TestThisStepIndex);
 %Calculate the time
-RandomDistanceAlongThisStep=rand(1, NumberTestedThisStep);
-TimeInThisStep=Pxi.TimeUntilTrough*RandomDistanceAlongThisStep;
-Data.Time(TestThisStepIndex)=TimeInThisStep;
+RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
+TimeAtDiagnosis=Pxi.TimeUntilTrough*RandomDistanceAlongThisStep;
+Data.Time(TestThisStepIndex)=TimeAtDiagnosis;
 Data.CD4(TestThisStepIndex)=InitialCD4Vector*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
+% Set those as having been diagnosed
+IndexTest(IndexTest==false)=NumberDiagnosedThisStep;
 
 
 % In the next step, only look at those who are undiagnosed
-MeanCD4Count=InitialCD4Vector(IndexTest==false)*(1+Pxi.FractionalDeclineToTrough)/2;
-IndexTest=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
+UntestedIndex=NumIndex(IndexTest==false);
+MeanCD4Count=InitialCD4Vector(UntestedIndex)*(Pxi.FractionalDeclineToReboundVec+Pxi.FractionalDeclineToTrough)/2;
+Duration=Pxi.TimeUntilRebound-Pxi.TimeUntilTrough;
+DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
+NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
+%Calculate the time
+RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
+TimeAtDiagnosis=Pxi.TimeUntilTrough+(Pxi.TimeUntilRebound-Pxi.TimeUntilTrough)*RandomDistanceAlongThisStep;
+DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
+Data.Time(DiagnosedThisStepIndexInTheMainArray)=TimeAtDiagnosis;
+Data.CD4(DiagnosedThisStepIndexInTheMainArray)=InitialCD4Vector(DiagnosedThisStepIndexInTheMainArray)*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
+IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
+
+
+%Calculate the starting point of all the people (yes this is inefficient, but much cleaner for code)
+CD4AtRebound=InitialCD4Vector*Pxi.FractionalDeclineToReboundVec;
+CurrentTime=
+while (sum(IndexTest)<SimulatedPopSize)
+    
+    
+    %Finally, to catch problems with testing rates, if it has been more than 50 years, stop
+    if CurrentTime>50
+        warning('Some of the elements in the GenerateCD4Count reached 50 years, which is probably too long');
+    end
+end
 
 % if the time is less than time to the bottom of the rapid decline
 IndexSharpDecline=TimeUntilDiagnosis<Pxi.TimeUntilTrough;
