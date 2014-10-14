@@ -48,11 +48,12 @@ UntestedIndex=NumIndex(IndexTest==false);
 MeanCD4Count=InitialCD4Vector(UntestedIndex)*(Pxi.FractionalDeclineToReboundVec+Pxi.FractionalDeclineToTrough)/2;
 Duration=Pxi.TimeUntilRebound-Pxi.TimeUntilTrough;
 DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
+DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
 NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
 %Calculate the time
 RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
 TimeAtDiagnosis=Pxi.TimeUntilTrough+(Pxi.TimeUntilRebound-Pxi.TimeUntilTrough)*RandomDistanceAlongThisStep;
-DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
+
 Data.Time(DiagnosedThisStepIndexInTheMainArray)=TimeAtDiagnosis;
 Data.CD4(DiagnosedThisStepIndexInTheMainArray)=InitialCD4Vector(DiagnosedThisStepIndexInTheMainArray)*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
 IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
@@ -60,33 +61,53 @@ IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
 %Calculate the starting point of all the people (yes this is inefficient, but much cleaner for code)
 CD4AtRebound=InitialCD4Vector*Pxi.FractionalDeclineToReboundVec;
-sqrCD4AtRebound=sqrt(CD4AtRebound);
-% Generate individualised decline rates
-####
+SqrCD4AtRebound=sqrt(CD4AtRebound);
+
+% Generate a squareroot decline for these individuals
+m=Pxi.SquareRootAnnualDecline;
+v=(Pxi.SDSQRDeclineIndividual)^2;
+mu = log((m^2)/sqrt(v+m^2));
+sigma = sqrt(log(v/(m^2)+1));
+SQRDecline = lognrnd(mu,sigma,1,SimulatedPopSize);
+%Remove declines that are less than 10% of the squareroot annual decline
+%This is to avoid negative declines and divide by zero errors. Note that it is expected that around 0.9% of the population would have this level according to these calculations
+SQRDecline(SQRDecline<0.1*Pxi.SquareRootAnnualDecline)=[];
+[~, NumberRemaining]=size(SQRDecline);
+if NumberRemaining<1
+    error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
+end
+%Resample to produce the required number of samples
+ResampledSQRDecline = randsample(SQRDecline,SimulatedPopSize-NumberRemaining,'true'); % with replacement
+SQRDecline=[SQRDecline ResampledSQRDecline];
 
 TimeSinceRebound=0;
 while (sum(IndexTest)<SimulatedPopSize)
     TimeMidpoint=TimeSinceRebound+StepSize/2;
     
     UntestedIndex=NumIndex(IndexTest==false);
-    UntestedDeclines=####(UntestedIndex)
+    UntestedDeclines=SQRDecline(UntestedIndex);
+    UntestedSqrCD4AtRebound=SqrCD4AtRebound(UntestedIndex);
     
     % Calculate CD4 at midpoint to find the average testing rate
     % We don't need to worr about stochasticity at this point because the
     % average CD4 is more likely to indicate health at a point in time than
     % day to day variation.
     
-    CD4AtMidpoint= sqrCD4AtMidpoint.^2;
-    
+    SqrCD4AtMidpoint=UntestedSqrCD4AtRebound-TimeMidpoint*UntestedDeclines;
+    %Make all <0 CD4s zero
+    SqrCD4AtMidpoint(SqrCD4AtMidpoint<0)=0;
+    CD4AtMidpoint= SqrCD4AtMidpoint.^2;
     
     DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, CD4AtMidpoint, StepSize);
+    DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
     NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
     %Calculate the time
     RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
-    TimeAtDiagnosis=Pxi.TimeUntilRebound+TimeSinceRebound+RandomDistanceAlongThisStep*StepSize;
-    DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
-    Data.Time(DiagnosedThisStepIndexInTheMainArray)=TimeAtDiagnosis;
-    Data.CD4(DiagnosedThisStepIndexInTheMainArray)=
+    TimeSinceReboundAtDiagnosis=TimeSinceRebound+RandomDistanceAlongThisStep*StepSize;
+    
+    Data.Time(DiagnosedThisStepIndexInTheMainArray)=Pxi.TimeUntilRebound+TimeSinceReboundAtDiagnosis;
+    
+    Data.CD4(DiagnosedThisStepIndexInTheMainArray)=CD4AtMidpoint;
     IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
     
@@ -98,6 +119,10 @@ while (sum(IndexTest)<SimulatedPopSize)
         warning('Some of the elements in the GenerateCD4Count reached 50 years, which is probably too long');
     end
 end
+
+
+
+
 
 % if the time is less than time to the bottom of the rapid decline
 IndexSharpDecline=TimeUntilDiagnosis<Pxi.TimeUntilTrough;

@@ -338,6 +338,20 @@ mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 
 Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
+% In this section, the decline must not be less than 10% of the average decline across simulations
+% Although this is very unlikely (given the above parameters) it needs to
+% be assumed that it is possible that declines of 10% could occur because
+% they are explicitly filtered in GenerateCD4Count
+Px.SquareRootAnnualDeclineVec (Px.SquareRootAnnualDeclineVec <0.1*Pxi.SquareRootAnnualDecline)=[];
+[~, NumberRemaining]=size(Px.SquareRootAnnualDeclineVec );
+if NumberRemaining<1
+    error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
+end
+%Resample to produce the required number of samples
+ResampledSQRDecline = randsample(Px.SquareRootAnnualDeclineVec ,ParameterisationSpaceSize-NumberRemaining,'true'); % with replacement
+Px.SquareRootAnnualDeclineVec =[Px.SquareRootAnnualDeclineVec  ResampledSQRDecline];
+
+
 
 
 % if MajorityOlderThan30==1
