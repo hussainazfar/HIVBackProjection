@@ -4,14 +4,20 @@ function [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi)
 % so, it creates the number of people expected in the correct proportions
 % by CD4. 
 
+
+StepSize=0.1;
 SymptomaticTestingFunction=exp(log(Curvature)*CD4Count);
 % Curvature [0, 1]
 
 TestingRate=RegularTestingRate+(1-RegularTestingRate)*SymptomaticTestingFunction;
 
 
-%Start with 
+%Start with the correct number of observations
 SimulatedPopSize=Pxi.SimulatedPopSize;
+
+IndexTest=false(1, SimulatedPopSize);
+Data.Time=zeros(1, SimulatedPopSize);
+Data.CD4=zeros(1, SimulatedPopSize);
 
 % Generate an intital distribution
 LogInitialCD4Vector = normrnd(Pxi.MedianLogHealthyCD4, Pxi.StdLogHealthyCD4, [1 SimulatedPopSize]);
@@ -21,6 +27,21 @@ InitialCD4Vector=exp(LogInitialCD4Vector);
 % Kaufmann 1999 
 % Kaufmann GR, Cunningham P, Zaunders J, Law M, Vizzard J, Carr A, et al. Impact of Early HIV-1 RNA and T-Lymphocyte Dynamics During Primary HIV-1 Infection on the Subsequent Course of HIV-1 RNA Levels and CD4+ T-Lymphocyte Counts in the First Year of HIV-1 Infection. JAIDS Journal of Acquired Immune Deficiency Syndromes 1999,22:437-444.
 % nadir 17 days after symptoms of 418, followed by 756 at day 40.        
+
+% For all people, find the probability of being diagnosed in the firt 17 days 
+MeanCD4Count=InitialCD4Vector*(1+Pxi.FractionalDeclineToTrough)/2;
+TestThisStepIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Pxi.TimeUntilTrough);
+NumberTestedThisStep=sum(TestThisStepIndex);
+%Calculate the time
+RandomDistanceAlongThisStep=rand(1, NumberTestedThisStep);
+TimeInThisStep=Pxi.TimeUntilTrough*RandomDistanceAlongThisStep;
+Data.Time(TestThisStepIndex)=TimeInThisStep;
+Data.CD4(TestThisStepIndex)=InitialCD4Vector*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
+
+
+% In the next step, only look at those who are undiagnosed
+MeanCD4Count=InitialCD4Vector(IndexTest==false)*(1+Pxi.FractionalDeclineToTrough)/2;
+IndexTest=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
 
 % if the time is less than time to the bottom of the rapid decline
 IndexSharpDecline=TimeUntilDiagnosis<Pxi.TimeUntilTrough;
