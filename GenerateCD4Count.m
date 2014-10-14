@@ -6,10 +6,7 @@ function [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi)
 
 
 StepSize=0.1;
-SymptomaticTestingFunction=exp(log(Curvature)*CD4Count);
-% Curvature [0, 1]
 
-TestingRate=RegularTestingRate+(1-RegularTestingRate)*SymptomaticTestingFunction;
 
 
 %Start with the correct number of observations
@@ -30,17 +27,19 @@ InitialCD4Vector=exp(LogInitialCD4Vector);
 % nadir 17 days after symptoms of 418, followed by 756 at day 40.        
 
 % For all people, find the probability of being diagnosed in the firt 17 days 
-MeanCD4Count=InitialCD4Vector(IndexTest==false)*(1+Pxi.FractionalDeclineToTrough)/2;
+UntestedIndex=NumIndex(IndexTest==false);%in this case, all
+MeanCD4Count=InitialCD4Vector(UntestedIndex)*(1+Pxi.FractionalDeclineToTrough)/2;
 Duration=Pxi.TimeUntilTrough;
-TestThisStepIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
-NumberDiagnosedThisStep=sum(TestThisStepIndex);
+DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
+DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
+NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
 %Calculate the time
 RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
 TimeAtDiagnosis=Pxi.TimeUntilTrough*RandomDistanceAlongThisStep;
-Data.Time(TestThisStepIndex)=TimeAtDiagnosis;
-Data.CD4(TestThisStepIndex)=InitialCD4Vector*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
+Data.Time(DiagnosedThisStepSubIndex)=TimeAtDiagnosis;
+Data.CD4(DiagnosedThisStepSubIndex)=InitialCD4Vector*((1-RandomDistanceAlongThisStep)*1+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToTrough);
 % Set those as having been diagnosed
-IndexTest(IndexTest==false)=NumberDiagnosedThisStep;
+IndexTest(DiagnosedThisStepSubIndex)=true;
 
 
 % In the next step, only look at those who are undiagnosed
