@@ -1,13 +1,13 @@
 function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(RealTestingCD4, Pxi )
     % To do a test run on this, call the following code
-    % ExampleData; % produces CD4ForOptimisation
-    % NumberOfSamples=200;
-    % [Px]=LoadBackProjectionParameters(NumberOfSamples);
-    % Create a simulation specific value for the parameters
-    % Pxi=Px;
-    % Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(1);
-    % Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(1);
-    % [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(CD4ForOptimisation, Pxi );
+%     ExampleData; % produces CD4ForOptimisation
+%     NumberOfSamples=200;
+%     [Px]=LoadBackProjectionParameters(NumberOfSamples);
+%     % Create a simulation specific value for the parameters
+%     Pxi=Px;
+%     Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(1);
+%     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(1);
+%     [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(CD4ForOptimisation, Pxi );
 
 
     ExpectedOutput=hist(RealTestingCD4, 50:100:1450);

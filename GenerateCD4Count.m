@@ -20,6 +20,10 @@ LogInitialCD4Vector = normrnd(Pxi.MedianLogHealthyCD4, Pxi.StdLogHealthyCD4, [1 
 InitialCD4Vector=exp(LogInitialCD4Vector);
 Data.InitialCD4=InitialCD4Vector;
 
+% clf;
+% hist(Data.InitialCD4, 50:100:1450);
+% pause
+
 % Kaufmann 1999 
 % Kaufmann GR, Cunningham P, Zaunders J, Law M, Vizzard J, Carr A, et al. Impact of Early HIV-1 RNA and T-Lymphocyte Dynamics During Primary HIV-1 Infection on the Subsequent Course of HIV-1 RNA Levels and CD4+ T-Lymphocyte Counts in the First Year of HIV-1 Infection. JAIDS Journal of Acquired Immune Deficiency Syndromes 1999,22:437-444.
 % nadir 17 days after symptoms of 418, followed by 756 at day 40.        
@@ -78,7 +82,12 @@ ResampledSQRDecline = randsample(SQRDecline,SimulatedPopSize-NumberRemaining,'tr
 SQRDecline=[SQRDecline ResampledSQRDecline];
 
 TimeSinceRebound=0;
+Step=0;
 while (sum(IndexTest)<SimulatedPopSize)
+    Step=Step+1;
+    disp( 'Step');
+    disp(Step);
+    disp(sum(IndexTest));%
     disp(TimeSinceRebound);% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     TimeMidpoint=TimeSinceRebound+StepSize/2;
     
@@ -97,7 +106,10 @@ while (sum(IndexTest)<SimulatedPopSize)
     CD4AtMidpoint= SqrCD4AtMidpoint.^2;
     
     DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, CD4AtMidpoint, StepSize);
+    disp(sum(DiagnosedThisStepSubIndex));
     DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
+    disp('Array ref');
+    DiagnosedThisStepIndexInTheMainArray
     NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
     %Calculate the time
     RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
@@ -108,10 +120,9 @@ while (sum(IndexTest)<SimulatedPopSize)
     Data.CD4(DiagnosedThisStepIndexInTheMainArray)=CD4AtMidpoint(DiagnosedThisStepSubIndex);
     IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
-    
-    
+
     TimeSinceRebound=TimeSinceRebound+StepSize;
-    
+
     %Finally, to catch problems with testing rates, if it has been more than 50 years, stop
     if TimeSinceRebound>50
         warning('Some of the elements in the GenerateCD4Count reached 50 years, which is probably too long');

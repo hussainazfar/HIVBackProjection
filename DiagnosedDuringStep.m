@@ -10,7 +10,7 @@ SymptomaticTestingFunction=exp(-Curvature*CD4Count/200);
 
 
 AnnualTestingProbability=RegularTestingRate+(1-RegularTestingRate)*SymptomaticTestingFunction;
-TestingProbability=AnnualTestingProbability.^Duration;
+TestingProbability=1-(1-AnnualTestingProbability).^Duration;
 
 DiagnosisResult=rand(size(CD4Count))<TestingProbability;
 

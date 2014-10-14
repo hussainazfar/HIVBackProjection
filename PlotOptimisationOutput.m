@@ -6,7 +6,7 @@ function PlotOptimisationOutput(ExpectedOutput, SimResultVector)
     
     
     hold on;
-    plot( SimResultVector, 'r.'); 
+    plot( SimResultVector, 'r'); 
     plot( ExpectedOutput, 'b.'); 
     xlabel('Bucket','fontsize', 22);
     ylabel('Count','fontsize', 22);

@@ -141,7 +141,7 @@ PointsPerDimension=SamplesPerRound^(1/NumberOfDimensions);
 
 FractionToKeep=0.5;
 
-NumberOfRounds=40;%used for finding singular best value
+NumberOfRounds=10;%used for finding singular best value
 NumberToKeep=floor(SamplesPerRound*FractionToKeep);
 
 %Sims per round
