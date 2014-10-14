@@ -79,6 +79,7 @@ SQRDecline=[SQRDecline ResampledSQRDecline];
 
 TimeSinceRebound=0;
 while (sum(IndexTest)<SimulatedPopSize)
+    disp(TimeSinceRebound);% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     TimeMidpoint=TimeSinceRebound+StepSize/2;
     
     UntestedIndex=NumIndex(IndexTest==false);
@@ -133,6 +134,6 @@ LogSamples=normrnd(logmu,sigma);
 Data.CD4=exp(LogSamples);
 
 %% Return results
-CD4CountHistogram=hist(Data.CD4, 50:100:1950);
+CD4CountHistogram=hist(Data.CD4, 50:100:1450);
 
 end

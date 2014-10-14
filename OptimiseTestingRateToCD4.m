@@ -10,7 +10,7 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     % [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(CD4ForOptimisation, Pxi );
 
 
-    ExpectedOutput=hist(RealTestingCD4, 50:100:1950);
+    ExpectedOutput=hist(RealTestingCD4, 50:100:1450);
     [~, NumberOfCD4Counts]=size(RealTestingCD4);
     FunctionPointer=@GenerateCD4Count;
     % [ResultsForOPtimisation, OtherOutput]=GenerateCD4Count(TestingRateParameters, FunctionInput);

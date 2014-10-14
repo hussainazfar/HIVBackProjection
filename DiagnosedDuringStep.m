@@ -2,7 +2,7 @@ function DiagnosisResult=DiagnosedDuringStep(TestingParameters, CD4Count, Durati
 RegularTestingRate=TestingParameters(1);
 Curvature=TestingParameters(2);
 
-SymptomaticTestingFunction=exp(log(Curvature)*CD4Count);
+SymptomaticTestingFunction=Curvature*exp(-CD4Count);
 % Curvature [0, 1], but will almost certainly be >e
 
 AnnualTestingProbability=RegularTestingRate+(1-RegularTestingRate)*SymptomaticTestingFunction;
