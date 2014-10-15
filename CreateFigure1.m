@@ -94,8 +94,8 @@ PopulationSizeToSimulate=200000;%makesure there are at least 1000 samples per po
 Median500=[];
 Median350=[];
 Median200=[];
-CurrentMedianStore=zeros(NumberOfSamples, 200);
-for CurrentParamNumber=1:NumberOfSamples
+CurrentMedianStore=zeros(NoParameterisations, 200);
+for CurrentParamNumber=1:NoParameterisations
     CurrentParamNumber
     Pxi=Px;
     Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);

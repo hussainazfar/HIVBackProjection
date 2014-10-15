@@ -20,8 +20,9 @@ Ax.ConsiderRecentInfection=0;
 disp( 'Starting parallel Matlab...');
 matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
 
-NumberOfTimeSamples=100;
+% NumberOfTimeSamples=100;
 [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Ax, NumberOfTimeSamples, RandomNumberStream);
+[Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, RandomNumberStream)
 matlabpool close;
 TimeDitributionToSample=reshape(IdealPopTimesStore, 1, []);
 CD4DistributionToSample=reshape(IdealPopTestingCD4, 1, []);

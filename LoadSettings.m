@@ -28,9 +28,6 @@ UseGeneticAlgorithmOptimisation=true;
 
 
 
-
-% NumberOfSamples=500;%Used in the old optmisation algorithm
-% Sx.NumberOfSamples=NumberOfSamples;
 RangeOfCD4Averages=[(YearOfDiagnosedDataEnd-5) YearOfDiagnosedDataEnd];%YearOfDiagnosedDataEnd not inclusive
 RangeOfCD4AveragesForForwardProjection=[(YearOfDiagnosedDataEnd-5) YearOfDiagnosedDataEnd];
 

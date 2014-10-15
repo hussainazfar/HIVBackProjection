@@ -1,4 +1,8 @@
-function [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4Store ]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, RandomNumberStream)
+function [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, RandomNumberStream)
+% function [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4Store ]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, RandomNumberStream)
+
+
+
 % CurrentDistribution - vector of CD4 values in the population (size=1*NumberOfPeople)
 % DeclineAssumptions - a structure that includes the decline rates at various points
 % Times - a matrix of estimated times since infection (NumberOfPeople, NumberOfTimeSamples)
@@ -10,14 +14,14 @@ SimulatedPopSize=10000;
 ClosestN=SimulatedPopSize/100;%This should sample from the 1% of simulations that are closest
 
 [~, NumberOfPeople]=size(RealTestingCD4);
-Times=zeros(NumberOfPeople, NumberOfParameterisations);
-StartingCD4=zeros(NumberOfPeople, NumberOfParameterisations);
-TestingProbVec=zeros(3, NumberOfParameterisations); % three is the number of optimisations that occur
+Times=zeros(NumberOfPeople, Px.NoParameterisations);
+StartingCD4=zeros(NumberOfPeople, Px.NoParameterisations);
+TestingProbVec=zeros(3, Px.NoParameterisations); % three is the number of optimisations that occur
 
-IdealPopTimesStore=zeros(SimulatedPopSize, NumberOfParameterisations);
+IdealPopTimesStore=zeros(SimulatedPopSize, Px.NoParameterisations);
 
 % For each specific vaiable combination
-parfor CurrentParamNumber=1:Px.NumberOfSamples
+parfor CurrentParamNumber=1:Px.NoParameterisations
 % for CurrentParamNumber=1:NumberOfTimeSamples
     % Seed the random number generator
     set(RandomNumberStream,'Substream',CurrentParamNumber);
@@ -27,7 +31,7 @@ parfor CurrentParamNumber=1:Px.NumberOfSamples
     Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
     
-    [TimesForThisSim, StartingCD4ForThisSim, OptimisedParameters]=OptimiseTestingRateToCD4(CD4ForOptimisation, Pxi );
+    [TimesForThisSim, StartingCD4ForThisSim, OptimisedParameters]=OptimiseTestingRateToCD4(RealTestingCD4, Pxi );
     
 %     [IdealPopTimes, IdealPopStartingCD4s, IdealPopTestingCD4, BestPEstimate]=OptimiseIdealPopulationToCD4(RealTestingCD4, Pxi, SimulatedPopSize);
     
@@ -41,9 +45,9 @@ parfor CurrentParamNumber=1:Px.NumberOfSamples
     % Store results
     Times(:, CurrentParamNumber)= TimesForThisSim;
     StartingCD4(:, CurrentParamNumber)= StartingCD4ForThisSim;
-    TestingProbVec(:,CurrentParamNumber)=OptimisedParameters;
-    IdealPopTimesStore(:, CurrentParamNumber)=IdealPopTimes;
-    IdealPopTestingCD4Store(:, CurrentParamNumber)=IdealPopTestingCD4;
+    TestingParameter(CurrentParamNumber).Result=OptimisedParameters;
+%     IdealPopTimesStore(:, CurrentParamNumber)=IdealPopTimes;
+%     IdealPopTestingCD4Store(:, CurrentParamNumber)=IdealPopTestingCD4;
 end
 
 

@@ -1,8 +1,8 @@
 function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(RealTestingCD4, Pxi )
     % To do a test run on this, call the following code
 %     ExampleData; % produces CD4ForOptimisation
-%     NumberOfSamples=200;
-%     [Px]=LoadBackProjectionParameters(NumberOfSamples);
+%     NoParameterisations=200;
+%     [Px]=LoadBackProjectionParameters(NoParameterisations);
 %     % Create a simulation specific value for the parameters
 %     Pxi=Px;
 %     Pxi.ShowCD4Optimisation=true; % to show the plots of the output of the function. Turn on for testing, but turn off for increased speed
@@ -12,11 +12,11 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     
     
     try 
-        ShowCD4Optimisation=Pxi.ShowCD4Optimisation;
+        TempShowCD4Optimisation=Pxi.ShowCD4Optimisation;
     catch 
-        ShowCD4Optimisation=false;
+        TempShowCD4Optimisation=false;
     end
-    Pxi.ShowCD4Optimisation=ShowCD4Optimisation;
+    Pxi.ShowCD4Optimisation=TempShowCD4Optimisation;
         
 
     ExpectedOutput=hist(RealTestingCD4, 50:100:1450);
@@ -27,12 +27,15 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     % TestingRateParameters(1)= in the equation 
     % OtherOutput= raw CD4 counts
     
-
-    OptimisationSettings.OutputPlotFunction=@PlotOptimisationOutput;
-    OptimisationSettings.PlotParameters=true;
+    if Pxi.ShowCD4Optimisation
+        OptimisationSettings.OutputPlotFunction=@PlotOptimisationOutput;
+        OptimisationSettings.PlotParameters=true;
+        OptimisationSettings.DisplayTimer=true;
+    end
     
     OptimisationSettings.SamplesPerRound=64;
-    OptimisationSettings.NumberOfRounds=50;
+    OptimisationSettings.NumberOfRounds=10;
+    warning('this has been hard set and should be changed back to 50');
     Pxi.SimulatedPopSize=NumberOfCD4Counts;
     FunctionInput=Pxi;
     

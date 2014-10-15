@@ -1,4 +1,4 @@
-function [OptimisedParameters, OptimisedParametersVector]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, ExpectedOutput, OptimisationSettings)
+function [OptimisedParameters, OptimisedParametersVector, OptimisationDetails]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, ExpectedOutput, OptimisationSettings)
 
 % FunctionPointer: FunctionPointer = @functionname
 
@@ -12,10 +12,12 @@ function [OptimisedParameters, OptimisedParametersVector]=StochasticOptimise(Fun
     % OptimisationSettings.ErrorFunction - a custom error function that can be used to determine the 
     % OptimisationSettings.OutputPlotFunction - used to plot the optimised parameters
     % OptimisationSettings.PlotParameters - (true or false) 
-    % OptimisationSettings.SamplesPerRound - used to determine the
-    % points per dimension
-
+    % OptimisationSettings.SamplesPerRound - used to determine the points per dimension
+    % OptimisationSettings.DisplayTimer - used to show the timer at each step
+    
 % ExpectedOutput - the values to compare against to check for the error
+
+OptimisationTimer=tic;
 
 %% Import all OptimisationSettings that exist
 try
@@ -53,6 +55,12 @@ try
     PlotParameters=OptimisationSettings.PlotParameters; 
 catch
     PlotParameters=false; 
+end
+
+try
+    DisplayTimer=OptimisationSettings.DisplayTimer; 
+catch
+    DisplayTimer=false; 
 end
 
 
@@ -170,12 +178,14 @@ end
 
 MeanDistanceBetweenPoints=zeros(1, NumberOfDimensions);
 ErrorVector=zeros(1, SamplesPerRound);
-OptimisationTimer=tic;
+
 RoundCount=0;
 while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<MaxTime) % && (the standard deviation hasn't changed all that much)
 	RoundCount=RoundCount+1;
-%     disp(['Starting step ' num2str(RoundCount) ' of ' num2str(NumberOfRounds) ' ' num2str(toc(OptimisationTimer)) ' seconds elapsed']);
-
+    if DisplayTimer==true
+        disp(['Starting step ' num2str(RoundCount) ' of ' num2str(NumberOfRounds) ', ' num2str(toc(OptimisationTimer)) ' seconds elapsed']);
+    end
+    
     % Run the Simulation
     for SimCount=1:SamplesPerRound
         [SimulatedOutputThisSim, OtherOutput]=FunctionPointer( ParameterEstimates(SimCount, :), FunctionInput);
@@ -252,6 +262,7 @@ end
 OptimisedParameters=BestParameterEstimates(1, :);
 OptimisedParametersVector=BestParameterEstimates;
 
+OptimisationDetails.TotalOptimisationTime=toc(OptimisationTimer);
 
 end 
 

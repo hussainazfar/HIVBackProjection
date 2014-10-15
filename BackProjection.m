@@ -1,4 +1,4 @@
-
+NoParameterisations=2; % the number of parameterisations used to generate uncertainty. Should be set to 200
 
 TimeALL=tic;
 
@@ -95,12 +95,12 @@ if ConsiderRecentInfection==true
 %% Determine the time between infection and diagnosis
 disp('Determining the time between infection and diagnosis');
 TicOptimisation=tic;
-NumberOfSamples=200;
+
 
 disp( 'Starting parallel Matlab...');
 matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-2);%this may not work in all processors
 
-[Px]=LoadBackProjectionParameters(NumberOfSamples);
+[Px]=LoadBackProjectionParameters(NoParameterisations);
 Px.ConsiderRecentInfection=ConsiderRecentInfection;
 
 % Sort individuals by year of diagnosis
@@ -145,10 +145,10 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     PatientRef(PatientRef<0)=[];
     
     %Perform an optimisation
-    [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, RandomNumberStream);
+    [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, RandomNumberStream);
     
     OptimisationResults(YearIndex).Year=Year;
-    OptimisationResults(YearIndex).TestingProbVec=TestingProbVec;
+    OptimisationResults(YearIndex).TestingParameter=TestingParameter;
     
     %Place values back into the vector
     CountRef=0;
@@ -158,7 +158,6 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     end
     
     CD4Comparison(YearIndex).RealTestingCD4=CD4ForOptimisation;
-    CD4Comparison(YearIndex).SimulatedTestingCD4=IdealPopTestingCD4;
     CD4ComparisonLookup(YearIndex)=Year;
     %Store the appropriate probabilities
     
@@ -170,28 +169,9 @@ toc(TicOptimisation)
 
 
 
-%% Old system
-% Determine the assumed testing rate in the population
-%The following uses a distributed computing genetic algorithm to
-%optimise the parameters we believe to be correct for the population
-% % % % % [AsymptomaticPSelected, SymptomaticPSelected, CurvatureSelected, MeanDeclineSelected,  CD4sUsedForFitting, SimulatedTestingCD4, SimulatedTimeUntilDiagnosis]=FindDataAndOptimise(Patient, RangeOfCD4Averages, Sx);
-% % % % % 
-% % % % % CombinedCD4Vector=SimulatedTestingCD4;
-% % % % % CombinedTimeVector=SimulatedTimeUntilDiagnosis;
-
-% Create a distribution of time between infection and diagnosis for all individuals
-% % % % % CreateDatesOfInfection
 
 
 
-    
-    
-    
-% Set the number of samples in the distribution of times until diagnosis to the number of optimised points found
-% Here we set the number of samples per person to the number of found optimised points
-% % % % % NumberOfSamples=NoOptimisedPoints;
-NumberOfSamples=NumberOfSamples;
- 
     
     
 %% If consideration is given to recent infection data, recombine the non-Recent patients back into the patient variable
@@ -201,8 +181,8 @@ if ConsiderRecentInfection==true
     [~, NumberOfRecentInfections]=size(RecentPatient);
 
     for i=1:NumberOfRecentInfections
-        RecentPatient(i).TimeFromInfectionToDiagnosis= rand(1,NumberOfSamples);
-        %Alternate distribution: People have testing rates of between once every 3 months and 1 year = (1-rand(1, NumberOfSamples)*0.75).*rand(1, NumberOfSamples)
+        RecentPatient(i).TimeFromInfectionToDiagnosis= rand(1,NoParameterisations);
+        %Alternate distribution: People have testing rates of between once every 3 months and 1 year = (1-rand(1, NoParameterisations)*0.75).*rand(1, NoParameterisations)
     end
 
     %recombine the recent and non-recent infections
@@ -243,16 +223,16 @@ clear DistributionUndiagnosedInfections;
 %diagnoses (regardless of the date of diagnosis)
 
 tic
-DateMatrix=zeros(NumberOfSamples, NumberOfPatients);
-InfectionTimeMatrix=zeros(NumberOfSamples, NumberOfPatients);
+DateMatrix=zeros(NoParameterisations, NumberOfPatients);
+InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
 
 NoPatientInRange=0;
 TimeDistributionOfRecentDiagnoses=[];
 CD4DistributionOfRecentDiagnoses=[];
 for i=1:NumberOfPatients
 
-        TimeDistributionOfRecentDiagnoses((i-1)*NumberOfSamples+1:i*NumberOfSamples)=Patient(i).TimeFromInfectionToDiagnosis;
-        CD4DistributionOfRecentDiagnoses((i-1)*NumberOfSamples+1:i*NumberOfSamples)=Patient(i).CD4CountAtDiagnosis;
+        TimeDistributionOfRecentDiagnoses((i-1)*NoParameterisations+1:i*NoParameterisations)=Patient(i).TimeFromInfectionToDiagnosis;
+        CD4DistributionOfRecentDiagnoses((i-1)*NoParameterisations+1:i*NoParameterisations)=Patient(i).CD4CountAtDiagnosis;
         DateMatrix(:, i)=Patient(i).InfectionDateDistribution;
         if Patient(i).DateOfDiagnosisContinuous>= RangeOfCD4Averages(1) && Patient(i).DateOfDiagnosisContinuous< RangeOfCD4Averages(2)
             NoPatientInRange=NoPatientInRange+1;
@@ -267,8 +247,8 @@ timevalue=toc;
 
 HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
 
-for SimNumber=1:NumberOfSamples
-    disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NumberOfSamples)]);
+for SimNumber=1:NoParameterisations
+    disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
     
     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
     InfectionsByYearDiagnosed=hist(DateMatrix(SimNumber, :), HistYearSlots);% 0.5*StepSize used to centralise the bar plots in the the hist function
@@ -371,7 +351,7 @@ end
 
 %% Find total undiagnosed at all points in time
 [~, NumberOfYearSlots]=size(HistYearSlots);
-UndiagnosedMatrix=zeros(NumberOfSamples, NumberOfYearSlots );
+UndiagnosedMatrix=zeros(NoParameterisations, NumberOfYearSlots );
 for i=1:NumberOfPatients
     %exclude those who were diagnosed overseas
     if mod(i, 100)==0

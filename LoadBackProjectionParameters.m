@@ -1,7 +1,7 @@
-function [Px]=LoadBackProjectionParameters(ParameterisationSpaceSize)
+function [Px]=LoadBackProjectionParameters(NoParameterisations)
 
 %% Simulation settings
-Px.NumberOfSamples=ParameterisationSpaceSize;
+Px.NoParameterisations=NoParameterisations;
 Px.MaxYears=20;%Max years is the maximum number of years a person can spend without being diagnosed with HIV. Although longer times are possible in real life, so few would occur that we can successfully ignore it in the name of simplicity and approximation
 Px.StepSize=0.1;
 
@@ -148,7 +148,7 @@ v=(Px.SQRTBaselineCD4Stdev)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 
-Px.SQRTBaselineCD4MedianVec=lognrnd(mu,sigma,1,ParameterisationSpaceSize);
+Px.SQRTBaselineCD4MedianVec=lognrnd(mu,sigma,1,NoParameterisations);
 
 Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec).^2/MedianHealthyCD4;
 
@@ -336,7 +336,7 @@ v=(Px.SquareRootAnnualDeclineStdev)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 
-Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
+Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,NoParameterisations);
 % In this section, the decline must not be less than 10% of the average decline across simulations
 % Although this is very unlikely (given the above parameters) it needs to
 % be assumed that it is possible that declines of 10% could occur because
@@ -347,7 +347,7 @@ if NumberRemaining<1
     error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
 end
 %Resample to produce the required number of samples
-ResampledSQRDecline = randsample(Px.SquareRootAnnualDeclineVec ,ParameterisationSpaceSize-NumberRemaining,'true'); % with replacement
+ResampledSQRDecline = randsample(Px.SquareRootAnnualDeclineVec ,NoParameterisations-NumberRemaining,'true'); % with replacement
 Px.SquareRootAnnualDeclineVec =[Px.SquareRootAnnualDeclineVec  ResampledSQRDecline];
 
 
