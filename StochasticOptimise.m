@@ -137,7 +137,7 @@ catch
     SamplesPerRound=BaselineSamplesPerRound;
 end
 
-PointsPerDimension=SamplesPerRound^(1/NumberOfDimensions);
+
 
 
 try
@@ -148,6 +148,9 @@ catch
 end
 FractionToKeep=0.6666^NumberOfDimensions;%This is to ensure that just over half of the range in each dimension is kept per round, to ensure that the solution converges quickly
 NumberToKeep=floor(SamplesPerRound*FractionToKeep);
+
+PointsPerDimension=NumberToKeep^(1/NumberOfDimensions); %used later on to determine the mean distance between points in each dimension
+
 
 %Sims per round
 % Choose random values between the bounds

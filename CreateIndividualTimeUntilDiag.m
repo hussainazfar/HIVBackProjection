@@ -12,7 +12,7 @@ ClosestN=SimulatedPopSize/100;%This should sample from the 1% of simulations tha
 [~, NumberOfPeople]=size(RealTestingCD4);
 Times=zeros(NumberOfPeople, NumberOfParameterisations);
 StartingCD4=zeros(NumberOfPeople, NumberOfParameterisations);
-TestingProbVec=zeros(1, NumberOfParameterisations);
+TestingProbVec=zeros(3, NumberOfParameterisations); % three is the number of optimisations that occur
 
 IdealPopTimesStore=zeros(SimulatedPopSize, NumberOfParameterisations);
 
@@ -27,19 +27,21 @@ parfor CurrentParamNumber=1:Px.NumberOfSamples
     Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
     
-    [IdealPopTimes, IdealPopStartingCD4s, IdealPopTestingCD4, BestPEstimate]=OptimiseIdealPopulationToCD4(RealTestingCD4, Pxi, SimulatedPopSize);
+    [TimesForThisSim, StartingCD4ForThisSim, OptimisedParameters]=OptimiseTestingRateToCD4(CD4ForOptimisation, Pxi );
+    
+%     [IdealPopTimes, IdealPopStartingCD4s, IdealPopTestingCD4, BestPEstimate]=OptimiseIdealPopulationToCD4(RealTestingCD4, Pxi, SimulatedPopSize);
     
     % Choose time values of CD4 counts close to the ones input
-    [ReturnValues]=ChooseRandomNearbyValues(RealTestingCD4, IdealPopTestingCD4, [IdealPopTimes; IdealPopStartingCD4s], ClosestN);
+%     [ReturnValues]=ChooseRandomNearbyValues(RealTestingCD4, IdealPopTestingCD4, [IdealPopTimes; IdealPopStartingCD4s], ClosestN);
 
     
 
     
     
     % Store results
-    Times(:, CurrentParamNumber)= ReturnValues(1, :);
-    StartingCD4(:, CurrentParamNumber)= ReturnValues(2, :);
-    TestingProbVec(CurrentParamNumber)=BestPEstimate;
+    Times(:, CurrentParamNumber)= TimesForThisSim;
+    StartingCD4(:, CurrentParamNumber)= StartingCD4ForThisSim;
+    TestingProbVec(:,CurrentParamNumber)=OptimisedParameters;
     IdealPopTimesStore(:, CurrentParamNumber)=IdealPopTimes;
     IdealPopTestingCD4Store(:, CurrentParamNumber)=IdealPopTestingCD4;
 end
