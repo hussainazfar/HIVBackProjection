@@ -18,14 +18,40 @@ CD4ForOptimisation=[CD4ForOptimisation CD4ForOptimisation CD4ForOptimisation CD4
 Ax=Px;
 Ax.ConsiderRecentInfection=0;
 disp( 'Starting parallel Matlab...');
-matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
+matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-2);%this may not work in all processors
 
 % NumberOfTimeSamples=100;
-[Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Ax, NumberOfTimeSamples, RandomNumberStream);
-[Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, RandomNumberStream)
+% [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Ax, NumberOfTimeSamples, RandomNumberStream);
+% [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Ax, RandomNumberStream);
+% IdealPopTimesStore= GenerateCD4 using TestingParameter and PX.Number of CD4s to generate = big as ofund in CreateIndividualTimeUntilDiag
+SamplesPerSim=10000;
+for CurrentParamNumber=1:Px.NoParameterisations 
+    set(RandomNumberStream,'Substream',CurrentParamNumber);
+    
+    %Choose the current parameterision
+    Ax=Px;
+    Ax.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
+    Ax.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
+    Ax.SimulatedPopSize=SamplesPerSim;
+    OptimisedParameter=OptimisationResults(end).TestingParameter(CurrentParamNumber).Result;%use the last year's worth of data
+    [~, Data(CurrentParamNumber)]=GenerateCD4Count(OptimisedParameters, Ax);
+
+    
+%     IdealPopTimesStore=Data.Time;
+%     IdealPopTestingCD4=Data.CD4;
+    
+end
+
 matlabpool close;
-TimeDitributionToSample=reshape(IdealPopTimesStore, 1, []);
-CD4DistributionToSample=reshape(IdealPopTestingCD4, 1, []);
+
+%% Realign the data 
+TimeDitributionToSample=zeros(1,Px.NoParameterisations*SamplesPerSim);
+CD4DistributionToSample=zeros(1,Px.NoParameterisations*SamplesPerSim);
+for CurrentParamNumber=1:Px.NoParameterisations
+    TimeDitributionToSample((CurrentParamNumber-1)*SamplesPerSim+1:(CurrentParamNumber)*SamplesPerSim)=Data(CurrentParamNumber).Time;
+    CD4DistributionToSample((CurrentParamNumber-1)*SamplesPerSim+1:(CurrentParamNumber)*SamplesPerSim)=Data(CurrentParamNumber).CD4;
+end
+
 
 PlotSettings.ListOfCD4sToPlot=[200 350 500];
 CD4TimeHistPlotSpacing=(0.0:0.1:20)+0.05;
@@ -42,6 +68,8 @@ LineStyleHolder{3}='-';
 
 clf;%clear the current figure ready for plotting
 hold on;
+
+%% Select the data that has observations closse to the 200, 350 and 500
 Count=0;
 for iCD4=PlotSettings.ListOfCD4sToPlot
     Count=Count+1;
@@ -57,7 +85,7 @@ for iCD4=PlotSettings.ListOfCD4sToPlot
     PlotHandle{Count}=plot(CD4TimeHistPlotSpacing, Output, 'Color' , ColourHolder{Count},'LineWidth',2);
 end
 
-
+%% Format the graph
 xlabel('Time between infection and diagnosis (years)','fontsize', 22);
 ylabel('Annual probability','fontsize', 22);
 set(gca,'Color',[1.0 1.0 1.0]);

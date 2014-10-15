@@ -34,8 +34,8 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     end
     
     OptimisationSettings.SamplesPerRound=64;
-    OptimisationSettings.NumberOfRounds=10;
-    warning('this has been hard set and should be changed back to 50');
+    OptimisationSettings.NumberOfRounds=50;
+
     Pxi.SimulatedPopSize=NumberOfCD4Counts;
     FunctionInput=Pxi;
     

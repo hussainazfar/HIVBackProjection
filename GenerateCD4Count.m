@@ -20,10 +20,6 @@ LogInitialCD4Vector = normrnd(Pxi.MedianLogHealthyCD4, Pxi.StdLogHealthyCD4, [1 
 InitialCD4Vector=exp(LogInitialCD4Vector);
 Data.InitialCD4=InitialCD4Vector;
 
-% clf;
-% hist(Data.InitialCD4, 50:100:1450);
-% pause
-
 % Kaufmann 1999 
 % Kaufmann GR, Cunningham P, Zaunders J, Law M, Vizzard J, Carr A, et al. Impact of Early HIV-1 RNA and T-Lymphocyte Dynamics During Primary HIV-1 Infection on the Subsequent Course of HIV-1 RNA Levels and CD4+ T-Lymphocyte Counts in the First Year of HIV-1 Infection. JAIDS Journal of Acquired Immune Deficiency Syndromes 1999,22:437-444.
 % nadir 17 days after symptoms of 418, followed by 756 at day 40.        
@@ -44,7 +40,7 @@ Data.CD4(DiagnosedThisStepSubIndex)=InitialCD4Vector(DiagnosedThisStepSubIndex).
 IndexTest(DiagnosedThisStepSubIndex)=true;
 
 
-% In the next step, only look at those who are undiagnosed
+% In the next step, look at those who are diagnosed during the rebound
 UntestedIndex=NumIndex(IndexTest==false);
 MeanCD4Count=InitialCD4Vector(UntestedIndex)*(Pxi.FractionalDeclineToRebound+Pxi.FractionalDeclineToTrough)/2;
 Duration=Pxi.TimeUntilRebound-Pxi.TimeUntilTrough;
@@ -142,7 +138,7 @@ end
 
 
 
-%% Add stochasticity to all TestingCD4
+% Add stochasticity to all TestingCD4
 % Hughes, M.D. et al "Within-Subject Variation in CD4..." 1994 JID
 % On the loge scale, the relationship between the within-subject SO and the underlying CD4 cell count of mu was given by (sigma = 0.930 - 0.110 loge(mu).
 
@@ -152,7 +148,7 @@ sigma = 0.930 - 0.110*logmu;
 LogSamples=normrnd(logmu,sigma);
 Data.CD4=exp(LogSamples);
 
-%% Return results
+% Return results
 CD4CountHistogram=hist(Data.CD4, 50:100:1450);
 
 end
