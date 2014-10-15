@@ -10,15 +10,9 @@ function [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(Re
 % TestingProbVec - the values of the probability vector associated with this result
 
 
-SimulatedPopSize=10000;
-ClosestN=SimulatedPopSize/100;%This should sample from the 1% of simulations that are closest
-
 [~, NumberOfPeople]=size(RealTestingCD4);
 Times=zeros(NumberOfPeople, Px.NoParameterisations);
 StartingCD4=zeros(NumberOfPeople, Px.NoParameterisations);
-TestingProbVec=zeros(3, Px.NoParameterisations); % three is the number of optimisations that occur
-
-IdealPopTimesStore=zeros(SimulatedPopSize, Px.NoParameterisations);
 
 % For each specific vaiable combination
 parfor CurrentParamNumber=1:Px.NoParameterisations
@@ -33,10 +27,6 @@ parfor CurrentParamNumber=1:Px.NoParameterisations
     
     [TimesForThisSim, StartingCD4ForThisSim, OptimisedParameters]=OptimiseTestingRateToCD4(RealTestingCD4, Pxi );
     
-%     [IdealPopTimes, IdealPopStartingCD4s, IdealPopTestingCD4, BestPEstimate]=OptimiseIdealPopulationToCD4(RealTestingCD4, Pxi, SimulatedPopSize);
-    
-    % Choose time values of CD4 counts close to the ones input
-%     [ReturnValues]=ChooseRandomNearbyValues(RealTestingCD4, IdealPopTestingCD4, [IdealPopTimes; IdealPopStartingCD4s], ClosestN);
 
     
 
@@ -46,8 +36,7 @@ parfor CurrentParamNumber=1:Px.NoParameterisations
     Times(:, CurrentParamNumber)= TimesForThisSim;
     StartingCD4(:, CurrentParamNumber)= StartingCD4ForThisSim;
     TestingParameter(CurrentParamNumber).Result=OptimisedParameters;
-%     IdealPopTimesStore(:, CurrentParamNumber)=IdealPopTimes;
-%     IdealPopTestingCD4Store(:, CurrentParamNumber)=IdealPopTestingCD4;
+
 end
 
 
