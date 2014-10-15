@@ -145,7 +145,7 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     PatientRef(PatientRef<0)=[];
     
     %Perform an optimisation
-    [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, NumberOfSamples, RandomNumberStream);
+    [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, RandomNumberStream);
     
     OptimisationResults(YearIndex).Year=Year;
     OptimisationResults(YearIndex).TestingProbVec=TestingProbVec;

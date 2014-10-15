@@ -171,7 +171,7 @@ OptimisationTimer=tic;
 RoundCount=0;
 while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer)<MaxTime) % && (the standard deviation hasn't changed all that much)
 	RoundCount=RoundCount+1;
-    disp(['Starting step ' num2str(RoundCount) ' of ' num2str(NumberOfRounds) ' ' num2str(toc(OptimisationTimer)) ' seconds elapsed']);
+%     disp(['Starting step ' num2str(RoundCount) ' of ' num2str(NumberOfRounds) ' ' num2str(toc(OptimisationTimer)) ' seconds elapsed']);
 
     % Run the Simulation
     for SimCount=1:SamplesPerRound
