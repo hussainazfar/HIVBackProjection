@@ -146,7 +146,7 @@ try
 catch
     NumberOfRounds=10;
 end
-FractionToKeep=0.5;
+FractionToKeep=0.6666^NumberOfDimensions;%This is to ensure that just over half of the range in each dimension is kept per round, to ensure that the solution converges quickly
 NumberToKeep=floor(SamplesPerRound*FractionToKeep);
 
 %Sims per round

@@ -112,19 +112,29 @@ while (sum(IndexTest)<SimulatedPopSize)
     %Calculate the time
     RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
     TimeSinceReboundAtDiagnosis=TimeSinceRebound+RandomDistanceAlongThisStep*StepSize;
-    
     Data.Time(DiagnosedThisStepIndexInTheMainArray)=Pxi.TimeUntilRebound+TimeSinceReboundAtDiagnosis;
     
     Data.CD4(DiagnosedThisStepIndexInTheMainArray)=CD4AtMidpoint(DiagnosedThisStepSubIndex);
     IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
 
-    TimeSinceRebound=TimeSinceRebound+StepSize;
+    
 
-    %Finally, to catch problems with testing rates, if it has been more than 50 years, stop
-    if TimeSinceRebound>50
-        warning('Some of the elements in the GenerateCD4Count reached 50 years, which is probably too long');
+    %Finally, to catch problems with testing rates, if it has been more than 20 years, stop
+    if TimeSinceRebound>20
+        Reached20Years=UntestedIndex(~DiagnosedThisStepSubIndex);
+        NumberDiagnosedThisStep=sum(~DiagnosedThisStepSubIndex);
+        %Calculate the time
+        RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
+        TimeSinceReboundAtDiagnosis=TimeSinceRebound+RandomDistanceAlongThisStep*StepSize;
+
+        Data.Time(Reached20Years)=Pxi.TimeUntilRebound+TimeSinceReboundAtDiagnosis;
+        Data.CD4(Reached20Years)=CD4AtMidpoint(~DiagnosedThisStepSubIndex);
+        IndexTest(Reached20Years)=true;
+        %warning('Some of the elements in the GenerateCD4Count reached 50 years, which is probably too long');
     end
+    
+    TimeSinceRebound=TimeSinceRebound+StepSize;
 end
 
 
