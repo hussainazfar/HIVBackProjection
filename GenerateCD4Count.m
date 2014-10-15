@@ -85,10 +85,10 @@ TimeSinceRebound=0;
 Step=0;
 while (sum(IndexTest)<SimulatedPopSize)
     Step=Step+1;
-    disp( 'Step');
-    disp(Step);
-    disp(sum(IndexTest));%
-    disp(TimeSinceRebound);% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     disp( 'Step');
+%     disp(Step);
+%     disp(sum(IndexTest));%
+%     disp(TimeSinceRebound);% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     TimeMidpoint=TimeSinceRebound+StepSize/2;
     
     UntestedIndex=NumIndex(IndexTest==false);
@@ -106,10 +106,8 @@ while (sum(IndexTest)<SimulatedPopSize)
     CD4AtMidpoint= SqrCD4AtMidpoint.^2;
     
     DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, CD4AtMidpoint, StepSize);
-    disp(sum(DiagnosedThisStepSubIndex));
+
     DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
-    disp('Array ref');
-    DiagnosedThisStepIndexInTheMainArray
     NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
     %Calculate the time
     RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);

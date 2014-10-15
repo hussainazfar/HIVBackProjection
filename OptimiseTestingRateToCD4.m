@@ -21,11 +21,12 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     %OptimisationSettings=[];
     OptimisationSettings.OutputPlotFunction=@PlotOptimisationOutput;
     OptimisationSettings.PlotParameters=true;
-    
+    OptimisationSettings.SamplesPerRound=64;
+    OptimisationSettings.NumberOfRounds=50;
     Pxi.SimulatedPopSize=NumberOfCD4Counts;
     FunctionInput=Pxi;
     
-    ParameterBounds=[0, 1; 0, 1];
+    ParameterBounds=[0, 1; 0, 1; 0, 1];
     
     % Determine a likely testing rate 
     [OptimisedParameters, ~]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, ExpectedOutput, OptimisationSettings);
@@ -42,7 +43,9 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     % Store results
     Times= ReturnValues(1, :);
     StartingCD4= ReturnValues(2, :);
-
+    
+    b=hist(Data.CD4, 50:100:1450);
+    plot(50:100:1450, b, 'k.'); 
 
 
 end

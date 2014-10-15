@@ -139,9 +139,14 @@ end
 
 PointsPerDimension=SamplesPerRound^(1/NumberOfDimensions);
 
-FractionToKeep=0.5;
 
-NumberOfRounds=10;%used for finding singular best value
+try
+    NumberOfRounds=OptimisationSettings.NumberOfRounds; 
+    
+catch
+    NumberOfRounds=10;
+end
+FractionToKeep=0.5;
 NumberToKeep=floor(SamplesPerRound*FractionToKeep);
 
 %Sims per round
