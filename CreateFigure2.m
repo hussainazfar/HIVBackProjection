@@ -33,7 +33,7 @@ for CurrentParamNumber=1:Px.NoParameterisations
     Ax.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
     Ax.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
     Ax.SimulatedPopSize=SamplesPerSim;
-    OptimisedParameter=OptimisationResults(end).TestingParameter(CurrentParamNumber).Result;%use the last year's worth of data
+    OptimisedParameters=OptimisationResults(end).TestingParameter(CurrentParamNumber).Result;%use the last year's worth of data
     [~, Data(CurrentParamNumber)]=GenerateCD4Count(OptimisedParameters, Ax);
 
     
