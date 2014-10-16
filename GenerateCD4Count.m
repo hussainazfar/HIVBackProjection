@@ -77,6 +77,10 @@ end
 ResampledCD4Decline = randsample(IndividualCD4Decline,SimulatedPopSize-NumberRemaining,'true'); % with replacement
 IndividualCD4Decline=[IndividualCD4Decline ResampledCD4Decline];
 
+hist(IndividualCD4Decline, 0:200)
+pause
+
+
 TimeSinceRebound=0;
 Step=0;
 while (sum(IndexTest)<SimulatedPopSize)

@@ -11,6 +11,8 @@
     
     TestingParameters=[0.1, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
 
+    Pxi.IndividualDeclineSD=5;
+    
 [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi);
 
 Count=0;
