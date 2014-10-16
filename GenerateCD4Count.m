@@ -58,48 +58,45 @@ IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
 %Calculate the starting point of all the people (yes this is inefficient, but much cleaner for code)
 CD4AtRebound=InitialCD4Vector.*Pxi.FractionalDeclineToRebound;
-SqrCD4AtRebound=sqrt(CD4AtRebound);
+% SqrCD4AtRebound=sqrt(CD4AtRebound);
 
 % Generate a squareroot decline for these individuals
-m=Pxi.SquareRootAnnualDecline;
-v=(Pxi.SDSQRDeclineIndividual)^2;
+m=Pxi.CD4Decline;
+v=(Pxi.IndividualDeclineSD)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
-SQRDecline = lognrnd(mu,sigma,1,SimulatedPopSize);
+IndividualCD4Decline = lognrnd(mu,sigma,1,SimulatedPopSize);
 %Remove declines that are less than 10% of the squareroot annual decline
 %This is to avoid negative declines and divide by zero errors. Note that it is expected that around 0.9% of the population would have this level according to these calculations
-SQRDecline(SQRDecline<0.1*Pxi.SquareRootAnnualDecline)=[];
-[~, NumberRemaining]=size(SQRDecline);
+IndividualCD4Decline(IndividualCD4Decline<0.1*Pxi.CD4Decline)=[];
+[~, NumberRemaining]=size(IndividualCD4Decline);
 if NumberRemaining<1
     error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
 end
 %Resample to produce the required number of samples
-ResampledSQRDecline = randsample(SQRDecline,SimulatedPopSize-NumberRemaining,'true'); % with replacement
-SQRDecline=[SQRDecline ResampledSQRDecline];
+ResampledCD4Decline = randsample(IndividualCD4Decline,SimulatedPopSize-NumberRemaining,'true'); % with replacement
+IndividualCD4Decline=[IndividualCD4Decline ResampledCD4Decline];
 
 TimeSinceRebound=0;
 Step=0;
 while (sum(IndexTest)<SimulatedPopSize)
     Step=Step+1;
-%     disp( 'Step');
-%     disp(Step);
-%     disp(sum(IndexTest));%
-%     disp(TimeSinceRebound);% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     TimeMidpoint=TimeSinceRebound+StepSize/2;
     
     UntestedIndex=NumIndex(IndexTest==false);
-    UntestedDeclines=SQRDecline(UntestedIndex);
-    UntestedSqrCD4AtRebound=SqrCD4AtRebound(UntestedIndex);
+    UntestedDeclines=IndividualCD4Decline(UntestedIndex);
+    UntestedCD4AtRebound=CD4AtRebound(UntestedIndex);
     
     % Calculate CD4 at midpoint to find the average testing rate
     % We don't need to worr about stochasticity at this point because the
     % average CD4 is more likely to indicate health at a point in time than
     % day to day variation.
     
-    SqrCD4AtMidpoint=UntestedSqrCD4AtRebound-TimeMidpoint*UntestedDeclines;
+    CD4AtMidpoint=UntestedCD4AtRebound-TimeMidpoint*UntestedDeclines;
     %Make all <0 CD4s zero
-    SqrCD4AtMidpoint(SqrCD4AtMidpoint<0)=0;
-    CD4AtMidpoint= SqrCD4AtMidpoint.^2;
+    CD4AtMidpoint(CD4AtMidpoint<0)=0;
+
     
     DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, CD4AtMidpoint, StepSize);
 

@@ -1,4 +1,4 @@
-NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
+NoParameterisations=2; % the number of parameterisations used to generate uncertainty. Should be set to 200
 
 TimeALL=tic;
 

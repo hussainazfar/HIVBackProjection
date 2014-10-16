@@ -136,21 +136,21 @@ Px.TimeUntilRebound=40/365.25; % From Kaufmann 1999
 
 % To compensate for the high levels of disagreement we will choose the
 % CD4 intercept (median, confidence intervals) to be 636 (586 - 686)
-Px.SQRTBaselineCD4Median=sqrt(636);
-Px.SQRTBaselineCD4LCI=sqrt(586);
-Px.SQRTBaselineCD4UCI=sqrt(686);
+Px.BaselineCD4Median=636;
+Px.BaselineCD4LCI=586;
+Px.BaselineCD4UCI=686;
 
-Px.SQRTBaselineCD4Stdev=(Px.SQRTBaselineCD4UCI-Px.SQRTBaselineCD4LCI)/2/1.96;
+Px.BaselineCD4Stdev=(Px.BaselineCD4UCI-Px.BaselineCD4LCI)/2/1.96;
 
 % Create the distribution average CD4 count declines
-m=Px.SQRTBaselineCD4Median;
-v=(Px.SQRTBaselineCD4Stdev)^2;
+m=Px.BaselineCD4Median;
+v=(Px.BaselineCD4Stdev)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 
-Px.SQRTBaselineCD4MedianVec=lognrnd(mu,sigma,1,NoParameterisations);
+Px.BaselineCD4MedianVec=lognrnd(mu,sigma,1,NoParameterisations);
 
-Px.FractionalDeclineToReboundVec=(Px.SQRTBaselineCD4MedianVec).^2/MedianHealthyCD4;
+Px.FractionalDeclineToReboundVec=Px.BaselineCD4MedianVec/MedianHealthyCD4;
 
 
 % 
