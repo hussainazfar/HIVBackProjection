@@ -40,7 +40,7 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     FunctionInput=Pxi;
     
     % there are three parameters that describe the shape of the testing function
-    ParameterBounds=[0, 1; 0, 1; 0, 1];
+    ParameterBounds=[0, 1; 0, 1; 0.99 1];
     
     % Determine a likely testing rate 
     [OptimisedParameters, DistributionOfOptimisedParameters]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, ExpectedOutput, OptimisationSettings);
