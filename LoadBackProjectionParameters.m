@@ -304,7 +304,7 @@ Px.FractionalDeclineToReboundVec=Px.BaselineCD4MedianVec/MedianHealthyCD4;
     % be assumed that it is possible that declines of 10% could occur because
     % they are explicitly filtered in GenerateCD4Count
     Px.CD4DeclineVec (Px.CD4DeclineVec <0.1*Px.MeanCD4Decline)=[]; % dispose of declines that are less than 10% of the estimate
-    [~, NumberRemaining]=size(Px.SquareRootAnnualDeclineVec );
+    [~, NumberRemaining]=size(Px.CD4DeclineVec );
     if NumberRemaining<1
         error('The CD4Decline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
     end

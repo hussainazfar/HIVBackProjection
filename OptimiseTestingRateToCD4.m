@@ -6,7 +6,7 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
 %     % Create a simulation specific value for the parameters
 %     Pxi=Px;
 %     Pxi.ShowCD4Optimisation=true; % to show the plots of the output of the function. Turn on for testing, but turn off for increased speed
-%     Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(1); % select a sample of this parameter
+%     Pxi.CD4Decline=Px.CD4DeclineVec(1); % select a sample of this parameter
 %     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(1); % select a sample of this parameter
 %     [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(CD4ForOptimisation, Pxi );
     
@@ -34,7 +34,7 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     end
     
     OptimisationSettings.SamplesPerRound=64;
-    OptimisationSettings.NumberOfRounds=50;
+    OptimisationSettings.NumberOfRounds=10;
 
     Pxi.SimulatedPopSize=NumberOfCD4Counts;
     FunctionInput=Pxi;
