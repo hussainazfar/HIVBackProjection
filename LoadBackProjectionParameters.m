@@ -463,7 +463,12 @@ Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the
 % sqrCD4=sqrCD4decline*t + sqr(startingCD4)
 % CD4=(sqrCD4decline*t + sqr(startingCD4))^2
 % d(CD4)/dt=2(sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
-% if d(CD4)/dt=60 (linear decline rate)
+% if d(CD4)/dt=linearCD4Decline (linear decline rate)
+% linearCD4Decline=2(sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
+% linearCD4Decline/(2*sqrCD4decline) = sqrCD4decline*t + sqr(startingCD4)
+% sqrCD4decline*t = linearCD4Decline/(2*sqrCD4decline) - sqr(startingCD4)
+% t = (linearCD4Decline/(2*sqrCD4decline) - sqr(startingCD4))/sqrCD4decline
+
 
 %     sqrt(median starting point)-sqrt
 

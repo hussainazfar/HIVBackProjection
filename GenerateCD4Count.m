@@ -71,7 +71,7 @@ IndividualCD4Decline = lognrnd(mu,sigma,1,SimulatedPopSize);
 IndividualCD4Decline(IndividualCD4Decline<0.1*Pxi.CD4Decline)=[];
 [~, NumberRemaining]=size(IndividualCD4Decline);
 if NumberRemaining<1
-    error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
+    error('The decline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
 end
 %Resample to produce the required number of samples
 ResampledCD4Decline = randsample(IndividualCD4Decline,SimulatedPopSize-NumberRemaining,'true'); % with replacement
