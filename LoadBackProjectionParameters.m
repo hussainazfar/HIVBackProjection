@@ -315,60 +315,60 @@ Px.FractionalDeclineToReboundVec=Px.BaselineCD4MedianVec/MedianHealthyCD4;
 
 
 %% Square root decline model 
-% % The weighted mean of the decline is 61 cells per year 
-% % assuming a  mean of 400 cells in the study, and a loss of 61 cells in the
-% % year following, meaning a fall to 339. The square root of these values
-% % are 20.00 and 18.41 respectively. This represents an annual decline in
-% % square root CD4 counts of 1.588 per year.
-% 
-% % This result is in alignment with the result from Cascade 2003 Differences in CD4 Cell Counts at Seroconversion and Decline Among 5739 HIV-1–Infected Individuals with Well-Estimated Dates of Seroconversion
-% % This paper showed a square root decline between 1.22 and 1.67
-% % depending on age and whether the result was adjusted for drop outs. 
-% 
-% % Note that the result above is not exactly in alignment with two studies by Lodi et al. 
-% % Firstly, Lodi 2010 found that in the seroconverter group, decline was
-% % 1.758 per year in the baseline group (<30 years, MSM) and up to 1.908 in 
-% % men older than 30 years. Alternately, Lodi 2011 found square root decline
-% % to be 1.159 per year, a highly divergent result to the 2010 resuilts.
-% 
-% % It should be noted that both of these model parameter results are 
-% % multi-parameter models. Lodi 2010 had a high starting CD4 and a fast CD4
-% % decline, while Lodi 2011 had a low starting CD4 and a slow CD4 decline,
-% % implying that the fitting function was converging to similar times and
-% % more observations in the centre of observations (after ~ second and thrid
-% % year) and hence the suitability for describing the early stage decline
-% % and the CD4 count immediately following infection may be limited. 
-% 
-% % Other studies include:
-% %Pillay non-TDR 1.7 (95% CI, 0.8–2.6) Cascade
-% %Keller 2010 : 1.67 (Canada)
-% 
-% % To choose an appropriate level of decline, we selected a mean square root
-% % decline of 1.6, and a 95% confidence interval of 1.4 to 1.8
-% 
-% Px.MeanSquareRootAnnualDecline=1.6;
-% Px.SquareRootAnnualDeclineStdev=(1.8-1.4)/2/1.96;
-% % Create the distribution average CD4 count declines
-% m=Px.MeanSquareRootAnnualDecline;
-% v=(Px.SquareRootAnnualDeclineStdev)^2;
-% mu = log((m^2)/sqrt(v+m^2));
-% sigma = sqrt(log(v/(m^2)+1));
-% 
-% Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,NoParameterisations);
-% % In this section, the decline must not be less than 10% of the average decline across simulations
-% % Although this is very unlikely (given the above parameters) it needs to
-% % be assumed that it is possible that declines of 10% could occur because
-% % they are explicitly filtered in GenerateCD4Count
-% Px.SquareRootAnnualDeclineVec (Px.SquareRootAnnualDeclineVec <0.1*Px.MeanSquareRootAnnualDecline)=[];
-% [~, NumberRemaining]=size(Px.SquareRootAnnualDeclineVec );
-% if NumberRemaining<1
-%     error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
-% end
-% %Resample to produce the required number of samples
-% ResampledSQRDecline = randsample(Px.SquareRootAnnualDeclineVec ,NoParameterisations-NumberRemaining,'true'); % with replacement
-% Px.SquareRootAnnualDeclineVec =[Px.SquareRootAnnualDeclineVec  ResampledSQRDecline];
-% 
-% 
+% The weighted mean of the decline is 61 cells per year 
+% assuming a  mean of 400 cells in the study, and a loss of 61 cells in the
+% year following, meaning a fall to 339. The square root of these values
+% are 20.00 and 18.41 respectively. This represents an annual decline in
+% square root CD4 counts of 1.588 per year.
+
+% This result is in alignment with the result from Cascade 2003 Differences in CD4 Cell Counts at Seroconversion and Decline Among 5739 HIV-1–Infected Individuals with Well-Estimated Dates of Seroconversion
+% This paper showed a square root decline between 1.22 and 1.67
+% depending on age and whether the result was adjusted for drop outs. 
+
+% Note that the result above is not exactly in alignment with two studies by Lodi et al. 
+% Firstly, Lodi 2010 found that in the seroconverter group, decline was
+% 1.758 per year in the baseline group (<30 years, MSM) and up to 1.908 in 
+% men older than 30 years. Alternately, Lodi 2011 found square root decline
+% to be 1.159 per year, a highly divergent result to the 2010 resuilts.
+
+% It should be noted that both of these model parameter results are 
+% multi-parameter models. Lodi 2010 had a high starting CD4 and a fast CD4
+% decline, while Lodi 2011 had a low starting CD4 and a slow CD4 decline,
+% implying that the fitting function was converging to similar times and
+% more observations in the centre of observations (after ~ second and thrid
+% year) and hence the suitability for describing the early stage decline
+% and the CD4 count immediately following infection may be limited. 
+
+% Other studies include:
+%Pillay non-TDR 1.7 (95% CI, 0.8–2.6) Cascade
+%Keller 2010 : 1.67 (Canada)
+
+% To choose an appropriate level of decline, we selected a mean square root
+% decline of 1.6, and a 95% confidence interval of 1.4 to 1.8
+
+Px.MeanSquareRootAnnualDecline=1.6;
+Px.SquareRootAnnualDeclineStdev=(1.8-1.4)/2/1.96;
+% Create the distribution average CD4 count declines
+m=Px.MeanSquareRootAnnualDecline;
+v=(Px.SquareRootAnnualDeclineStdev)^2;
+mu = log((m^2)/sqrt(v+m^2));
+sigma = sqrt(log(v/(m^2)+1));
+
+Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,NoParameterisations);
+% In this section, the decline must not be less than 10% of the average decline across simulations
+% Although this is very unlikely (given the above parameters) it needs to
+% be assumed that it is possible that declines of 10% could occur because
+% they are explicitly filtered in GenerateCD4Count
+Px.SquareRootAnnualDeclineVec (Px.SquareRootAnnualDeclineVec <0.1*Px.MeanSquareRootAnnualDecline)=[];
+[~, NumberRemaining]=size(Px.SquareRootAnnualDeclineVec );
+if NumberRemaining<1
+    error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
+end
+%Resample to produce the required number of samples
+ResampledSQRDecline = randsample(Px.SquareRootAnnualDeclineVec ,NoParameterisations-NumberRemaining,'true'); % with replacement
+Px.SquareRootAnnualDeclineVec =[Px.SquareRootAnnualDeclineVec  ResampledSQRDecline];
+
+
 % 
 % 
 % % if MajorityOlderThan30==1
@@ -417,33 +417,58 @@ Px.FractionalDeclineToReboundVec=Px.BaselineCD4MedianVec/MedianHealthyCD4;
 % % 
 % % Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,ParameterisationSpaceSize);
 % 
-% %%  Individual vaiablility in decline
-% % The following represents the individual variability of CD4 declines. 
-% % Wolbers et al. Plos 2010 (table 1) to generate an interquartile range
-% %For example, people at the 25th percentile may have a
-% %decline of 46 cells per year, and at the 75th percentile may have a
-% %decline of 81. 
-% %Using the results from 
-% % Note: this method does not fully account for the range of possible
-% % declines in CD4 count of PLHIV. However, it accounts for some of it,
-% % which is better than asserting that all the variation in the population's
-% % annual CD4 decline is completely independent of current CD4. It is well
-% % established that high CD4s have higher CD4 declines, and since this is
-% % one of the main explanatory factors, it is better to compare the upper
-% % quartile reading of decline to the upper quartile reading of current CD4
-% % and look for ranges of uncertainty this way. 
-% CD4cellcountatcARTinitiation=[289];% 206 398];
-% EstimatedprecARTCD4slope=[61 46 81]; %[median LQR UQR]
-% CD4cellcount1yearbeforecARTinitiation=CD4cellcountatcARTinitiation+EstimatedprecARTCD4slope;
-% sqrCD4_1=sqrt(CD4cellcount1yearbeforecARTinitiation);
-% sqrCD4_2=sqrt(CD4cellcountatcARTinitiation);
-% sqrdecline=sqrCD4_1-sqrCD4_2;%+ve, [median LQR UQR]
-% %now to find a rough stddev
-% MedianToUQR=(sqrdecline(3)-sqrdecline(1));%0.5271
-% MedianToLQR=(sqrdecline(1)-sqrdecline(2));%0.4053
-% MeanDistance=(MedianToUQR+MedianToLQR)/2;%0.4662
-% %The following indicates the range in which we believe INDIVIDUAL variability to be contained
-% Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the normal distrbution 25th percentile
+%%  Individual vaiablility in decline
+% The following represents the individual variability of CD4 declines. 
+% Wolbers et al. Plos 2010 (table 1) to generate an interquartile range
+%For example, people at the 25th percentile may have a
+%decline of 46 cells per year, and at the 75th percentile may have a
+%decline of 81. 
+%Using the results from 
+% Note: this method does not fully account for the range of possible
+% declines in CD4 count of PLHIV. However, it accounts for some of it,
+% which is better than asserting that all the variation in the population's
+% annual CD4 decline is completely independent of current CD4. It is well
+% established that high CD4s have higher CD4 declines, and since this is
+% one of the main explanatory factors, it is better to compare the upper
+% quartile reading of decline to the upper quartile reading of current CD4
+% and look for ranges of uncertainty this way. 
+CD4cellcountatcARTinitiation=[289];% 206 398];
+EstimatedprecARTCD4slope=[61 46 81]; %[median LQR UQR]
+CD4cellcount1yearbeforecARTinitiation=CD4cellcountatcARTinitiation+EstimatedprecARTCD4slope;
+sqrCD4_1=sqrt(CD4cellcount1yearbeforecARTinitiation);
+sqrCD4_2=sqrt(CD4cellcountatcARTinitiation);
+sqrdecline=sqrCD4_1-sqrCD4_2;%+ve, [median LQR UQR]
+%now to find a rough stddev
+MedianToUQR=(sqrdecline(3)-sqrdecline(1));%0.5271
+MedianToLQR=(sqrdecline(1)-sqrdecline(2));%0.4053
+MeanDistance=(MedianToUQR+MedianToLQR)/2;%0.4662
+%The following indicates the range in which we believe INDIVIDUAL variability to be contained
+Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the normal distrbution 25th percentile
+
+%% Linear decline following square root decline 
+% Although square root decline has the nice property of giving faster
+% declines for higher CD4 counts, there is a point at which the CD4 decline
+% becomes very shallow. This means that it takes too long to go from 300 to
+% zero. As such, we need to determine the point at which linear decline
+% takes over. In the more complicated decline model, once the average
+% decline rate reaches 60 cells/muL/year, linear decline takes over. 
+
+% Using the median starting CD4 count, we determine the time until median
+% decline is 60 cell/muL/year.
+
+% d(sqrCD4)/dt= sqrCD4decline  %in this case, sqrCD4decline=1.6
+% sqrCD4=sqrCD4decline*dt
+% sqrCD4=sqrCD4decline*t + c
+% when t=0, sqrCD4=sqr(startingCD4)
+% sqrCD4=sqrCD4decline*t + sqr(startingCD4)
+% CD4=(sqrCD4decline*t + sqr(startingCD4))^2
+% d(CD4)/dt=2(sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
+% if d(CD4)/dt=60 (linear decline rate)
+
+%     sqrt(median starting point)-sqrt
+
+
+
     
 %% Other studies
 % Lodi 2011 CASCADE
