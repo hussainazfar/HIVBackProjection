@@ -64,6 +64,7 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
         DeleteIndex=Data.Time>MaxTime;
         Data.Time(DeleteIndex)=[];
         Data.CD4(DeleteIndex)=[];
+        Data.InitialCD4(DeleteIndex)=[];
         
         % IMPORTANT! Note that the removal of samples will not make a
         % straight cut off in this case. Using this algorithm, we are saying
