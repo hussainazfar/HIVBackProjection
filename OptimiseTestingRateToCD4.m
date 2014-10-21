@@ -35,15 +35,16 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     end
     
     %OptimisationSettings.SamplesPerRound=64;
-    OptimisationSettings.SamplesPerRound=1000;
-    OptimisationSettings.NumberOfRounds=10;
+    OptimisationSettings.SamplesPerRound=64;
+    OptimisationSettings.NumberOfRounds=20;
 
     Pxi.SimulatedPopSize=NumberOfCD4Counts;
     FunctionInput=Pxi;
     
     % there are three parameters that describe the shape of the testing function
-    %ParameterBounds=[0, 1; 0, 1; 0.99, 1]; %these bounds are only used to generate a sampling of the CD4 count with time
-    ParameterBounds=[0, 1; 0, 1; 0.99, 1];
+    % ParameterBounds=[0, 1; 0, 1; 0.99, 1]; %these bounds are only used to generate a sampling of the CD4 count with time
+    % ParameterBounds=[0, 1; 0, 1; 0.99, 1]; % Must be tested at CD4 =0;
+    ParameterBounds=[0, 1; 0, 1; 0, 1]; % Must be tested at CD4 =0;
     
     % Determine a likely testing rate 
     [OptimisedParameters, DistributionOfOptimisedParameters]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, ExpectedOutput, OptimisationSettings);

@@ -456,18 +456,18 @@ Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the
 % Using the median starting CD4 count, we determine the time until median
 % decline is 60 cell/muL/year.
 
-% d(sqrCD4)/dt= sqrCD4decline  %in this case, sqrCD4decline=1.6
-% sqrCD4=sqrCD4decline*dt
-% sqrCD4=sqrCD4decline*t + c
+% d(sqrCD4)/dt= -sqrCD4decline  %in this case, sqrCD4decline=1.6
+% sqrCD4=-sqrCD4decline*dt
+% sqrCD4=-sqrCD4decline*t + c
 % when t=0, sqrCD4=sqr(startingCD4)
-% sqrCD4=sqrCD4decline*t + sqr(startingCD4)
-% CD4=(sqrCD4decline*t + sqr(startingCD4))^2
-% d(CD4)/dt=2(sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
-% if d(CD4)/dt=linearCD4Decline (linear decline rate of 61 that we wish to be the rate from this point onwards)
-% linearCD4Decline=2(sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
-% linearCD4Decline/(2*sqrCD4decline) = sqrCD4decline*t + sqr(startingCD4)
-% sqrCD4decline*t = linearCD4Decline/(2*sqrCD4decline) - sqr(startingCD4)
-% t = (linearCD4Decline/(2*sqrCD4decline) - sqr(startingCD4))/sqrCD4decline
+% sqrCD4=-sqrCD4decline*t + sqr(startingCD4)
+% CD4=(-sqrCD4decline*t + sqr(startingCD4))^2
+% d(CD4)/dt=-2(-sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
+% if d(CD4)/dt=-linearCD4Decline (linear decline rate of 61 that we wish to be the rate from this point onwards)
+% -linearCD4Decline=-2(-sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
+% linearCD4Decline/(2*sqrCD4decline) = -sqrCD4decline*t + sqr(startingCD4)
+% sqrCD4decline*t = -linearCD4Decline/(2*sqrCD4decline) + sqr(startingCD4)
+% t = (-linearCD4Decline/(2*sqrCD4decline) + sqr(startingCD4))/sqrCD4decline
 
 % Px.TimeAtLinearDecline=(-Px.MeanCD4Decline/(2*Px.MeanSquareRootAnnualDecline) + sqrt(Px.BaselineCD4Median))/Px.MeanSquareRootAnnualDecline; %t from above 
 Px.TimeAtLinearDecline=(-Px.MeanCD4Decline/(-2*Px.MeanSquareRootAnnualDecline) - sqrt(Px.BaselineCD4Median))/(-Px.MeanSquareRootAnnualDecline); %t from above 
@@ -476,6 +476,8 @@ Px.TimeAtLinearDecline=(-Px.MeanCD4Decline/(-2*Px.MeanSquareRootAnnualDecline) -
 % t=0:0.1:30;
 % dCD4dt=-2*(-Px.MeanSquareRootAnnualDecline*t + sqrt(Px.BaselineCD4Median))*Px.MeanSquareRootAnnualDecline;
 % plot(t, dCD4dt);
+
+% Add the time in the fast fall and recovery
 Px.TimeAtLinearDecline=Px.TimeAtLinearDecline+Px.TimeUntilRebound;
 
 % Note that from TimeAtLinearDecline onwards, the decline is based on the

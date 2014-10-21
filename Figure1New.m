@@ -17,7 +17,8 @@
 [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi);
 
 Count=0;
-for Time=0:0.1:20
+for Time=0:0.025:20
+    Time
     Count=Count+1;
     IndexInStep=Time<=Data.Time & Data.Time<Time+0.1;
     

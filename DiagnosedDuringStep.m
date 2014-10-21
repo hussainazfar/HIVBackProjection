@@ -1,4 +1,9 @@
-function DiagnosisResult=DiagnosedDuringStep(TestingParameters, CD4Count, Duration)
+function [DiagnosisResult, AnnualTestingProbability]=DiagnosedDuringStep(TestingParameters, CD4Count, Duration)
+% Test this function
+% CD4sToTest=0:1:1500;
+% [DiagnosisResult AnnualTestingProbability]=DiagnosedDuringStep(OptimisedParameters, CD4sToTest, 0.1);
+% plot(CD4sToTest, AnnualTestingProbability);
+
 RegularTestingRate=TestingParameters(1);
 Curvature=TestingParameters(2);
 TestingRateAtZero=TestingParameters(3);% This is a value between (0, 1), and indicates how high the value goes up to 
