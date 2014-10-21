@@ -7,7 +7,8 @@
     
     Pxi.CD4Decline=mean(Px.CD4DeclineVec); % select a sample of this parameter
     Pxi.FractionalDeclineToRebound=mean(Px.FractionalDeclineToReboundVec); % select a sample of this parameter
-    Pxi.SimulatedPopSize=100000;
+    Pxi.SQRCD4Decline=mean(Px.SQRCD4DeclineVec);
+    Pxi.SimulatedPopSize=1000000;
     
     TestingParameters=[0.1, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
 

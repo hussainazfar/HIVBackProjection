@@ -4,6 +4,19 @@ function [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi)
 % so, it creates the number of people expected in the correct proportions
 % by CD4. 
 
+% To test this function, use:
+%     NoParameterisations=200;
+%     [Px]=LoadBackProjectionParameters(NoParameterisations);
+%     % Create a simulation specific value for the parameters
+%     Pxi=Px;
+%     Pxi.CD4Decline=Px.CD4DeclineVec(1); % select a sample of this parameter
+%     Pxi.SQRCD4Decline=Px.SQRCD4DeclineVec(1);
+%     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(1); % select a sample of this parameter
+%     Pxi.SimulatedPopSize=100000;
+%     TestingParameters=[0.10, 0, 0];%small amount of testing per year, no difference in testing by CD4 count
+%     [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi);
+
+
 StepSize=0.1;
 
 %Start with the correct number of observations
@@ -108,10 +121,13 @@ while (sum(IndexTest)<SimulatedPopSize)
     else 
         
         % calculate the CD4 count at the point at which linear decline occurs
-        UntestedCD4AtLinearDecline=UntestedSqrCD4AtRebound-Pxi.TimeAtLinearDecline .*UntestedDeclines;
+        UntestedSqrCD4AtLinearDecline=UntestedSqrCD4AtRebound-Pxi.TimeAtLinearDecline .*UntestedDeclines;
+        UntestedCD4AtLinearDecline=UntestedSqrCD4AtLinearDecline.^2;
         % calculate the liner decline
         TimeSinceLinearDecline=TimeMidpoint-Pxi.TimeAtLinearDecline;
-        LinearCD4Decline=2*(UntestedDeclines*TimeSinceLinearDecline + UntestedSqrCD4AtRebound).*UntestedDeclines;
+        % linearCD4Decline=2(sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
+        %mean(UntestedDeclines)positive
+        LinearCD4Decline=2*(-UntestedDeclines*Pxi.TimeAtLinearDecline + UntestedSqrCD4AtRebound).*UntestedDeclines;
         % Calculate the squareroot decline at TimeAtLinearDecline
         CD4AtMidpoint=UntestedCD4AtLinearDecline-TimeSinceLinearDecline*LinearCD4Decline;
     end
