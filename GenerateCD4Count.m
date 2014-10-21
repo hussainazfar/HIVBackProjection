@@ -15,7 +15,7 @@ NumIndex=1:SimulatedPopSize;
 Data.Time=zeros(1, SimulatedPopSize);
 Data.CD4=zeros(1, SimulatedPopSize);
 
-% Generate an intital distribution
+%% Generate an intital distribution
 LogInitialCD4Vector = normrnd(Pxi.MedianLogHealthyCD4, Pxi.StdLogHealthyCD4, [1 SimulatedPopSize]);
 InitialCD4Vector=exp(LogInitialCD4Vector);
 Data.InitialCD4=InitialCD4Vector;
@@ -24,7 +24,7 @@ Data.InitialCD4=InitialCD4Vector;
 % Kaufmann GR, Cunningham P, Zaunders J, Law M, Vizzard J, Carr A, et al. Impact of Early HIV-1 RNA and T-Lymphocyte Dynamics During Primary HIV-1 Infection on the Subsequent Course of HIV-1 RNA Levels and CD4+ T-Lymphocyte Counts in the First Year of HIV-1 Infection. JAIDS Journal of Acquired Immune Deficiency Syndromes 1999,22:437-444.
 % nadir 17 days after symptoms of 418, followed by 756 at day 40.        
 
-% For all people, find the probability of being diagnosed in the firt 17 days 
+%% For all people, find the probability of being diagnosed in the firt 17 days during the rapid decline
 UntestedIndex=NumIndex(IndexTest==false);%in this case, all
 MeanCD4Count=InitialCD4Vector(UntestedIndex)*(1+Pxi.FractionalDeclineToTrough)/2;
 Duration=Pxi.TimeUntilTrough;
@@ -40,7 +40,7 @@ Data.CD4(DiagnosedThisStepSubIndex)=InitialCD4Vector(DiagnosedThisStepSubIndex).
 IndexTest(DiagnosedThisStepSubIndex)=true;
 
 
-% In the next step, look at those who are diagnosed during the rebound
+%% In the next step, look at those who are diagnosed during the rapid rebound
 UntestedIndex=NumIndex(IndexTest==false);
 MeanCD4Count=InitialCD4Vector(UntestedIndex)*(Pxi.FractionalDeclineToRebound+Pxi.FractionalDeclineToTrough)/2;
 Duration=Pxi.TimeUntilRebound-Pxi.TimeUntilTrough;
@@ -56,7 +56,7 @@ Data.CD4(DiagnosedThisStepIndexInTheMainArray)=InitialCD4Vector(DiagnosedThisSte
 IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
 
-%Calculate the starting point of all the people (yes this is inefficient, but much cleaner for code)
+%% Calculate the starting point of all the people (yes this is inefficient, but much cleaner for code)
 CD4AtRebound=InitialCD4Vector.*Pxi.FractionalDeclineToRebound;
 % SqrCD4AtRebound=sqrt(CD4AtRebound);
 
@@ -88,19 +88,28 @@ while (sum(IndexTest)<SimulatedPopSize)
 
     TimeMidpoint=TimeSinceRebound+StepSize/2;
     
+    
     UntestedIndex=NumIndex(IndexTest==false);
     UntestedDeclines=IndividualCD4Decline(UntestedIndex);
     UntestedCD4AtRebound=CD4AtRebound(UntestedIndex);
     
     % Calculate CD4 at midpoint to find the average testing rate
-    % We don't need to worr about stochasticity at this point because the
+    % We don't need to worry about stochasticity at this point because the
     % average CD4 is more likely to indicate health at a point in time than
     % day to day variation.
     
-    CD4AtMidpoint=UntestedCD4AtRebound-TimeMidpoint*UntestedDeclines;
+    % if TimeMidpoint < TimeAtLinearDecline 
+    % calculate the squareroot decline
+    % else 
+    % calculate the liner decline
+    % TimeSinceLinearDeclineStart=TimeMidpoint-TimeAtLinearDecline;
+    % Calculate the squareroot decline at TimeAtLinearDecline
+        CD4AtMidpoint=UntestedCD4AtRebound-TimeMidpoint*UntestedDeclines;
+    %end
+    
+    
     %Make all <0 CD4s zero
     CD4AtMidpoint(CD4AtMidpoint<0)=0;
-
     
     DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, CD4AtMidpoint, StepSize);
 
