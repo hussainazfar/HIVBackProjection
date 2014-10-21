@@ -1,4 +1,4 @@
-NoParameterisations=2; % the number of parameterisations used to generate uncertainty. Should be set to 200
+NoParameterisations=5; % the number of parameterisations used to generate uncertainty. Should be set to 200
 
 TimeALL=tic;
 
@@ -145,6 +145,7 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     PatientRef(PatientRef<0)=[];
     
     %Perform an optimisation
+    Px.CurrentYear=Year;
     [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, RandomNumberStream);
     
     OptimisationResults(YearIndex).Year=Year;
@@ -430,7 +431,7 @@ CreateFigure2
 CreateFigure3
 CreateFigure4
 CreateFigure5
-% CreateOtherPlots
+CreateOtherPlots
 CreateResultUncertaintyAroundTime
 %OutputPlots %old plots output
 toc(TimeALL)

@@ -53,11 +53,30 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
 %     plot([1 2 3], DistributionOfOptimisedParameters);
     
     % Rerun the best testing rate, match CD4 counts with
-    Pxi.SimulatedPopSize=10000;
+    Pxi.SimulatedPopSize=100000;
     
     [~, Data]=GenerateCD4Count(OptimisedParameters, Pxi);
     
-    ClosestN=Pxi.SimulatedPopSize/100;
+    % Filter the data such that only infections after a certain date is allowable
+    try % In this section, if the CurrentYear or EarliestPossibleInfection is not set, no cut off occurs
+        MaxTime=Pxi.CurrentYear-Pxi.EarliestPossibleInfection; %e.g. 1978
+        % Filter optimised dates according to the max time
+        DeleteIndex=Data.Time>MaxTime;
+        Data.Time(DeleteIndex)=[];
+        Data.CD4(DeleteIndex)=[];
+        
+        % IMPORTANT! Note that the removal of samples will not make a
+        % straight cut off in this case. Using this algorithm, we are saying
+        % "No samples prior to 1978", but in reality, we are really saying 
+        % "No samples more than 5 years ago". That means people who are
+        % diagnosed later in 1984 will have an ealiest infection date of 
+        % late 1984, whereas 
+    catch 
+        % No filtering occurs
+    end
+    
+    [~, NumberOfSamples]=size(Data.CD4);
+    ClosestN=Pxi.SimulatedPopSize/100;%find the closest 100 values
     % Choose time values of CD4 counts close to the ones input
     [ReturnValues]=ChooseRandomNearbyValues(RealTestingCD4, Data.CD4, [Data.Time; Data.InitialCD4], ClosestN);
 
