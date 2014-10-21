@@ -23,13 +23,10 @@ parfor CurrentParamNumber=1:Px.NoParameterisations
     %Choose the current parameterision
     Pxi=Px;
     Pxi.CD4Decline=Px.CD4DeclineVec(CurrentParamNumber);
+    Pxi.SQRCD4Decline=Px.SQRCD4DeclineVec(CurrentParamNumber);
     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
     
     [TimesForThisSim, StartingCD4ForThisSim, OptimisedParameters]=OptimiseTestingRateToCD4(RealTestingCD4, Pxi );
-    
-
-    
-
     
     
     % Store results

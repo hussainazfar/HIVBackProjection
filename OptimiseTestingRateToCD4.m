@@ -7,6 +7,7 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
 %     Pxi=Px;
 %     Pxi.ShowCD4Optimisation=true; % to show the plots of the output of the function. Turn on for testing, but turn off for increased speed
 %     Pxi.CD4Decline=Px.CD4DeclineVec(1); % select a sample of this parameter
+%     Pxi.SQRCD4Decline=Px.SQRCD4DeclineVec(1);
 %     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(1); % select a sample of this parameter
 %     [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(CD4ForOptimisation, Pxi );
     
@@ -33,14 +34,16 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
         OptimisationSettings.DisplayTimer=true;
     end
     
-    OptimisationSettings.SamplesPerRound=64;
+    %OptimisationSettings.SamplesPerRound=64;
+    OptimisationSettings.SamplesPerRound=1000;
     OptimisationSettings.NumberOfRounds=10;
 
     Pxi.SimulatedPopSize=NumberOfCD4Counts;
     FunctionInput=Pxi;
     
     % there are three parameters that describe the shape of the testing function
-    ParameterBounds=[0, 1; 0, 1; 0.99 1];
+    %ParameterBounds=[0, 1; 0, 1; 0.99, 1]; %these bounds are only used to generate a sampling of the CD4 count with time
+    ParameterBounds=[0, 1; 0, 1; 0.99, 1];
     
     % Determine a likely testing rate 
     [OptimisedParameters, DistributionOfOptimisedParameters]=StochasticOptimise(FunctionPointer, FunctionInput, ParameterBounds, ExpectedOutput, OptimisationSettings);

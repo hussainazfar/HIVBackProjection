@@ -354,19 +354,19 @@ v=(Px.SquareRootAnnualDeclineStdev)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 
-Px.SquareRootAnnualDeclineVec = lognrnd(mu,sigma,1,NoParameterisations);
+Px.SQRCD4DeclineVec = lognrnd(mu,sigma,1,NoParameterisations);
 % In this section, the decline must not be less than 10% of the average decline across simulations
 % Although this is very unlikely (given the above parameters) it needs to
 % be assumed that it is possible that declines of 10% could occur because
 % they are explicitly filtered in GenerateCD4Count
-Px.SquareRootAnnualDeclineVec (Px.SquareRootAnnualDeclineVec <0.1*Px.MeanSquareRootAnnualDecline)=[];
-[~, NumberRemaining]=size(Px.SquareRootAnnualDeclineVec );
+Px.SQRCD4DeclineVec (Px.SQRCD4DeclineVec <0.1*Px.MeanSquareRootAnnualDecline)=[];
+[~, NumberRemaining]=size(Px.SQRCD4DeclineVec );
 if NumberRemaining<1
     error('The SQRDecline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
 end
 %Resample to produce the required number of samples
-ResampledSQRDecline = randsample(Px.SquareRootAnnualDeclineVec ,NoParameterisations-NumberRemaining,'true'); % with replacement
-Px.SquareRootAnnualDeclineVec =[Px.SquareRootAnnualDeclineVec  ResampledSQRDecline];
+ResampledSQRDecline = randsample(Px.SQRCD4DeclineVec ,NoParameterisations-NumberRemaining,'true'); % with replacement
+Px.SQRCD4DeclineVec =[Px.SQRCD4DeclineVec  ResampledSQRDecline];
 
 
 % 
@@ -463,14 +463,26 @@ Px.SDSQRDeclineIndividual= MeanDistance/0.67;%0.67 is the one tail value for the
 % sqrCD4=sqrCD4decline*t + sqr(startingCD4)
 % CD4=(sqrCD4decline*t + sqr(startingCD4))^2
 % d(CD4)/dt=2(sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
-% if d(CD4)/dt=linearCD4Decline (linear decline rate)
+% if d(CD4)/dt=linearCD4Decline (linear decline rate of 61 that we wish to be the rate from this point onwards)
 % linearCD4Decline=2(sqrCD4decline*t + sqr(startingCD4))*sqrCD4decline
 % linearCD4Decline/(2*sqrCD4decline) = sqrCD4decline*t + sqr(startingCD4)
 % sqrCD4decline*t = linearCD4Decline/(2*sqrCD4decline) - sqr(startingCD4)
 % t = (linearCD4Decline/(2*sqrCD4decline) - sqr(startingCD4))/sqrCD4decline
 
+% Px.TimeAtLinearDecline=(-Px.MeanCD4Decline/(2*Px.MeanSquareRootAnnualDecline) + sqrt(Px.BaselineCD4Median))/Px.MeanSquareRootAnnualDecline; %t from above 
+Px.TimeAtLinearDecline=(-Px.MeanCD4Decline/(-2*Px.MeanSquareRootAnnualDecline) - sqrt(Px.BaselineCD4Median))/(-Px.MeanSquareRootAnnualDecline); %t from above 
 
-%     sqrt(median starting point)-sqrt
+
+% t=0:0.1:30;
+% dCD4dt=-2*(-Px.MeanSquareRootAnnualDecline*t + sqrt(Px.BaselineCD4Median))*Px.MeanSquareRootAnnualDecline;
+% plot(t, dCD4dt);
+Px.TimeAtLinearDecline=Px.TimeAtLinearDecline+Px.TimeUntilRebound;
+
+% Note that from TimeAtLinearDecline onwards, the decline is based on the
+% sqrCD4decline at that point in time. That means that the decline is, on
+% average, not allowed to be lower than 60.8cells/muL/year.
+
+
 
 
 

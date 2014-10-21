@@ -4,7 +4,6 @@ function [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi)
 % so, it creates the number of people expected in the correct proportions
 % by CD4. 
 
-
 StepSize=0.1;
 
 %Start with the correct number of observations
@@ -58,17 +57,20 @@ IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;
 
 %% Calculate the starting point of all the people (yes this is inefficient, but much cleaner for code)
 CD4AtRebound=InitialCD4Vector.*Pxi.FractionalDeclineToRebound;
-% SqrCD4AtRebound=sqrt(CD4AtRebound);
 
 % Generate a squareroot decline for these individuals
-m=Pxi.CD4Decline;
-v=(Pxi.IndividualDeclineSD)^2;
+m=Pxi.SQRCD4Decline;
+v=(Pxi.SDSQRDeclineIndividual)^2;
+MinimumCD4Decline=0.1*Pxi.SQRCD4Decline;
+% m=Pxi.CD4Decline;
+% v=(Pxi.IndividualDeclineSD)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
+
 IndividualCD4Decline = lognrnd(mu,sigma,1,SimulatedPopSize);
 %Remove declines that are less than 10% of the squareroot annual decline
 %This is to avoid negative declines and divide by zero errors. Note that it is expected that around 0.9% of the population would have this level according to these calculations
-IndividualCD4Decline(IndividualCD4Decline<0.1*Pxi.CD4Decline)=[];
+IndividualCD4Decline(IndividualCD4Decline<MinimumCD4Decline)=[];
 [~, NumberRemaining]=size(IndividualCD4Decline);
 if NumberRemaining<1
     error('The decline function resulted in too few samples to resample from. This may be due to a decline rate that is too shallow');
@@ -77,8 +79,6 @@ end
 ResampledCD4Decline = randsample(IndividualCD4Decline,SimulatedPopSize-NumberRemaining,'true'); % with replacement
 IndividualCD4Decline=[IndividualCD4Decline ResampledCD4Decline];
 
-hist(IndividualCD4Decline, 0:200)
-pause
 
 
 TimeSinceRebound=0;
@@ -93,19 +93,28 @@ while (sum(IndexTest)<SimulatedPopSize)
     UntestedDeclines=IndividualCD4Decline(UntestedIndex);
     UntestedCD4AtRebound=CD4AtRebound(UntestedIndex);
     
+    UntestedSqrCD4AtRebound=sqrt(UntestedCD4AtRebound);
+    
     % Calculate CD4 at midpoint to find the average testing rate
     % We don't need to worry about stochasticity at this point because the
     % average CD4 is more likely to indicate health at a point in time than
     % day to day variation.
     
-    % if TimeMidpoint < TimeAtLinearDecline 
-    % calculate the squareroot decline
-    % else 
-    % calculate the liner decline
-    % TimeSinceLinearDeclineStart=TimeMidpoint-TimeAtLinearDecline;
-    % Calculate the squareroot decline at TimeAtLinearDecline
-        CD4AtMidpoint=UntestedCD4AtRebound-TimeMidpoint*UntestedDeclines;
-    %end
+    if TimeMidpoint < Pxi.TimeAtLinearDecline 
+        % calculate the squareroot decline
+        SqrCD4AtMidpoint=UntestedSqrCD4AtRebound-TimeMidpoint*UntestedDeclines;
+        CD4AtMidpoint=SqrCD4AtMidpoint.^2;
+        
+    else 
+        
+        % calculate the CD4 count at the point at which linear decline occurs
+        UntestedCD4AtLinearDecline=UntestedSqrCD4AtRebound-Pxi.TimeAtLinearDecline .*UntestedDeclines;
+        % calculate the liner decline
+        TimeSinceLinearDecline=TimeMidpoint-Pxi.TimeAtLinearDecline;
+        LinearCD4Decline=2*(UntestedDeclines*TimeSinceLinearDecline + UntestedSqrCD4AtRebound).*UntestedDeclines;
+        % Calculate the squareroot decline at TimeAtLinearDecline
+        CD4AtMidpoint=UntestedCD4AtLinearDecline-TimeSinceLinearDecline*LinearCD4Decline;
+    end
     
     
     %Make all <0 CD4s zero
