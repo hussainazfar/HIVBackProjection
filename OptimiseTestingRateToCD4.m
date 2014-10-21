@@ -58,8 +58,10 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     [~, Data]=GenerateCD4Count(OptimisedParameters, Pxi);
     
     % Filter the data such that only infections after a certain date is allowable
-    try % In this section, if the CurrentYear or EarliestPossibleInfection is not set, no cut off occurs
-        MaxTime=Pxi.CurrentYear-Pxi.EarliestPossibleInfection; %e.g. 1978
+    try % In this section, if the CurrentYear or FirstInfectionDate is not set, no cut off occurs
+
+        MaxTime=Pxi.CurrentYear-Pxi.FirstInfectionDate; %e.g. 1978
+        MaxTime
         % Filter optimised dates according to the max time
         DeleteIndex=Data.Time>MaxTime;
         Data.Time(DeleteIndex)=[];

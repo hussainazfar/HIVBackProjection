@@ -5,8 +5,10 @@ Px.NoParameterisations=NoParameterisations;
 Px.MaxYears=20;%Max years is the maximum number of years a person can spend without being diagnosed with HIV. Although longer times are possible in real life, so few would occur that we can successfully ignore it in the name of simplicity and approximation
 Px.StepSize=0.1;
 
-Px.EarliestPossibleInfection=1978; %used to filter possible back projected times
+Px.LowerFirstInfectionDate=1975; %used to filter possible back projected times
+Px.UpperFirstInfectionDate=1980; %used to filter possible back projected times
 
+Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate)*rand(1, Px.NoParameterisations);
 %% The below results are from a meta-analysis of studies of healthy CD4 counts 
 % MeanHealthyCD4=903;
 % Px.MeanHealthyCD4=MeanHealthyCD4;
