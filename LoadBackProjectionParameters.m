@@ -5,10 +5,39 @@ Px.NoParameterisations=NoParameterisations;
 Px.MaxYears=20;%Max years is the maximum number of years a person can spend without being diagnosed with HIV. Although longer times are possible in real life, so few would occur that we can successfully ignore it in the name of simplicity and approximation
 Px.StepSize=0.1;
 
+%% Create simulation starting times
 Px.LowerFirstInfectionDate=1975; %used to filter possible back projected times
 Px.UpperFirstInfectionDate=1980; %used to filter possible back projected times
 
-Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate)*rand(1, Px.NoParameterisations);
+Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate)*betarnd(4,4,[1 NoParameterisations]);
+% hist(a,100)
+% 
+% 
+% % Determine the log-normal distribution that contains these dates in the
+% % 95% confifdence intervals
+% % Px.UpperFirstInfectionDate is the hard upper bound
+% DateMedian =(Px.UpperFirstInfectionDate+Px.LowerFirstInfectionDate)/2; %is the median of the distribution, weighted slightly towards the right
+% % Px.LowerFirstInfectionDate is the lower 
+% TimeMedian=Px.UpperFirstInfectionDate-DateMedian;
+% TimeL95=Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate;
+% LogTimeMedian=log(TimeMedian);
+% LogTimeL95=log(TimeL95);
+% LogTimeStdev=(LogTimeL95-LogTimeMedian)/1.96;
+% 
+% 
+% m=LogTimeMedian;
+% v=(LogTimeStdev)^2;
+% mu = log((m^2)/sqrt(v+m^2));
+% sigma = sqrt(log(v/(m^2)+1));
+% 
+% LogTimeDistribution=lognrnd(mu,sigma,1,NoParameterisations);
+% 
+% Px.TimeDistribution=exp(LogTimeDistribution);
+% 
+% 
+% Px.FirstInfectionDateVec=Px.UpperFirstInfectionDate-Px.TimeDistribution;
+
+% Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate)*rand(1, Px.NoParameterisations);
 %% The below results are from a meta-analysis of studies of healthy CD4 counts 
 % MeanHealthyCD4=903;
 % Px.MeanHealthyCD4=MeanHealthyCD4;

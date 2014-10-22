@@ -10,14 +10,14 @@ function Figure1New
     Pxi.SQRCD4Decline=mean(Px.SQRCD4DeclineVec);
     Pxi.SimulatedPopSize=1000000;
     
-    TestingParameters=[0.1, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
+    TestingParameters=[0.5, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
 
     Pxi.IndividualDeclineSD=5;
     
 [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi);
 
 Count=0;
-for Time=0:0.025:20
+for Time=0:0.01:20
     Time
     Count=Count+1;
     IndexInStep=Time<=Data.Time & Data.Time<Time+0.1;
