@@ -1,4 +1,4 @@
-function [SaveMatrix]=ExportData(Patients)%, FileName )
+function [SaveMatrix]=ExportData(Patients, FileName )
 
 SaveMatrix=[];
 
@@ -19,10 +19,10 @@ for ThisPatient=Patients
     SaveMatrix{Row,3}=ThisPatient.DateOfDiagnosis{:};
     SaveMatrix{Row,4}=ThisPatient.CD4CountAtDiagnosis;
     
-    SaveMatrix(Row, 5)=MeanTime;
-    SaveMatrix(Row, 6)=MedianTime;
+    SaveMatrix{Row, 5}=MeanTime;
+    SaveMatrix{Row, 6}=MedianTime;
     
     
 end
 
-xlswrite(SaveMatrix, FileName);
+xlswrite( FileName, SaveMatrix);
