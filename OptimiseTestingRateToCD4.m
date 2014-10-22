@@ -61,7 +61,7 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     try % In this section, if the CurrentYear or FirstInfectionDate is not set, no cut off occurs
 
         MaxTime=Pxi.CurrentYear-Pxi.FirstInfectionDate; %e.g. 1978
-        MaxTime
+        
         % Filter optimised dates according to the max time
         DeleteIndex=Data.Time>MaxTime;
         Data.Time(DeleteIndex)=[];

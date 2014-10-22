@@ -1,4 +1,4 @@
-% function Figure1New
+function Figure1New
     NoParameterisations=200;
     [Px]=LoadBackProjectionParameters(NoParameterisations);
     % Create a simulation specific value for the parameters
@@ -35,3 +35,4 @@ plot(t, CD4Median);
 plot(t,CD4U95);
 plot(t,CD4L95);
 hold off;
+end
