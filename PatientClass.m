@@ -3,6 +3,7 @@ classdef PatientClass %< handle
 %       HIVStatus;
 %       AIDSStatus;
 %       Alive;
+      ID;
       YearBirth;
       DOB;
       Sex;
