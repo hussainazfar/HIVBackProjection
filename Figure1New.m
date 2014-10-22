@@ -8,19 +8,20 @@ function Figure1New
     Pxi.CD4Decline=mean(Px.CD4DeclineVec); % select a sample of this parameter
     Pxi.FractionalDeclineToRebound=mean(Px.FractionalDeclineToReboundVec); % select a sample of this parameter
     Pxi.SQRCD4Decline=mean(Px.SQRCD4DeclineVec);
-    Pxi.SimulatedPopSize=1000000;
+    Pxi.SimulatedPopSize=10000000;
     
-    TestingParameters=[0.5, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
+    TestingParameters=[0.1, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
 
     Pxi.IndividualDeclineSD=5;
     
 [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi);
 
 Count=0;
-for Time=0:0.01:20
+StepSize=0.01;
+for Time=0:StepSize:20
     Time
     Count=Count+1;
-    IndexInStep=Time<=Data.Time & Data.Time<Time+0.1;
+    IndexInStep=Time<=Data.Time & Data.Time<Time+StepSize;
     
     TestingCD4=Data.CD4(IndexInStep);
      t(Count)=Time;
