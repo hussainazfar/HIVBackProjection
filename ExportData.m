@@ -1,6 +1,7 @@
-function ExportData(Patients, FileName )
+function [SaveMatrix]=ExportData(Patients)%, FileName )
 
-Matrix
+SaveMatrix=[];
+
 
 Row=0;
 for ThisPatient=Patients
@@ -8,15 +9,20 @@ for ThisPatient=Patients
     
     
     
-    TimeBetweenInfection
+    
     
     MeanTime=mean(ThisPatient.TimeFromInfectionToDiagnosis);
     MedianTime=median(ThisPatient.TimeFromInfectionToDiagnosis);
     
-    ThisPatient.ID
-    ThisPatient.DateOfDiagnosisContinuous
-
-    SaveMatrix(Row, :)=
+    SaveMatrix{Row,1}=ThisPatient.ID;
+    SaveMatrix{Row,2}=ThisPatient.DateOfDiagnosisContinuous;
+    SaveMatrix{Row,3}=ThisPatient.DateOfDiagnosis{:};
+    SaveMatrix{Row,4}=ThisPatient.CD4CountAtDiagnosis;
+    
+    SaveMatrix(Row, 5)=MeanTime;
+    SaveMatrix(Row, 6)=MedianTime;
+    
+    
 end
 
 xlswrite(SaveMatrix, FileName);

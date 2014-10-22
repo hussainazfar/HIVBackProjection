@@ -1,4 +1,6 @@
-NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
+NoParameterisations=10; % the number of parameterisations used to generate uncertainty. Should be set to 200
+IncludePreviouslyDiagnosedOverseas=true;
+
 
 TimeALL=tic;
 
@@ -40,20 +42,21 @@ end
 
 
 %% Sort Patients into those who have a previous overseas diagnosis, and those who have not. 
-
-disp('Removing overseas diagnosed cases to be utilised later');
-PatientSplitTimer=tic;
-OverseasDiagID=[];
-[~, NumberInPatientCurrently]=size(Patient);
-for i=1:NumberInPatientCurrently
-    if Patient(i).PreviouslyDiagnosedOverseas==1
-        OverseasDiagID=[OverseasDiagID i];
+PreviouslyDiagnosedOverseasPatient=[];
+if (IncludePreviouslyDiagnosedOverseas==false)
+    disp('Removing overseas diagnosed cases to be utilised later');
+    PatientSplitTimer=tic;
+    OverseasDiagID=[];
+    [~, NumberInPatientCurrently]=size(Patient);
+    for i=1:NumberInPatientCurrently
+        if Patient(i).PreviouslyDiagnosedOverseas==1
+            OverseasDiagID=[OverseasDiagID i];
+        end
     end
+    PreviouslyDiagnosedOverseasPatient=Patient(OverseasDiagID);
+    Patient(OverseasDiagID)=[];
+    toc(PatientSplitTimer)
 end
-PreviouslyDiagnosedOverseasPatient=Patient(OverseasDiagID);
-Patient(OverseasDiagID)=[];
-toc(PatientSplitTimer)
-
 %% Remove records to adjust for duplicate diagnoses
 [Patient, DuplicatePatient]=RemoveDuplicates(Patient);
 

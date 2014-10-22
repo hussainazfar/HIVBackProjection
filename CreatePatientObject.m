@@ -11,7 +11,7 @@ for i=1:LineDataMatrix.NumberOfPatients
         disp(['Loading notification ', num2str(i), ' of ',  num2str(LineDataMatrix.NumberOfPatients)]);
     end
     
-    
+    Patient(i).ID=LineDataMatrix.ID(i);
     Patient(i).YearBirth=LineDataMatrix.YearBirth(i);
     Patient(i).DOB=LineDataMatrix.DOB(i);
     Patient(i).Sex=LineDataMatrix.Sex(i);
