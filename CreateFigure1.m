@@ -1,21 +1,36 @@
 %% Output plot of progression
 
-PopulationSizeToSimulate=1000000;%1000000;
+% PopulationSizeToSimulate=1000000;%1000000;
 
-Ax=Px;
-Ax.SquareRootAnnualDecline=median(Ax.SquareRootAnnualDeclineVec);
-Ax.FractionalDeclineToRebound=median(Px.FractionalDeclineToReboundVec);
-[TimeUntilDiagnosis, ~, TestingCD4]=GenerateTheoreticalPopulationCD4s(20*rand(1, PopulationSizeToSimulate), Ax);
+% Ax=Px;
+% Ax.SquareRootAnnualDecline=median(Ax.SquareRootAnnualDeclineVec);
+% Ax.FractionalDeclineToRebound=median(Px.FractionalDeclineToReboundVec);
+% [TimeUntilDiagnosis, ~, TestingCD4]=GenerateTheoreticalPopulationCD4s(20*rand(1, PopulationSizeToSimulate), Ax);
 
-testCD4=TestingCD4;
+display('Calcualting the output for plot 1');
+
+Pxi=Px;
+
+Pxi.FractionalDeclineToRebound=median(Px.FractionalDeclineToReboundVec); % select a sample of this parameter
+Pxi.SQRCD4Decline=median(Px.SQRCD4DeclineVec);
+Pxi.SimulatedPopSize=10000000;
+
+TestingParameters=[0.1, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
+
+[CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi);
+
+TimeUntilDiagnosis=Data.Time;
+testCD4=Data.CD4;
 Count=0;
 clear     MedianVec UCIVec LCIVec UQRVec LQRVec;
 % for t=0:0.1:20
 Granularity=0.1;
+MeasurementDistance=0.01;
 EndYear=10;
-for t=0:Granularity:EndYear
+t=[0.05 0.1:Granularity:EndYear];
+for tval=t
     Count=Count+1;
-    ttindex=TimeUntilDiagnosis>=t & TimeUntilDiagnosis<t+Granularity;
+    ttindex=TimeUntilDiagnosis>=tval & TimeUntilDiagnosis<tval+MeasurementDistance;
     CD4AtTime=testCD4(ttindex);
     MedianVec(Count)=median(CD4AtTime);
     UCIVec(Count)=prctile(CD4AtTime, 2.5);
@@ -23,7 +38,7 @@ for t=0:Granularity:EndYear
     UQRVec(Count)=prctile(CD4AtTime, 25);
     LQRVec(Count)=prctile(CD4AtTime, 75);
 end
-t=(0:Granularity:EndYear)+Granularity/2; %the above values are for the centre point
+t=t+MeasurementDistance/2; %the above values are for the centre point
 t=[0 t];
 LogInitialCD4Vector = normrnd(Px.MedianLogHealthyCD4, Px.StdLogHealthyCD4, [1 1000000]);
 InitialCD4Vector=exp(LogInitialCD4Vector);
@@ -90,7 +105,7 @@ disp(['The healthy CD4 count distribution had an interquartile range of (' num2s
 
 %% Create uncertainty in time between infection and diagnosis
 
-PopulationSizeToSimulate=200000;%makesure there are at least 1000 samples per point
+PopulationSizeToSimulate=1000000;%makesure there are at least 1000 samples per point
 Median500=[];
 Median350=[];
 Median200=[];
@@ -98,9 +113,15 @@ CurrentMedianStore=zeros(NoParameterisations, 200);
 for CurrentParamNumber=1:NoParameterisations
     CurrentParamNumber
     Pxi=Px;
-    Pxi.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
-    Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
-    [TimeUntilDiagnosis, ~, TestingCD4]=GenerateTheoreticalPopulationCD4s(20*rand(1, PopulationSizeToSimulate), Pxi);
+    
+    Pxi.FractionalDeclineToRebound=median(Px.FractionalDeclineToReboundVec); % select a sample of this parameter
+    Pxi.SQRCD4Decline=median(Px.SQRCD4DeclineVec);
+    Pxi.SimulatedPopSize=PopulationSizeToSimulate;
+    TestingParameters=[0.1, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
+    [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi);
+    
+
+
     
     % search for elements with approximately the right CD4 count
 %     Year=0.4;%to avoid the problem of the rapid decline

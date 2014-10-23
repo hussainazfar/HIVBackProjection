@@ -9,7 +9,8 @@ Px.StepSize=0.1;
 Px.LowerFirstInfectionDate=1975; %used to filter possible back projected times
 Px.UpperFirstInfectionDate=1980; %used to filter possible back projected times
 
-Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate)*betarnd(4,4,[1 NoParameterisations]);
+% Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate)*betarnd(4,4,[1 NoParameterisations]);
+Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate)*rand(1, Px.NoParameterisations);
 % hist(a,100)
 % 
 % 
@@ -37,7 +38,10 @@ Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-
 % 
 % Px.FirstInfectionDateVec=Px.UpperFirstInfectionDate-Px.TimeDistribution;
 
-% Px.FirstInfectionDateVec=Px.LowerFirstInfectionDate+(Px.UpperFirstInfectionDate-Px.LowerFirstInfectionDate)*rand(1, Px.NoParameterisations);
+% 
+
+
+
 %% The below results are from a meta-analysis of studies of healthy CD4 counts 
 % MeanHealthyCD4=903;
 % Px.MeanHealthyCD4=MeanHealthyCD4;

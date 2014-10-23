@@ -1,4 +1,4 @@
-NoParameterisations=10; % the number of parameterisations used to generate uncertainty. Should be set to 200
+NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
 IncludePreviouslyDiagnosedOverseas=true;
 
 
@@ -430,7 +430,7 @@ for Year=TimeSinceInfectionYearIndex
 end
 
 %% Plotting results
-% CreateFigure1
+CreateFigure1
 CreateFigure2
 CreateFigure3
 CreateFigure4
