@@ -1,22 +1,21 @@
 %% Create a plot of the expected distributions of time until diagnosis for different CD4 counts in Australia
 
 
-%Select CD4s from YearOfDiagnosedDataEnd
-CD4ForOptimisation=-ones(size(Patient));
-Count=0;
-for P=Patient
-    Count=Count+1;
-    if (P.DateOfDiagnosisContinuous>=YearOfDiagnosedDataEnd-5 && P.DateOfDiagnosisContinuous<YearOfDiagnosedDataEnd)
-        CD4ForOptimisation(Count)=P.CD4CountAtDiagnosis;
-    end
-end
-CD4ForOptimisation(CD4ForOptimisation<-0.5)=[];
+% %Select CD4s from YearOfDiagnosedDataEnd
+% CD4ForOptimisation=-ones(size(Patient));
+% Count=0;
+% for P=Patient
+%     Count=Count+1;
+%     if (P.DateOfDiagnosisContinuous>=YearOfDiagnosedDataEnd-5 && P.DateOfDiagnosisContinuous<YearOfDiagnosedDataEnd)
+%         CD4ForOptimisation(Count)=P.CD4CountAtDiagnosis;
+%     end
+% end
+% CD4ForOptimisation(CD4ForOptimisation<-0.5)=[];
+% 
+% % the following is done as a hack to increase the samples to make a smooth curve
+% CD4ForOptimisation=[CD4ForOptimisation CD4ForOptimisation CD4ForOptimisation CD4ForOptimisation];
 
-% the following is done as a hack to increase the samples to make a smooth curve
-CD4ForOptimisation=[CD4ForOptimisation CD4ForOptimisation CD4ForOptimisation CD4ForOptimisation];
 
-Ax=Px;
-Ax.ConsiderRecentInfection=0;
 disp( 'Starting parallel Matlab...');
 matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-2);%this may not work in all processors
 
@@ -25,16 +24,19 @@ matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-2);%this may not work in al
 % [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Ax, RandomNumberStream);
 % IdealPopTimesStore= GenerateCD4 using TestingParameter and PX.Number of CD4s to generate = big as ofund in CreateIndividualTimeUntilDiag
 SamplesPerSim=10000;
-for CurrentParamNumber=1:Px.NoParameterisations 
+parfor CurrentParamNumber=1:Px.NoParameterisations 
     set(RandomNumberStream,'Substream',CurrentParamNumber);
     
     %Choose the current parameterision
-    Ax=Px;
-    Ax.SquareRootAnnualDecline=Px.SquareRootAnnualDeclineVec(CurrentParamNumber);
-    Ax.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
-    Ax.SimulatedPopSize=SamplesPerSim;
+    Pxi=Px;
+
+    
+    
+    Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber); % select a sample of this parameter
+    Pxi.SQRCD4Decline=Px.SQRCD4DeclineVec(CurrentParamNumber);
+    Pxi.SimulatedPopSize=SamplesPerSim;
     OptimisedParameters=OptimisationResults(end).TestingParameter(CurrentParamNumber).Result;%use the last year's worth of data
-    [~, Data(CurrentParamNumber)]=GenerateCD4Count(OptimisedParameters, Ax);
+    [~, Data(CurrentParamNumber)]=GenerateCD4Count(OptimisedParameters, Pxi);
 
     
 %     IdealPopTimesStore=Data.Time;

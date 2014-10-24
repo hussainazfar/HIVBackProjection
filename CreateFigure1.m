@@ -105,7 +105,7 @@ disp(['The healthy CD4 count distribution had an interquartile range of (' num2s
 
 %% Create uncertainty in time between infection and diagnosis
 
-PopulationSizeToSimulate=1000000;%makesure there are at least 1000 samples per point
+PopulationSizeToSimulate=10000;%makesure there are at least 1000 samples per point
 Median500=[];
 Median350=[];
 Median200=[];
@@ -114,13 +114,14 @@ for CurrentParamNumber=1:NoParameterisations
     CurrentParamNumber
     Pxi=Px;
     
-    Pxi.FractionalDeclineToRebound=median(Px.FractionalDeclineToReboundVec); % select a sample of this parameter
-    Pxi.SQRCD4Decline=median(Px.SQRCD4DeclineVec);
+    Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber); % select a sample of this parameter
+    Pxi.SQRCD4Decline=Px.SQRCD4DeclineVec(CurrentParamNumber);
     Pxi.SimulatedPopSize=PopulationSizeToSimulate;
     TestingParameters=[0.1, 0, 0];%low, flat testing rate should not bias towards high starting CD4s
     [CD4CountHistogram, Data]=GenerateCD4Count(TestingParameters, Pxi);
     
-
+    TimeUntilDiagnosis=Data.Time;
+    TestingCD4=Data.CD4;
 
     
     % search for elements with approximately the right CD4 count

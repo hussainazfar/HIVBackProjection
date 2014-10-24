@@ -4,7 +4,23 @@ clf;
 HistogramCD4Centres=25:50:4987.5;
 a=CD4ComparisonLookup;%to minimise code size
 RealTestingCD4=[ CD4Comparison(a==2009).RealTestingCD4 CD4Comparison(a==2010).RealTestingCD4 CD4Comparison(a==2011).RealTestingCD4 CD4Comparison(a==2012).RealTestingCD4 CD4Comparison(a==2013).RealTestingCD4];
-SimulatedTestingCD4=[ CD4Comparison(a==2009).SimulatedTestingCD4 CD4Comparison(a==2010).SimulatedTestingCD4 CD4Comparison(a==2011).SimulatedTestingCD4 CD4Comparison(a==2012).SimulatedTestingCD4 CD4Comparison(a==2013).SimulatedTestingCD4];
+
+SamplesPerSim=1000;
+SimulatedTestingCD4=zeros(5, Px.NoParameterisations, SamplesPerSim);
+for CurrentParamNumber=1:Px.NoParameterisations 
+    YearCount=0;
+    for Year=2009:2013
+        YearCount=YearCount+1;
+        %Choose the current parameterision
+        Pxi=Px;
+        Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber); % select a sample of this parameter
+        Pxi.SQRCD4Decline=Px.SQRCD4DeclineVec(CurrentParamNumber);
+        Pxi.SimulatedPopSize=SamplesPerSim;
+        OptimisedParameters=OptimisationResults(a==Year).TestingParameter(CurrentParamNumber).Result;%use the last year's worth of data
+        [~, TempData]=GenerateCD4Count(OptimisedParameters, Pxi);
+        SimulatedTestingCD4(YearCount, CurrentParamNumber, :)=TempData.CD4;
+    end
+end
 
 [SimulatedCD4Histogram, X] =hist(reshape(SimulatedTestingCD4, 1, []), HistogramCD4Centres);%Collapse all the simulations into a single variable to get something analoguous to a "mean"
 [RealCD4Histogram, X] =hist(RealTestingCD4, HistogramCD4Centres);
