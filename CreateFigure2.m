@@ -96,6 +96,7 @@ set(gca, 'fontsize', 18)
 box off;
 
 xlim([0 15])
+ylim([0 0.35])
 set(gca,'XTick',0:15)
     
 h_legend=legend([PlotHandle{1} PlotHandle{2} PlotHandle{3}], [num2str(PlotSettings.ListOfCD4sToPlot(1)) '  cells/\muL'], [num2str(PlotSettings.ListOfCD4sToPlot(2)) '  cells/\muL'] , [num2str(PlotSettings.ListOfCD4sToPlot(3)) '  cells/\muL'], 'Location','NorthEast');
