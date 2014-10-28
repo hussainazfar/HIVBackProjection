@@ -17,10 +17,11 @@ for ThisPatient=Patients
     SaveMatrix{Row,1}=ThisPatient.ID;
     SaveMatrix{Row,2}=ThisPatient.DateOfDiagnosisContinuous;
     SaveMatrix{Row,3}=ThisPatient.DateOfDiagnosis{:};
-    SaveMatrix{Row,4}=ThisPatient.CD4CountAtDiagnosis;
+    SaveMatrix{Row,4}=ThisPatient.PreviouslyDiagnosedOverseas;
+    SaveMatrix{Row,5}=ThisPatient.CD4CountAtDiagnosis;
     
-    SaveMatrix{Row, 5}=MeanTime;
-    SaveMatrix{Row, 6}=MedianTime;
+    SaveMatrix{Row, 6}=MeanTime;
+    SaveMatrix{Row, 7}=MedianTime;
     
     
 end

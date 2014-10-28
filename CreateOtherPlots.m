@@ -214,9 +214,10 @@ xlabel({'Median CD4 count (cells/\muL)'},'fontsize', 22);
     
 %% Outputting the total size of the duplicates
 [~, NumOfPatientInSim]=size(Patient);
-[~, NumberOfDuplicates]=size(DuplicatePatient);
-disp(['There were ' num2str(NumberOfDuplicates) ' duplicates and ' num2str(NumOfPatientInSim) ' records included in the final simulation.']);
-
+if DeduplicateDiagnoses
+    [~, NumberOfDuplicates]=size(DuplicatePatient);
+    disp(['There were ' num2str(NumberOfDuplicates) ' duplicates and ' num2str(NumOfPatientInSim) ' records included in the final simulation.']);
+end
 
 [~, NumPrevDiagnosedOverSeas]=size(PreviouslyDiagnosedOverseasPatient);
 disp(['There were ' num2str(NumPrevDiagnosedOverSeas) ' previously diagnosed cases excluded.']);

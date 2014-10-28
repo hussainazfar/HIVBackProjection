@@ -1,6 +1,6 @@
 NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
-IncludePreviouslyDiagnosedOverseas=false;
-
+IncludePreviouslyDiagnosedOverseas=true;
+DeduplicateDiagnoses=false;
 
 TimeALL=tic;
 
@@ -58,8 +58,9 @@ if (IncludePreviouslyDiagnosedOverseas==false)
     toc(PatientSplitTimer)
 end
 %% Remove records to adjust for duplicate diagnoses
-[Patient, DuplicatePatient]=RemoveDuplicates(Patient);
-
+if DeduplicateDiagnoses
+    [Patient, DuplicatePatient]=RemoveDuplicates(Patient);
+end
 
 %% Sort Patients into those who have an infection known to be in the last 12 months, and those who have not. 
 if ConsiderRecentInfection==true
