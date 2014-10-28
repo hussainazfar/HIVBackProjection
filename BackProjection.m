@@ -1,6 +1,6 @@
 NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
-IncludePreviouslyDiagnosedOverseas=true;
-DeduplicateDiagnoses=false;
+IncludePreviouslyDiagnosedOverseas=false;
+DeduplicateDiagnoses=true;
 
 TimeALL=tic;
 
