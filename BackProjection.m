@@ -270,6 +270,8 @@ MSMCD4=zeros(1, MSMCount);
 NonMSMCD4=zeros(1, NonMSMCount);
 MSMDate=zeros(1, MSMCount);
 NonMSMDate=zeros(1, NonMSMCount);
+MSMInfectionTimeMatrix=zeros(NoParameterisations, MSMCount);
+NonMSMInfectionTimeMatrix=zeros(NoParameterisations, NonMSMCount);
 
 MSMCount=0;
 NonMSMCount=0;
@@ -279,11 +281,13 @@ for i=1:NumberOfPatients
         MSMDateMatrix(:, MSMCount)=Patient(i).InfectionDateDistribution;
         MSMDate(MSMCount)=Patient(i).DateOfDiagnosisContinuous;
         MSMCD4(MSMCount)=Patient(i).CD4CountAtDiagnosis;
+        MSMInfectionTimeMatrix(:,MSMCount)=Patient(i).TimeFromInfectionToDiagnosis;
     else
         NonMSMCount=NonMSMCount+1;
         NonMSMDateMatrix(:, NonMSMCount)=Patient(i).InfectionDateDistribution;
         NonMSMDate(NonMSMCount)=Patient(i).DateOfDiagnosisContinuous;
         NonMSMCD4(NonMSMCount)=Patient(i).CD4CountAtDiagnosis;
+        NonMSMInfectionTimeMatrix(:,NonMSMCount)=Patient(i).TimeFromInfectionToDiagnosis;
     end
 end
 %plot(MSMDistributionForThisSimulationDiagnosedInfections')

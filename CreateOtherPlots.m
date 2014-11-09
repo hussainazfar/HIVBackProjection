@@ -228,7 +228,7 @@ disp(['There were ' num2str(NumPrevDiagnosedOverSeas) ' previously diagnosed cas
 clear    MedianMSMCD4 LQRMSMCD4 UQRMSMCD4 MedianNonMSMCD4 LQRNonMSMCD4 UQRNonMSMCD4;
 
 CurrentYearIndex=0;
-CurrentYearVec=1985:CD4BackProjectionYearsWhole(2);
+CurrentYearVec=1982:CD4BackProjectionYearsWhole(2);
 for CurrentYear=CurrentYearVec
     CurrentYearIndex=CurrentYearIndex+1;
     MSMCD4CurrentYear=MSMCD4(CurrentYear<=MSMDate & MSMDate<=CurrentYear+1);
@@ -258,6 +258,52 @@ set(gca, 'fontsize', 18)
 h_legend=legend([ MSMHandle NonMSMHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthWest');
 print('-dpng ','-r300','ResultsPlots/Appendix MSM vs non-MSM CD4.png')
 
+%% Displying the relative difference in time between infection and diagnosis in MSM and non-MSM
+clear    MedianMSMInfDiag LQRMSMInfDiag UQRMSMInfDiag MedianNonMSMInfDiag LQRNonMSMInfDiag UQRNonMSMInfDiag;
+MSMInfDiag=reshape(MSMInfectionTimeMatrix, 1, []);
+NonMSMInfDiag=reshape(NonMSMInfectionTimeMatrix, 1, []);
+% create date vectors to match
+MSMDateSize=size(NoParameterisations);
+Temp=ones(NoParameterisations, 1);
+MSMDateMat=Temp*MSMDate;
+MSMDateInfDiag=reshape(MSMDateMat, 1, []);
+
+NonMSMDateSize=size(NoParameterisations);
+Temp=ones(NoParameterisations, 1);
+NonMSMDateMat=Temp*NonMSMDate;
+NonMSMDateInfDiag=reshape(NonMSMDateMat, 1, []);
+
+
+CurrentYearIndex=0;
+CurrentYearVec=1982:CD4BackProjectionYearsWhole(2);
+for CurrentYear=CurrentYearVec
+    CurrentYearIndex=CurrentYearIndex+1;
+    MSMInfDiagCurrentYear=MSMInfDiag(CurrentYear<=MSMDateInfDiag & MSMDateInfDiag<=CurrentYear+1);
+    MedianMSMInfDiag(CurrentYearIndex)=median(MSMInfDiagCurrentYear);
+    LQRMSMInfDiag(CurrentYearIndex)=prctile(MSMInfDiagCurrentYear, 25);
+    UQRMSMInfDiag(CurrentYearIndex)=prctile(MSMInfDiagCurrentYear, 75);
+    
+    
+    NonMSMInfDiagCurrentYear=NonMSMInfDiag(CurrentYear<=NonMSMDateInfDiag & NonMSMDateInfDiag<=CurrentYear+1);
+    MedianNonMSMInfDiag(CurrentYearIndex)=median(NonMSMInfDiagCurrentYear);
+    LQRNonMSMInfDiag(CurrentYearIndex)=prctile(NonMSMInfDiagCurrentYear, 25);
+    UQRNonMSMInfDiag(CurrentYearIndex)=prctile(NonMSMInfDiagCurrentYear, 75);
+end
+
+clf;
+hold on;
+MSMHandle=CreateUncertaintyPlot(CurrentYearVec-0.1, MedianMSMInfDiag, LQRMSMInfDiag, UQRMSMInfDiag, 'r');
+hold on;
+NonMSMHandle=CreateUncertaintyPlot(CurrentYearVec+0.1, MedianNonMSMInfDiag, LQRNonMSMInfDiag, UQRNonMSMInfDiag, 'b');
+xlim([1979.5 CD4BackProjectionYearsWhole(2)+1]);
+xlabel('Year of diagnosis','fontsize', 22);
+ylabel({'Time between infection and diagnosis', '(interquartile range)'},'fontsize', 22);
+set(gca,'YTick',0:1:20)
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+h_legend=legend([ MSMHandle NonMSMHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthWest');
+print('-dpng ','-r300','ResultsPlots/Appendix MSM vs non-MSM Infection Diagnosis.png')
 
 
 
