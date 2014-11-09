@@ -1,4 +1,4 @@
-NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
+NoParameterisations=6; % the number of parameterisations used to generate uncertainty. Should be set to 200
 IncludePreviouslyDiagnosedOverseas=false;
 DeduplicateDiagnoses=true;
 
@@ -231,6 +231,9 @@ clear DistributionUndiagnosedInfections;
 tic
 DateMatrix=zeros(NoParameterisations, NumberOfPatients);
 InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
+MSMInfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
+
+
 
 NoPatientInRange=0;
 TimeDistributionOfRecentDiagnoses=[];
@@ -243,13 +246,42 @@ for i=1:NumberOfPatients
         if Patient(i).DateOfDiagnosisContinuous>= RangeOfCD4Averages(1) && Patient(i).DateOfDiagnosisContinuous< RangeOfCD4Averages(2)
             NoPatientInRange=NoPatientInRange+1;
             InfectionTimeMatrix(:, NoPatientInRange)=Patient(i).TimeFromInfectionToDiagnosis;
-            %ExpectedTimesVector=[ExpectedTimesVector Patient(i).TimeFromInfectionToDiagnosis];
         end
+        
 end
 %remove all those elements that are not used
 InfectionTimeMatrix(:, NoPatientInRange+1:NumberOfPatients)=[];
 timevalue=toc;
 
+% find proportion that are MSM, proportion that are not MSM
+% cout to allow a pre allocation
+MSMCount=0;
+NonMSMCount=0;
+for i=1:NumberOfPatients
+    if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
+        MSMCount=MSMCount+1;
+    else
+        NonMSMCount=NonMSMCount+1;
+    end
+end
+MSMDateMatrix=zeros(NoParameterisations, MSMCount);
+NonMSMDateMatrix=zeros(NoParameterisations, NonMSMCount);
+MSMCD4=zeros(1, MSMCount);
+NonMSMCD4=zeros(1, NonMSMCount);
+MSMDate=zeros(1, MSMCount);
+NonMSMDate=zeros(1, NonMSMCount);
+
+MSMCount=0;
+NonMSMCount=0;
+for i=1:NumberOfPatients
+    if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
+        MSMCount=MSMCount+1;
+        MSMDateMatrix(:, MSMCount)=Patient(i).InfectionDateDistribution;
+    else
+        NonMSMCount=NonMSMCount+1;
+        NonMSMDateMatrix(:, NonMSMCount)=Patient(i).InfectionDateDistribution;
+    end
+end
 
 HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
 
@@ -257,11 +289,11 @@ for SimNumber=1:NoParameterisations
     disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
     
     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
-    InfectionsByYearDiagnosed=hist(DateMatrix(SimNumber, :), HistYearSlots);% 0.5*StepSize used to centralise the bar plots in the the hist function
+    InfectionsByYearDiagnosed=hist(DateMatrix(SimNumber, :), HistYearSlots+0.5*StepSize);% 0.5*StepSize used to centralise the bar plots in the the hist function
     [~, TotalInTimeVector]=size(ExpectedTimesVector);
     
-        ProportionOfExpectedTimesVectorExpectedPerStep=StepSize/(RangeOfCD4Averages(2)-RangeOfCD4Averages(1));
-        TotalInStepResample=round(TotalInTimeVector*ProportionOfExpectedTimesVectorExpectedPerStep);%this parameter is not acually used in any meaningful way in this code
+        %ProportionOfExpectedTimesVectorExpectedPerStep=StepSize/(RangeOfCD4Averages(2)-RangeOfCD4Averages(1));
+        %TotalInStepResample=round(TotalInTimeVector*ProportionOfExpectedTimesVectorExpectedPerStep);%this parameter is not acually used in any meaningful way in this code
         
         % Find an estimate for the number of infections which are undiagnosed
         [~, LastPositionInArray]=size(HistYearSlots);
@@ -272,23 +304,26 @@ for SimNumber=1:NoParameterisations
             if n>MaxYears/StepSize %i.e if year step is greater than 20 years
                 DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=0;
             else
-                if TotalInStepResample<0
-                    DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=0;
-                else
+                %if TotalInStepResample<0
+                %    DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=0;
+                %else
                     AdjustmentFactor=2*n/(2*n-1);
                     %Adjust for the fact that we are cutting across triangle in determining the future cases i.e.:
                     %|\
                     %|\|\
                     %|\|\|\
                     %2.5, 1.5, 0.5
-                    TotalDiagnosedInBackprojectionEstimate=InfectionsByYearDiagnosed(YearIndex)*AdjustmentFactor;
+                    TotalDiagnosedInBackprojectionEstimate=round(InfectionsByYearDiagnosed(YearIndex)*AdjustmentFactor);
                     replacement=true;
                     RandomisedExpectedTimesVector=randsample(ExpectedTimesVector, TotalInTimeVector, replacement);%create a really big vector to sample from. This should be about 50 times bigger than what's needed.
                     
                     NumberFoundDiagnosed=0;
                     NumberOfUnidagnosedInfectionsThisStep=0;
                     CountSamples=0;
-                    while NumberFoundDiagnosed<TotalDiagnosedInBackprojectionEstimate
+                    
+                    LowerBoundFound=false;
+                    UpperBoundFound=false;
+                    while (UpperBoundFound==false)%NumberFoundDiagnosed<TotalDiagnosedInBackprojectionEstimate+1
 
                         CountSamples=CountSamples+1;
                         
@@ -300,12 +335,20 @@ for SimNumber=1:NoParameterisations
                         else
                             NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
                         end
-                        
+                        if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate && LowerBoundFound==false)
+                            LowerBoundFound=true;
+                            LowerBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;
+                        end
+                        if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate+1)
+                            UpperBoundFound=true;
+                            UpperBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;
+                        end
                     end
+                    DiffInUndiagnosedEstimate=UpperBoundNumberOfUnidagnosedInfectionsThisStep-LowerBoundNumberOfUnidagnosedInfectionsThisStep;
+                    UndiagnosedEstimateInThisStep=floor(LowerBoundNumberOfUnidagnosedInfectionsThisStep+rand*DiffInUndiagnosedEstimate);
+                    DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=UndiagnosedEstimateInThisStep;
 
-                    DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=NumberOfUnidagnosedInfectionsThisStep;
-
-                end
+                %end
             end
         end
 
@@ -333,6 +376,10 @@ for SimNumber=1:NoParameterisations
     DistributionDiagnosedInfections(SimNumber, :)=DistributionForThisSimulationDiagnosedInfections;
     DistributionUndiagnosedInfections(SimNumber, :)=DistributionForThisSimulationUndiagnosedInfections;
     
+    MSMDistributionForThisSimulationDiagnosedInfections(SimNumber, :)=hist(MSMDateMatrix(SimNumber, :), YearCentres);
+    NonMSMDistributionForThisSimulationDiagnosedInfections(SimNumber, :)=hist(NonMSMDateMatrix(SimNumber, :), YearCentres);
+    
+    PropMSMDistributionDiagnosedInfections(SimNumber, :)=MSMDistributionForThisSimulationDiagnosedInfections(SimNumber, :)./DistributionDiagnosedInfections(SimNumber, :);
 end
 
 %% Create a diagnosis plot
