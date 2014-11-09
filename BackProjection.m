@@ -277,11 +277,18 @@ for i=1:NumberOfPatients
     if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
         MSMCount=MSMCount+1;
         MSMDateMatrix(:, MSMCount)=Patient(i).InfectionDateDistribution;
+        MSMDate(MSMCount)=Patient(i).DateOfDiagnosisContinuous;
+        MSMCD4(MSMCount)=Patient(i).CD4CountAtDiagnosis;
     else
         NonMSMCount=NonMSMCount+1;
         NonMSMDateMatrix(:, NonMSMCount)=Patient(i).InfectionDateDistribution;
+        NonMSMDate(NonMSMCount)=Patient(i).DateOfDiagnosisContinuous;
+        NonMSMCD4(NonMSMCount)=Patient(i).CD4CountAtDiagnosis;
     end
 end
+%plot(MSMDistributionForThisSimulationDiagnosedInfections')
+%plot(NonMSMDistributionForThisSimulationDiagnosedInfections')
+
 
 HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
 

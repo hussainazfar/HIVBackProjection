@@ -221,3 +221,43 @@ end
 
 [~, NumPrevDiagnosedOverSeas]=size(PreviouslyDiagnosedOverseasPatient);
 disp(['There were ' num2str(NumPrevDiagnosedOverSeas) ' previously diagnosed cases excluded.']);
+
+
+
+%% Displying the relative difference between CD4 counts in MSM and non-MSM
+clear    MedianMSMCD4 LQRMSMCD4 UQRMSMCD4 MedianNonMSMCD4 LQRNonMSMCD4 UQRNonMSMCD4;
+
+CurrentYearIndex=0;
+CurrentYearVec=1985:CD4BackProjectionYearsWhole(2);
+for CurrentYear=CurrentYearVec
+    CurrentYearIndex=CurrentYearIndex+1;
+    MSMCD4CurrentYear=MSMCD4(CurrentYear<=MSMDate & MSMDate<=CurrentYear+1);
+    MedianMSMCD4(CurrentYearIndex)=median(MSMCD4CurrentYear);
+    LQRMSMCD4(CurrentYearIndex)=prctile(MSMCD4CurrentYear, 25);
+    UQRMSMCD4(CurrentYearIndex)=prctile(MSMCD4CurrentYear, 75);
+    
+    
+    NonMSMCD4CurrentYear=NonMSMCD4(CurrentYear<=NonMSMDate & NonMSMDate<=CurrentYear+1);
+    MedianNonMSMCD4(CurrentYearIndex)=median(NonMSMCD4CurrentYear);
+    LQRNonMSMCD4(CurrentYearIndex)=prctile(NonMSMCD4CurrentYear, 25);
+    UQRNonMSMCD4(CurrentYearIndex)=prctile(NonMSMCD4CurrentYear, 75);
+end
+
+clf;
+hold on;
+MSMHandle=CreateUncertaintyPlot(CurrentYearVec-0.1, MedianMSMCD4, LQRMSMCD4, UQRMSMCD4, 'r');
+hold on;
+NonMSMHandle=CreateUncertaintyPlot(CurrentYearVec+0.1, MedianNonMSMCD4, LQRNonMSMCD4, UQRNonMSMCD4, 'b');
+xlim([1979.5 CD4BackProjectionYearsWhole(2)+1]);
+xlabel('Year of diagnosis','fontsize', 22);
+ylabel({'CD4 count at diagnosis', '(interquartile range)'},'fontsize', 22);
+set(gca,'YTick',0:100:1500)
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+h_legend=legend([ MSMHandle NonMSMHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthWest');
+print('-dpng ','-r300','ResultsPlots/Appendix MSM vs non-MSM CD4.png')
+
+
+
+
