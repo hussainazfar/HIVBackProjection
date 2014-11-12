@@ -307,6 +307,7 @@ for SimNumber=1:NoParameterisations
     
     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
     InfectionsByYearDiagnosed=hist(DateMatrix(SimNumber, :), HistYearSlots+0.5*StepSize);% 0.5*StepSize used to centralise the bar plots in the the hist function
+    MSMInfectionsByYearDiagnosed=hist(MSMDateMatrix(SimNumber, :), HistYearSlots+0.5*StepSize);% 0.5*StepSize used to centralise the bar plots in the the hist function
     [~, TotalInTimeVector]=size(ExpectedTimesVector);
     
         %ProportionOfExpectedTimesVectorExpectedPerStep=StepSize/(RangeOfCD4Averages(2)-RangeOfCD4Averages(1));
@@ -319,7 +320,8 @@ for SimNumber=1:NoParameterisations
             YearIndex=YearIndex+1;
             n=LastPositionInArray-YearIndex+1;
             if n>MaxYears/StepSize %i.e if year step is greater than 20 years
-                DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=0;
+                TotalUndiagnosedInfections(YearIndex)=0;
+                MSMTotalUndiagnosedInfections(YearIndex)=0;
             else
                 %if TotalInStepResample<0
                 %    DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=0;
@@ -372,40 +374,52 @@ for SimNumber=1:NoParameterisations
                     end
                     DiffInUndiagnosedEstimate=UpperBoundNumberOfUnidagnosedInfectionsThisStep-LowerBoundNumberOfUnidagnosedInfectionsThisStep;
                     UndiagnosedEstimateInThisStep=floor(LowerBoundNumberOfUnidagnosedInfectionsThisStep+rand*DiffInUndiagnosedEstimate);
-                    DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=UndiagnosedEstimateInThisStep;
-
+                    TotalUndiagnosedInfections(YearIndex)=UndiagnosedEstimateInThisStep;
+                    if (DiffInUndiagnosedEstimate==0)
+                        MSMTotalUndiagnosedInfections(YearIndex)=0;%to avoid divide by zero error
+                    else
+                        ProportionInUncertainZoneThatAreMSM=(UpperBoundOfUndiagnosedMSM-LowerBoundOfUndiagnosedMSM)/DiffInUndiagnosedEstimate;
+                        UncertainZoneMSM=round((UpperBoundOfUndiagnosedMSM-LowerBoundOfUndiagnosedMSM)*ProportionInUncertainZoneThatAreMSM*rand);
+                        MSMTotalUndiagnosedInfections(YearIndex)=LowerBoundNumberOfUnidagnosedInfectionsThisStep+UncertainZoneMSM;
+                    end
                 %end
             end
         end
 
     %Create a matrix of all simulations
-    DistributionUndiagnosedInfectionsPrecise(SimNumber, :)=DistributionForThisSimulationUndiagnosedInfectionsPrecise;
+    DistributionUndiagnosedInfectionsPrecise(SimNumber, :)=TotalUndiagnosedInfections;
+    MSMDistributionUndiagnosedInfectionsPrecise(SimNumber, :)=MSMTotalUndiagnosedInfections;
     DistributionDiagnosedInfectionsPrecise(SimNumber, :)=InfectionsByYearDiagnosed;
+    MSMDistributionDiagnosedInfectionsPrecise(SimNumber, :)=MSMInfectionsByYearDiagnosed;
     
     %Sum up the results for the undiagnosed infections into year blocks
     YearIndex=0;
     StepIndex=0;
     DistributionForThisSimulationUndiagnosedInfections=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
+    MSMDistributionForThisSimulationUndiagnosedInfections=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
     for Year=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2)
         YearIndex=YearIndex+1;
         for TenSteps=1:10
             StepIndex=StepIndex+1;
-            DistributionForThisSimulationUndiagnosedInfections(YearIndex)=DistributionForThisSimulationUndiagnosedInfections(YearIndex)+DistributionForThisSimulationUndiagnosedInfectionsPrecise(StepIndex);
+            DistributionForThisSimulationUndiagnosedInfections(YearIndex)=DistributionForThisSimulationUndiagnosedInfections(YearIndex)+TotalUndiagnosedInfections(StepIndex);
+            MSMDistributionForThisSimulationUndiagnosedInfections(YearIndex)=MSMDistributionForThisSimulationUndiagnosedInfections(YearIndex)+MSMTotalUndiagnosedInfections(StepIndex);
         end        
     end
     
     %State the histogram year centres
     YearCentres=(CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2))+0.5;
     %Find the infections that have already been diagnosed
-    DistributionForThisSimulationDiagnosedInfections=hist(DateMatrix(SimNumber, :), YearCentres);
-   
-    DistributionDiagnosedInfections(SimNumber, :)=DistributionForThisSimulationDiagnosedInfections;
+
+
+    
+    DistributionDiagnosedInfections(SimNumber, :)=hist(DateMatrix(SimNumber, :), YearCentres);
     DistributionUndiagnosedInfections(SimNumber, :)=DistributionForThisSimulationUndiagnosedInfections;
+    MSMDistributionUndiagnosedInfections(SimNumber, :)=MSMDistributionForThisSimulationUndiagnosedInfections;
     
-    MSMDistributionForThisSimulationDiagnosedInfections(SimNumber, :)=hist(MSMDateMatrix(SimNumber, :), YearCentres);
-    NonMSMDistributionForThisSimulationDiagnosedInfections(SimNumber, :)=hist(NonMSMDateMatrix(SimNumber, :), YearCentres);
+    MSMDistributionDiagnosedInfections(SimNumber, :)=hist(MSMDateMatrix(SimNumber, :), YearCentres);
+    NonMSMDistributionDiagnosedInfections(SimNumber, :)=hist(NonMSMDateMatrix(SimNumber, :), YearCentres);
     
-    PropMSMDistributionDiagnosedInfections(SimNumber, :)=MSMDistributionForThisSimulationDiagnosedInfections(SimNumber, :)./DistributionDiagnosedInfections(SimNumber, :);
+    PropMSMDistributionDiagnosedInfections(SimNumber, :)=MSMDistributionDiagnosedInfections(SimNumber, :)./DistributionDiagnosedInfections(SimNumber, :);
 end
 
 %% Create a diagnosis plot
