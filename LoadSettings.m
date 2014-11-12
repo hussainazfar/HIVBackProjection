@@ -12,7 +12,7 @@ YearOfDiagnosedDataEnd=2014;% for data that doesn't go beyond 2014
 CD4BackProjectionYears=[1965.0 YearOfDiagnosedDataEnd-StepSize];
 CD4BackProjectionYearsWhole=[1965 YearOfDiagnosedDataEnd-1];
 
-ConsiderRecentInfection=true;
+ConsiderRecentInfection=false;
 
 %% Program settings
 RunID='BackProject';

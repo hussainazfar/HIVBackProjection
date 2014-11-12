@@ -188,7 +188,7 @@ box off;
 print('-dpng ','-r300','ResultsPlots/Appendix uncertainty of median CD4 between simulations with time.png');
 
 clf;
-plot(0.1:0.5:10.1, CurrentMedianStore(1:10, 1:5:101)')
+plot(0.1:0.5:10.1, CurrentMedianStore(1:min([NoParameterisations, 10]), 1:5:101)')
 xlabel('Time since infection (years)','fontsize', 22);
 ylabel({'Median CD4 count'},'fontsize', 22);
 set(gca,'XTick', 1:10);

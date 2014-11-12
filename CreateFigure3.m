@@ -87,17 +87,22 @@ YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));
 
 %add the two variables together to get a final result
 DistributionTotal=MSMDistributionDiagnosedInfections+MSMDistributionUndiagnosedInfections;
-UCI=prctile(DistributionTotal, 97.5, 1);
-LCI=prctile(DistributionTotal, 2.5, 1);
-Median=median(DistributionTotal, 1);
+MSMUCI=prctile(DistributionTotal, 97.5, 1);
+MSMLCI=prctile(DistributionTotal, 2.5, 1);
+MSMMedian=median(DistributionTotal, 1);
 
 clf;%clear the current figure ready for plotting
 hold on
 DiagnosesHandle=plot(YearVectorLabel, DiagnosesByYear, 'Color' , [0.3 0.3 0.3], 'LineStyle', '.' ,'MarkerSize',20);
 
 TotalEstimatedInfectionsHandle=plot(YearVectorLabel, Median, 'Color' , [0.0 0.0 0.0],'LineWidth',2, 'LineStyle', '-');
-UncertaintyHandle=plot(YearVectorLabel, UCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '--');
-plot(YearVectorLabel, LCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '--');
+UncertaintyHandle=plot(YearVectorLabel, UCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');
+plot(YearVectorLabel, LCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');
+
+
+TotalEstimatedInfectionsHandle=plot(YearVectorLabel, MSMMedian, 'Color' , [0.0 0.0 0.0],'LineWidth',2, 'LineStyle', '-');
+UncertaintyHandle=plot(YearVectorLabel, MSMUCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');
+plot(YearVectorLabel, MSMLCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');
 
 
 hold off
