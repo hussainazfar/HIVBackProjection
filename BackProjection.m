@@ -231,7 +231,7 @@ clear DistributionUndiagnosedInfections;
 tic
 DateMatrix=zeros(NoParameterisations, NumberOfPatients);
 InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
-MSMInfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
+MSMCaseIndicator=zeros(1, NumberOfPatients);
 
 
 
@@ -246,11 +246,17 @@ for i=1:NumberOfPatients
         if Patient(i).DateOfDiagnosisContinuous>= RangeOfCD4Averages(1) && Patient(i).DateOfDiagnosisContinuous< RangeOfCD4Averages(2)
             NoPatientInRange=NoPatientInRange+1;
             InfectionTimeMatrix(:, NoPatientInRange)=Patient(i).TimeFromInfectionToDiagnosis;
+            if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
+                MSMCaseIndicator(NoPatientInRange)=1;
+            else
+                MSMCaseIndicator(NoPatientInRange)=0;
+            end
         end
         
 end
 %remove all those elements that are not used
 InfectionTimeMatrix(:, NoPatientInRange+1:NumberOfPatients)=[];
+MSMCaseIndicator( NoPatientInRange+1:NumberOfPatients)=[];
 timevalue=toc;
 
 % find proportion that are MSM, proportion that are not MSM
@@ -326,11 +332,17 @@ for SimNumber=1:NoParameterisations
                     %2.5, 1.5, 0.5
                     TotalDiagnosedInBackprojectionEstimate=round(InfectionsByYearDiagnosed(YearIndex)*AdjustmentFactor);
                     replacement=true;
-                    RandomisedExpectedTimesVector=randsample(ExpectedTimesVector, TotalInTimeVector, replacement);%create a really big vector to sample from. This should be about 50 times bigger than what's needed.
+                    %create a really big vector to sample from. This should be about 50 times bigger than what's needed.
+                    SampleIndex=randsample(TotalInTimeVector, TotalInTimeVector, replacement);
+                    %RandomisedExpectedTimesVector=randsample(ExpectedTimesVector, TotalInTimeVector, replacement);
+                    RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
+                    MSMSampleVector=MSMCaseIndicator(SampleIndex);
+                    
                     
                     NumberFoundDiagnosed=0;
                     NumberOfUnidagnosedInfectionsThisStep=0;
                     CountSamples=0;
+                    MSMIncludedInforwardProjection=0;
                     
                     LowerBoundFound=false;
                     UpperBoundFound=false;
@@ -345,14 +357,17 @@ for SimNumber=1:NoParameterisations
                             NumberFoundDiagnosed=NumberFoundDiagnosed+1;
                         else
                             NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
+                            MSMIncludedInforwardProjection=MSMIncludedInforwardProjection+MSMSampleVector(CountSamples);
                         end
                         if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate && LowerBoundFound==false)
                             LowerBoundFound=true;
                             LowerBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;
+                            LowerBoundOfUndiagnosedMSM=MSMIncludedInforwardProjection;
                         end
                         if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate+1)
                             UpperBoundFound=true;
                             UpperBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;
+                            UpperBoundOfUndiagnosedMSM=MSMIncludedInforwardProjection;
                         end
                     end
                     DiffInUndiagnosedEstimate=UpperBoundNumberOfUnidagnosedInfectionsThisStep-LowerBoundNumberOfUnidagnosedInfectionsThisStep;
