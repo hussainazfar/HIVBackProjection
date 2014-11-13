@@ -86,10 +86,10 @@ print('-dpng ','-r300','ResultsPlots/Figure 3b Diagnoses and Total Infections.pn
 YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));
 
 %add the two variables together to get a final result
-DistributionTotal=MSMDistributionDiagnosedInfections+MSMDistributionUndiagnosedInfections;
-MSMUCI=prctile(DistributionTotal, 97.5, 1);
-MSMLCI=prctile(DistributionTotal, 2.5, 1);
-MSMMedian=median(DistributionTotal, 1);
+MSMDistributionTotal=MSMDistributionDiagnosedInfections+MSMDistributionUndiagnosedInfections;
+MSMUCI=prctile(MSMDistributionTotal, 97.5, 1);
+MSMLCI=prctile(MSMDistributionTotal, 2.5, 1);
+MSMMedian=median(MSMDistributionTotal, 1);
 
 clf;%clear the current figure ready for plotting
 hold on

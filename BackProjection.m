@@ -532,6 +532,10 @@ CreateResultUncertaintyAroundTime
 %OutputPlots %old plots output
 toc(TimeALL)
 
+
+%% Sensitivity analysis
+SensitivityAnalysis
+
 %% Return diagnosed overseas to the population
 AllPatients=[Patient PreviouslyDiagnosedOverseasPatient];
 
