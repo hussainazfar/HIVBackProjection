@@ -64,7 +64,7 @@ end
 
 %% Sort Patients into those who have an infection known to be in the last 12 months, and those who have not. 
 % if ConsiderRecentInfection==true
-%     disp('Removing Recent cases to be utilised later');
+% %     disp('Removing Recent cases to be utilised later');
 %     PatientSplitTimer=tic;
 %     RecentPatientID=[];
 %     [~, NumberInPatientCurrently]=size(Patient);
@@ -185,11 +185,14 @@ toc(TicOptimisation)
 if ConsiderRecentInfection==true
     % assign infection distributions of those who are known to have been infected in the last 12 months
 
-    [~, NumberOfRecentInfections]=size(RecentPatient);
+    %[~, NumberOfRecentInfections]=size(RecentPatient);
 
-    for i=1:NumberOfRecentInfections
-        RecentPatient(i).TimeFromInfectionToDiagnosis= rand(1,NoParameterisations);
-        %Alternate distribution: People have testing rates of between once every 3 months and 1 year = (1-rand(1, NoParameterisations)*0.75).*rand(1, NoParameterisations)
+    for i=1:NumberInPatientCurrently
+        
+        if Patient(i).RecentInfection==1
+            Patient(i).TimeFromInfectionToDiagnosis= rand(1,NoParameterisations);
+            %Alternate distribution: People have testing rates of between once every 3 months and 1 year = (1-rand(1, NoParameterisations)*0.75).*rand(1, NoParameterisations)
+        end
     end
 
     %recombine the recent and non-recent infections
