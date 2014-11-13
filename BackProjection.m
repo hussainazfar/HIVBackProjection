@@ -124,11 +124,12 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
         MaxYear=Year+1;
     end
     
-    if Px.ConsiderRecentInfection
-        RecentDataTotal=sum(MinYear<=RecentDiagnosisDates & RecentDiagnosisDates<MaxYear);
-        NoRecentDataTotal=sum(MinYear<=NotRecentDiagnosisDates & NotRecentDiagnosisDates<MaxYear);
-        Px.PropWithRecentDiagDataPresentThisYear=RecentDataTotal/(RecentDataTotal+NoRecentDataTotal);
-    end
+    %This section is no longer used in the current methodology
+%     if Px.ConsiderRecentInfection
+%         RecentDataTotal=sum(MinYear<=RecentDiagnosisDates & RecentDiagnosisDates<MaxYear);
+%         NoRecentDataTotal=sum(MinYear<=NotRecentDiagnosisDates & NotRecentDiagnosisDates<MaxYear);
+%         Px.PropWithRecentDiagDataPresentThisYear=RecentDataTotal/(RecentDataTotal+NoRecentDataTotal);
+%     end
     
     CD4ForOptimisation=-1*ones(1, NumberInPatientCurrently);%to indicate empty fields
     % Select individuals that are in the year group
