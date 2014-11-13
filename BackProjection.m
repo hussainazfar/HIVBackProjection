@@ -359,7 +359,7 @@ for SimNumber=1:NoParameterisations
                         NewTimeToAdd=RandomisedExpectedTimesVector(CountSamples);
                         TimeToFind=(CD4BackProjectionYearsWhole(2)+1-YearStep);
 
-                        if NewTimeToAdd<TimeToFind+StepSize/2%The StepSize/2 is because of an error being created by the random addition of small amounts to the expected times vector
+                        if NewTimeToAdd<TimeToFind
                             NumberFoundDiagnosed=NumberFoundDiagnosed+1;
                         else
                             NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
