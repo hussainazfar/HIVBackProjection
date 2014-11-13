@@ -63,36 +63,36 @@ if DeduplicateDiagnoses
 end
 
 %% Sort Patients into those who have an infection known to be in the last 12 months, and those who have not. 
-if ConsiderRecentInfection==true
-    disp('Removing Recent cases to be utilised later');
-    PatientSplitTimer=tic;
-    RecentPatientID=[];
-    [~, NumberInPatientCurrently]=size(Patient);
-    for i=1:NumberInPatientCurrently
-        if Patient(i).RecentInfection==1
-            RecentPatientID=[RecentPatientID i];
-        end
-    end
-    RecentPatient=Patient(RecentPatientID);
-    Patient(RecentPatientID)=[];
-    toc(PatientSplitTimer)
-    
-    %Determine the proportion of people in each year with evidence of recent infection
-    NotRecentDiagnosisDates=zeros(size(Patient));
-    PCount=0;
-    for P=Patient
-        PCount=PCount+1;
-        NotRecentDiagnosisDates(PCount)=P.DateOfDiagnosisContinuous;%Note that in this system all records without recent diagnosis data have an entris of year zero. This means that you can fileter it out when trying to determine the total number recently infected below.
-    end
-    
-    RecentDiagnosisDates=zeros(size(RecentPatient));
-    PCount=0;
-    for RP=RecentPatient
-        PCount=PCount+1;
-        RecentDiagnosisDates(PCount)=RP.DateOfDiagnosisContinuous;
-    end
-    
- end
+% if ConsiderRecentInfection==true
+%     disp('Removing Recent cases to be utilised later');
+%     PatientSplitTimer=tic;
+%     RecentPatientID=[];
+%     [~, NumberInPatientCurrently]=size(Patient);
+%     for i=1:NumberInPatientCurrently
+%         if Patient(i).RecentInfection==1
+%             RecentPatientID=[RecentPatientID i];
+%         end
+%     end
+%     RecentPatient=Patient(RecentPatientID);
+%     Patient(RecentPatientID)=[];
+%     toc(PatientSplitTimer)
+%     
+%     %Determine the proportion of people in each year with evidence of recent infection
+%     NotRecentDiagnosisDates=zeros(size(Patient));
+%     PCount=0;
+%     for P=Patient
+%         PCount=PCount+1;
+%         NotRecentDiagnosisDates(PCount)=P.DateOfDiagnosisContinuous;%Note that in this system all records without recent diagnosis data have an entris of year zero. This means that you can fileter it out when trying to determine the total number recently infected below.
+%     end
+%     
+%     RecentDiagnosisDates=zeros(size(RecentPatient));
+%     PCount=0;
+%     for RP=RecentPatient
+%         PCount=PCount+1;
+%         RecentDiagnosisDates(PCount)=RP.DateOfDiagnosisContinuous;
+%     end
+%     
+%  end
 
 
 
@@ -192,7 +192,7 @@ if ConsiderRecentInfection==true
     end
 
     %recombine the recent and non-recent infections
-    Patient=[Patient RecentPatient];
+    %Patient=[Patient RecentPatient];
 end
 
 
