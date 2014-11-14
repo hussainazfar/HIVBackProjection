@@ -11,6 +11,9 @@ set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
 box off;
+
+lsline
+ 
 print('-dpng ','-r300','ResultsPlots/Appendix Max inc v first infection.png')
 
 
@@ -27,6 +30,7 @@ set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
 box off;
+lsline
 print('-dpng ','-r300','ResultsPlots/Appendix post-primary CD4 v time until diag.png')
 
 
@@ -39,4 +43,5 @@ set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
 box off;
+lsline
 print('-dpng ','-r300','ResultsPlots/Appendix sqr decline v time until diag.png')

@@ -1,4 +1,4 @@
-NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
+NoParameterisations=12; % the number of parameterisations used to generate uncertainty. Should be set to 200
 IncludePreviouslyDiagnosedOverseas=false;
 DeduplicateDiagnoses=true;
 
@@ -358,13 +358,14 @@ for SimNumber=1:NoParameterisations
                         
                         NewTimeToAdd=RandomisedExpectedTimesVector(CountSamples);
                         TimeToFind=(CD4BackProjectionYearsWhole(2)+1-YearStep);
-
+                        % Determine if the infection would have occure in this time step
                         if NewTimeToAdd<TimeToFind
                             NumberFoundDiagnosed=NumberFoundDiagnosed+1;
                         else
                             NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
                             MSMIncludedInforwardProjection=MSMIncludedInforwardProjection+MSMSampleVector(CountSamples);
                         end
+                        % Determine 
                         if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate && LowerBoundFound==false)
                             LowerBoundFound=true;
                             LowerBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;

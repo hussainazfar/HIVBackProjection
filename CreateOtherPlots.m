@@ -84,7 +84,7 @@ clf;%clear the current figure ready for plotting
     set(gca, 'fontsize', 18)
     box off;
     
-    xlim([PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)])
+    xlim([PlotSettings.YearsToPlot(1) CD4BackProjectionYearsWhole(2)+1])
     
     
     %legend([DiagnosesHandle BackProjectedInfectionsHandle TotalEstimatedInfectionsHandle], 'Diagnoses                    ', 'Back-projected infections' , 'Total estimated infections', 'Location','NorthEast');
