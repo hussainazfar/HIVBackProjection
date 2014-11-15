@@ -46,7 +46,7 @@ end
 
 CutOffYear=CD4BackProjectionYearsWhole(2)+1;
 
-FutureSim=false(1, SampleVectorSize);
+IncludeInForwardProjection=false(1, NoPatientInRange);
 % Step 2: randomly sample the population that is passed into a structure
 % that preserves the undiagnosed cases
 for SimNumber=1:NoParameterisations
@@ -85,6 +85,7 @@ for SimNumber=1:NoParameterisations
                 if RandomisedInfectionDate(CountSamples) + RandomisedExpectedTimesVector(CountSamples)<CutOffYear
                     NumberFoundDiagnosed=NumberFoundDiagnosed+1;
                 else
+                    IncludeInForwardProjection(CountSamples)=true;
                     NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
                     MSMIncludedInforwardProjection=MSMIncludedInforwardProjection+MSMSampleVector(CountSamples);
                 end
