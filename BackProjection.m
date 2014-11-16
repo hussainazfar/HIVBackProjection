@@ -181,23 +181,23 @@ toc(TicOptimisation)
 
     
     
-%% If consideration is given to recent infection data, recombine the non-Recent patients back into the patient variable
-if ConsiderRecentInfection==true
-    % assign infection distributions of those who are known to have been infected in the last 12 months
-
-    %[~, NumberOfRecentInfections]=size(RecentPatient);
-
-    for i=1:NumberInPatientCurrently
-        
-        if Patient(i).RecentInfection==1
-            Patient(i).TimeFromInfectionToDiagnosis= rand(1,NoParameterisations);
-            %Alternate distribution: People have testing rates of between once every 3 months and 1 year = (1-rand(1, NoParameterisations)*0.75).*rand(1, NoParameterisations)
-        end
-    end
-
-    %recombine the recent and non-recent infections
-    %Patient=[Patient RecentPatient];
-end
+% %% If consideration is given to recent infection data, recombine the non-Recent patients back into the patient variable
+% if ConsiderRecentInfection==true
+%     % assign infection distributions of those who are known to have been infected in the last 12 months
+% 
+%     %[~, NumberOfRecentInfections]=size(RecentPatient);
+% 
+%     for i=1:NumberInPatientCurrently
+%         
+%         if Patient(i).RecentInfection==1
+%             Patient(i).TimeFromInfectionToDiagnosis= rand(1,NoParameterisations);
+%             %Alternate distribution: People have testing rates of between once every 3 months and 1 year = (1-rand(1, NoParameterisations)*0.75).*rand(1, NoParameterisations)
+%         end
+%     end
+% 
+%     %recombine the recent and non-recent infections
+%     %Patient=[Patient RecentPatient];
+% end
 
 
 
@@ -223,21 +223,33 @@ if ConsiderRecentInfection==true
         for i=1:NumberInPatientCurrently
             % A clear western blot in close proximity to diagnosis indicates most likely a recent infection
             % Serconversion illness indicates a likely recent infection
-            
-            if (Patient(i).DateIll-Patient(i).DateOfDiagnosisContinuous)<40 % if the 
-            % Find the most recent of the above. Randomly chose between 0 and 40 days prior to this as the infection date 
-            
-            % If the last negative test is more recent than the infection
-            % date, chose a random time between the infection date and the
-            % diagnosis date. We do this for all cases, including those
-            % above that we hard set
-            if ~isnan(Patient(i).DateLastNegative) &&  Patient(i).DateLastNegative<Patient(i).DateOfDiagnosisContinuous
-                if Patient(i).DateLastNegative<Patient(i).InfectionDateDistribution(SimCount)
-                    Patient(i).InfectionDateDistribution(SimCount)=Patient(i).DateLastNegative+rand*(Patient(i).DateOfDiagnosisContinuous-Patient(i).DateLastNegative);
-                    % re-establish the time between infection and diagnosis for the individual
-                    Patient(i).TimeFromInfectionToDiagnosis=Patient(i).DateOfDiagnosisContinuous-Patient(i).InfectionDateDistribution;
-                end
+            LatestFirstDateEstFromIllness=NaN;
+            LatestFirstDateEstFromWesternBlot=NaN;
+            % if the time of illness is 
+            if (Patient(i).DateIll-Patient(i).DateOfDiagnosisContinuous)<40/365 % if NaN, do nothing
+                LatestFirstDateEstFromIllness=Patient(i).DateIll-40/365;
             end
+            % if it is more than 40 days, there's probably an issue, so we ignore the western blot result
+            if (Patient(i).DateIndetWesternBlot-Patient(i).DateOfDiagnosisContinuous)<40/365 % if NaN, do nothing
+                LatestFirstDateEstFromWesternBlot=Patient(i).DateIndetWesternBlot-40/365;
+            end
+            
+            
+            if Patient(i).InfectionDateDistribution(SimCount)<Patient(i).DateLastNegative % if NaN, do nothing
+                LatestFirstDateEstFromLastNegative=Patient(i).DateLastNegative;
+            else
+                LatestFirstDateEstFromLastNegative=NaN;
+            end
+            
+            % Find the most recent of the above. Randomly chose between
+            % LatestFirstDate and the date of diagnosis
+            LatestFirstDate=max([LatestFirstDateEstFromWesternBlot, LatestFirstDateEstFromIllness, LatestFirstDateEstFromLastNegative]);
+            if ~isnan(LatestFirstDate)
+                Patient(i).InfectionDateDistribution(SimCount)=Patient(i).DateLastNegative+rand*(Patient(i).DateOfDiagnosisContinuous-Patient(i).DateLastNegative);
+                % re-establish the time between infection and diagnosis for the individual
+                Patient(i).TimeFromInfectionToDiagnosis=Patient(i).DateOfDiagnosisContinuous-Patient(i).InfectionDateDistribution;
+            end
+            %else do nothing
         end
     end
 end
