@@ -128,36 +128,37 @@ end
 
 TotalInfectionsPerYear=DistributionDiagnosedInfections+DistributionUndiagnosedInfections;
 
-
-
-DistributionUndiagnosedInfectionsPrecise(SimNumber, :)=TotalUndiagnosedInfections;
-DistributionDiagnosedInfectionsPrecise(SimNumber, :)=InfectionsByYearDiagnosed;
-
-
-%     MSMDistributionUndiagnosedInfectionsPrecise(SimNumber, :)=MSMTotalUndiagnosedInfections;
-%     DistributionDiagnosedInfectionsPrecise(SimNumber, :)=InfectionsByYearDiagnosed;
-%     MSMDistributionDiagnosedInfectionsPrecise(SimNumber, :)=MSMInfectionsByYearDiagnosed;
-
 HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize))+0.5*StepSize;
 for SimNumber=1:NoParameterisations
     DistributionUndiagnosedInfectionsPrecise(SimNumber, :)=hist(UndiagnosedCaseData(SimNumber).InfectionDate, HistYearSlots);
     DistributionDiagnosedInfectionsPrecise(SimNumber, :)=hist(DateMatrix(SimNumber,:), HistYearSlots);
 end
 
+
+DiagnosisDateVec=zeros(1, NumberOfPatients);
+for i=1:NumberOfPatients
+    DiagnosisDateVec(i)=Patient(i).DateOfDiagnosisContinuous;
+end
+DiagnosisDistributionPrecise=hist(DiagnosisDateVec, HistYearSlots);
+
+
+
 %Plotting multiple simulations
 hold on;
 plot(YearVector, TotalInfectionsPerYear');
 plot(YearVector, DistributionDiagnosedInfections');
-
 hold off;
 
 
 plot(HistYearSlots, DistributionDiagnosedInfectionsPrecise')
 
 
-
+hold on;
 plot(HistYearSlots, mean(DistributionDiagnosedInfectionsPrecise, 1)')
-
+plot(HistYearSlots, mean(DistributionUndiagnosedInfectionsPrecise, 1)')
+plot(HistYearSlots, mean(DistributionDiagnosedInfectionsPrecise+DistributionUndiagnosedInfectionsPrecise, 1)')
+plot(HistYearSlots, DiagnosisDistributionPrecise, 'r')
+hold off;
 
 %     DateIndeterminantWB
 %     EarlietTimeWB=DateIndeterminantWB-40;
