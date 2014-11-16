@@ -378,7 +378,7 @@ for SimNumber=1:NoParameterisations
                         end
                     end
                     DiffInUndiagnosedEstimate=UpperBoundNumberOfUnidagnosedInfectionsThisStep-LowerBoundNumberOfUnidagnosedInfectionsThisStep;
-                    UndiagnosedEstimateInThisStep=floor(LowerBoundNumberOfUnidagnosedInfectionsThisStep+rand*DiffInUndiagnosedEstimate);
+                    UndiagnosedEstimateInThisStep=round(LowerBoundNumberOfUnidagnosedInfectionsThisStep+rand*DiffInUndiagnosedEstimate);
                     TotalUndiagnosedInfections(YearIndex)=UndiagnosedEstimateInThisStep;
                     if (DiffInUndiagnosedEstimate==0)%to avoid divide by zero error
                         MSMTotalUndiagnosedInfections(YearIndex)=LowerBoundNumberOfUnidagnosedInfectionsThisStep;
