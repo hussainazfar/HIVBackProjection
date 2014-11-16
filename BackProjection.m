@@ -380,8 +380,8 @@ for SimNumber=1:NoParameterisations
                     DiffInUndiagnosedEstimate=UpperBoundNumberOfUnidagnosedInfectionsThisStep-LowerBoundNumberOfUnidagnosedInfectionsThisStep;
                     UndiagnosedEstimateInThisStep=floor(LowerBoundNumberOfUnidagnosedInfectionsThisStep+rand*DiffInUndiagnosedEstimate);
                     TotalUndiagnosedInfections(YearIndex)=UndiagnosedEstimateInThisStep;
-                    if (DiffInUndiagnosedEstimate==0)
-                        MSMTotalUndiagnosedInfections(YearIndex)=0;%to avoid divide by zero error
+                    if (DiffInUndiagnosedEstimate==0)%to avoid divide by zero error
+                        MSMTotalUndiagnosedInfections(YearIndex)=LowerBoundNumberOfUnidagnosedInfectionsThisStep;
                     else
                         ProportionInUncertainZoneThatAreMSM=(UpperBoundOfUndiagnosedMSM-LowerBoundOfUndiagnosedMSM)/DiffInUndiagnosedEstimate;
                         UncertainZoneMSM=round((UpperBoundOfUndiagnosedMSM-LowerBoundOfUndiagnosedMSM)*ProportionInUncertainZoneThatAreMSM*rand);
