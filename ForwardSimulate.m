@@ -9,12 +9,7 @@ InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
 MSMCaseIndicator=zeros(1, NumberOfPatients);
 
 NoPatientInRange=0;
-%TimeDistributionOfRecentDiagnoses=[];
-%CD4DistributionOfRecentDiagnoses=[];
 for i=1:NumberOfPatients
-
-    %TimeDistributionOfRecentDiagnoses((i-1)*NoParameterisations+1:i*NoParameterisations)=Patient(i).TimeFromInfectionToDiagnosis;
-    %CD4DistributionOfRecentDiagnoses((i-1)*NoParameterisations+1:i*NoParameterisations)=Patient(i).CD4CountAtDiagnosis;
     DateMatrix(:, i)=Patient(i).InfectionDateDistribution;
     if Patient(i).DateOfDiagnosisContinuous>= RangeOfCD4Averages(1) && Patient(i).DateOfDiagnosisContinuous< RangeOfCD4Averages(2)
         NoPatientInRange=NoPatientInRange+1;
@@ -75,7 +70,6 @@ for SimNumber=1:NoParameterisations
             CountSamples=0;
             NumberFoundDiagnosed=0;
             NumberOfUnidagnosedInfectionsThisStep=0;
-%             MSMIncludedInforwardProjection=0;
 
             LowerBoundFound=false;
             UpperBoundFound=false;
@@ -89,19 +83,16 @@ for SimNumber=1:NoParameterisations
                 else % if the simulated individual has not been diagnosed by the cut off date
                     IncludeInForwardProjection(CountSamples)=true; % note this vector is not a true indicator of whether the person is 
                     NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
-%                     MSMIncludedInforwardProjection=MSMIncludedInforwardProjection+MSMSampleVector(CountSamples);
                 end
                 
                 % Determine whether the simulation has reached the expected number of people
                 if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate && LowerBoundFound==false)
                     LowerBoundFound=true;
                     LowerBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;
-%                     LowerBoundOfUndiagnosedMSM=MSMIncludedInforwardProjection;
                 end
                 if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate+1)
                     UpperBoundFound=true;
                     UpperBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;
-%                     UpperBoundOfUndiagnosedMSM=MSMIncludedInforwardProjection;
                 end
             end
             
@@ -139,6 +130,17 @@ for SimNumber=1:NoParameterisations
 end
 
 plot(YearVector, (DistributionDiagnosedInfections+DistributionUndiagnosedInfections)')
+
+
+
+DistributionUndiagnosedInfectionsPrecise(SimNumber, :)=TotalUndiagnosedInfections;
+DistributionDiagnosedInfectionsPrecise(SimNumber, :)=InfectionsByYearDiagnosed;
+
+
+%     MSMDistributionUndiagnosedInfectionsPrecise(SimNumber, :)=MSMTotalUndiagnosedInfections;
+%     DistributionDiagnosedInfectionsPrecise(SimNumber, :)=InfectionsByYearDiagnosed;
+%     MSMDistributionDiagnosedInfectionsPrecise(SimNumber, :)=MSMInfectionsByYearDiagnosed;
+
 
 
 
