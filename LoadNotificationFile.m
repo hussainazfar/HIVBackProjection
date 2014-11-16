@@ -39,7 +39,7 @@ LineDataMatrix.DateOfDiagnosisContinuous=LineDataMatrix.YearOfDiagnosis+  (daten
 
 
 % Load the date of last negative and the date of illness
-LineDataMatrix.LastNegative=NaN(1, NumberOfPatients);
+LineDataMatrix.DateLastNegative=NaN(1, NumberOfPatients);
 if sum(strcmp(VariableName, 'dateneg'))==1   %dateill dateindet
     Column=strcmp(VariableName, 'dateneg');
     for i=1:NumberOfPatients%this needs to be done line by line because it is a string
@@ -49,7 +49,7 @@ if sum(strcmp(VariableName, 'dateneg'))==1   %dateill dateindet
         else
             Year=year(datenum(DateText, 'dd/mm/yyyy'));
             DaysSinceYear=datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
-            LineDataMatrix.LastNegative(i)=Year+  DaysSinceYear./yeardays(Year);
+            LineDataMatrix.DateLastNegative(i)=Year+  DaysSinceYear./yeardays(Year);
         end
     end
 end

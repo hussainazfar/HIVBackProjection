@@ -26,7 +26,7 @@ classdef PatientClass %< handle
       %Variables that indicate recent diagnosis
       DateIll;
       DateIndetWesternBlot;
-      DateLastNeg;
+      DateLastNegative;
       
       
 %       PopulationCategory;%Category values

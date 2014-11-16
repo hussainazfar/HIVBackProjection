@@ -201,6 +201,15 @@ end
 
 
 
+
+% There are three items to consider when dealing with a
+
+
+% a clear western blot in close proximity to diagnosis indicates most likely a recent infection
+
+% Serconversion illness indicates a likely infection
+% Find the most recent of the above. Randomly chose between 0 and 40 days prior to this as the infection date 
+
 %% Create dates for the infection based on time between infection and testing, together with testing date
 [~, NumberOfPatients]=size(Patient);
 for i=1:NumberOfPatients
