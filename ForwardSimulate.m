@@ -120,13 +120,13 @@ for SimNumber=1:NoParameterisations
         end
     end
     
-    DistributionDiagnosedInfections(SimNumber, :)=hist(DateMatrix(SimNumber, :), YearVector);
-    MSMDistributionDiagnosedInfections(SimNumber, :)=hist(MSMDateMatrix(SimNumber, :), YearVector);
+    DistributionDiagnosedInfections(SimNumber, :)=hist(DateMatrix(SimNumber, :), YearVector+0.5);
+    MSMDistributionDiagnosedInfections(SimNumber, :)=hist(MSMDateMatrix(SimNumber, :), YearVector+0.5);
     PropMSMDistributionDiagnosedInfections(SimNumber, :)=MSMDistributionDiagnosedInfections(SimNumber, :)./DistributionDiagnosedInfections(SimNumber, :);
     
 end
 
-
+TotalInfectionsPerYear=DistributionDiagnosedInfections+DistributionUndiagnosedInfections;
 
 
 
@@ -145,11 +145,18 @@ for SimNumber=1:NoParameterisations
 end
 
 %Plotting multiple simulations
-plot(YearVector, (DistributionDiagnosedInfections+DistributionUndiagnosedInfections)')
+hold on;
+plot(YearVector, TotalInfectionsPerYear');
+plot(YearVector, DistributionDiagnosedInfections');
+
+hold off;
+
+
 plot(HistYearSlots, DistributionDiagnosedInfectionsPrecise')
 
 
 
+plot(HistYearSlots, mean(DistributionDiagnosedInfectionsPrecise, 1)')
 
 
 %     DateIndeterminantWB
