@@ -245,7 +245,7 @@ if ConsiderRecentInfection==true
             % LatestFirstDate and the date of diagnosis
             LatestFirstDate=max([LatestFirstDateEstFromWesternBlot, LatestFirstDateEstFromIllness, LatestFirstDateEstFromLastNegative]);
             if ~isnan(LatestFirstDate)
-                Patient(i).InfectionDateDistribution(SimCount)=Patient(i).DateLastNegative+rand*(Patient(i).DateOfDiagnosisContinuous-Patient(i).DateLastNegative);
+                Patient(i).InfectionDateDistribution(SimCount)=LatestFirstDate+rand*(Patient(i).DateOfDiagnosisContinuous-LatestFirstDate);
                 % re-establish the time between infection and diagnosis for the individual
                 Patient(i).TimeFromInfectionToDiagnosis=Patient(i).DateOfDiagnosisContinuous-Patient(i).InfectionDateDistribution;
             end
