@@ -226,6 +226,42 @@ disp(['There were ' num2str(NumPrevDiagnosedOverSeas) ' previously diagnosed cas
 
 %% Displying the relative difference between CD4 counts in MSM and non-MSM
 clear    MedianMSMCD4 LQRMSMCD4 UQRMSMCD4 MedianNonMSMCD4 LQRNonMSMCD4 UQRNonMSMCD4;
+% find proportion that are MSM, proportion that are not MSM
+% cout to allow a pre allocation
+MSMCount=0;
+NonMSMCount=0;
+for i=1:NumberOfPatients
+    if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
+        MSMCount=MSMCount+1;
+    else
+        NonMSMCount=NonMSMCount+1;
+    end
+end
+MSMCD4=zeros(1, MSMCount);
+NonMSMCD4=zeros(1, NonMSMCount);
+MSMDate=zeros(1, MSMCount);
+NonMSMDate=zeros(1, NonMSMCount);
+MSMInfectionTimeMatrix=zeros(NoParameterisations, MSMCount);
+NonMSMInfectionTimeMatrix=zeros(NoParameterisations, NonMSMCount);
+
+MSMCount=0;
+NonMSMCount=0;
+for i=1:NumberOfPatients
+    if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
+        MSMCount=MSMCount+1;
+        MSMDateMatrix(:, MSMCount)=Patient(i).InfectionDateDistribution;
+        MSMDate(MSMCount)=Patient(i).DateOfDiagnosisContinuous;
+        MSMCD4(MSMCount)=Patient(i).CD4CountAtDiagnosis;
+        MSMInfectionTimeMatrix(:,MSMCount)=Patient(i).TimeFromInfectionToDiagnosis;
+    else
+        NonMSMCount=NonMSMCount+1;
+        NonMSMDateMatrix(:, NonMSMCount)=Patient(i).InfectionDateDistribution;
+        NonMSMDate(NonMSMCount)=Patient(i).DateOfDiagnosisContinuous;
+        NonMSMCD4(NonMSMCount)=Patient(i).CD4CountAtDiagnosis;
+        NonMSMInfectionTimeMatrix(:,NonMSMCount)=Patient(i).TimeFromInfectionToDiagnosis;
+    end
+end
+
 
 CurrentYearIndex=0;
 CurrentYearVec=1982:CD4BackProjectionYearsWhole(2);

@@ -224,6 +224,7 @@ if ConsiderRecentInfection==true
             % A clear western blot in close proximity to diagnosis indicates most likely a recent infection
             % Serconversion illness indicates a likely recent infection
             
+            if (Patient(i).DateIll-Patient(i).DateOfDiagnosisContinuous)<40 % if the 
             % Find the most recent of the above. Randomly chose between 0 and 40 days prior to this as the infection date 
             
             % If the last negative test is more recent than the infection
