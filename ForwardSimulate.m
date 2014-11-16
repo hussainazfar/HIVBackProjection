@@ -5,8 +5,10 @@
 
 %% Step 1: Collect sampling data
 DateMatrix=zeros(NoParameterisations, NumberOfPatients);
+
 InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
 MSMCaseIndicator=false(1, NumberOfPatients);
+
 
 NoPatientInRange=0;
 for i=1:NumberOfPatients
@@ -24,6 +26,9 @@ end
 %remove all those elements that are not used
 InfectionTimeMatrix(:, NoPatientInRange+1:NumberOfPatients)=[];
 MSMCaseIndicator( NoPatientInRange+1:NumberOfPatients)=[];
+MSMCount=sum(MSMCaseIndicator);
+MSMDateMatrix=zeros(NoParameterisations, MSMCount);
+
 
 HistWholeYearVec=(CD4BackProjectionYearsWhole(1):1:CD4BackProjectionYearsWhole(2))+0.5;
 
@@ -49,6 +54,7 @@ IncludeInForwardProjection=false(1, NoPatientInRange);
 for SimNumber=1:NoParameterisations
     disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
+    [~, TotalInTimeVector]=size(ExpectedTimesVector);
     UndiagnosedCaseData(SimNumber).MSM=[];
     UndiagnosedCaseData(SimNumber).InfectionDate=[];
             

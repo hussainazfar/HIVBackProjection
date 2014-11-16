@@ -202,13 +202,8 @@ end
 
 
 
-% There are three items to consider when dealing with a
 
 
-% a clear western blot in close proximity to diagnosis indicates most likely a recent infection
-
-% Serconversion illness indicates a likely infection
-% Find the most recent of the above. Randomly chose between 0 and 40 days prior to this as the infection date 
 
 %% Create dates for the infection based on time between infection and testing, together with testing date
 [~, NumberOfPatients]=size(Patient);
@@ -217,9 +212,34 @@ for i=1:NumberOfPatients
 end
     
 
+%% If consideration is given to recent infection data, select data according to avaialable information
+% There are three items to consider when dealing with a
 
 
 
+
+if ConsiderRecentInfection==true
+    for SimCount=1:NoParameterisations
+        for i=1:NumberInPatientCurrently
+            % A clear western blot in close proximity to diagnosis indicates most likely a recent infection
+            % Serconversion illness indicates a likely recent infection
+            
+            % Find the most recent of the above. Randomly chose between 0 and 40 days prior to this as the infection date 
+            
+            % If the last negative test is more recent than the infection
+            % date, chose a random time between the infection date and the
+            % diagnosis date. We do this for all cases, including those
+            % above that we hard set
+            if ~isnan(Patient(i).DateLastNegative) &&  Patient(i).DateLastNegative<Patient(i).DateOfDiagnosisContinuous
+                if Patient(i).DateLastNegative<Patient(i).InfectionDateDistribution(SimCount)
+                    Patient(i).InfectionDateDistribution(SimCount)=Patient(i).DateLastNegative+rand*(Patient(i).DateOfDiagnosisContinuous-Patient(i).DateLastNegative);
+                    % re-establish the time between infection and diagnosis for the individual
+                    Patient(i).TimeFromInfectionToDiagnosis=Patient(i).DateOfDiagnosisContinuous-Patient(i).InfectionDateDistribution;
+                end
+            end
+        end
+    end
+end
 
 
 
@@ -435,6 +455,8 @@ end
 %     
 %     PropMSMDistributionDiagnosedInfections(SimNumber, :)=MSMDistributionDiagnosedInfections(SimNumber, :)./DistributionDiagnosedInfections(SimNumber, :);
 % end
+%% Forward simulate 
+ForwardSimulate
 
 %% Create a diagnosis plot
 SizeOfDiagnosisVector=ceil((CD4BackProjectionYears(2)-CD4BackProjectionYears(1))/StepSize);
@@ -457,6 +479,7 @@ for i=1:NumberOfPatients
 end
 
 %% Find total undiagnosed at all points in time
+HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
 [~, NumberOfYearSlots]=size(HistYearSlots);
 UndiagnosedMatrix=zeros(NoParameterisations, NumberOfYearSlots );
 for i=1:NumberOfPatients
@@ -467,7 +490,7 @@ for i=1:NumberOfPatients
         YearSlotCount=0;
         for YearStep=HistYearSlots
             YearSlotCount=YearSlotCount+1;
-            UndiagnosedAddtionVector=Patient(i).InfectionDateDistribution<YearStep & Patient(i).DateOfDiagnosisContinuous >YearStep;
+            UndiagnosedAddtionVector=Patient(i).InfectionDateDistribution<YearStep & YearStep<Patient(i).DateOfDiagnosisContinuous ;
             %Add this value to the matrix across the no. simulations dimension
             UndiagnosedMatrix(:, YearSlotCount)=UndiagnosedMatrix(:, YearSlotCount)+UndiagnosedAddtionVector';
         end

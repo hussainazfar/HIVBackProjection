@@ -117,8 +117,10 @@ classdef PatientClass %< handle
 
    methods
 
-      function obj = PatientClass
-
+      function obj = PatientClass(obj)
+            obj.DateIll=NaN;
+            obj.DateIndetWesternBlot=NaN;
+            obj.DateLastNegative=NaN;
       end
       
 
