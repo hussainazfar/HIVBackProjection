@@ -6,7 +6,7 @@
 %% Step 1: Collect sampling data
 DateMatrix=zeros(NoParameterisations, NumberOfPatients);
 InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
-MSMCaseIndicator=zeros(1, NumberOfPatients);
+MSMCaseIndicator=false(1, NumberOfPatients);
 
 NoPatientInRange=0;
 for i=1:NumberOfPatients
@@ -15,9 +15,9 @@ for i=1:NumberOfPatients
         NoPatientInRange=NoPatientInRange+1;
         InfectionTimeMatrix(:, NoPatientInRange)=Patient(i).TimeFromInfectionToDiagnosis;
         if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
-            MSMCaseIndicator(NoPatientInRange)=1;
+            MSMCaseIndicator(NoPatientInRange)=true;
         else
-            MSMCaseIndicator(NoPatientInRange)=0;
+            MSMCaseIndicator(NoPatientInRange)=false;
         end
     end
 end
@@ -49,7 +49,9 @@ IncludeInForwardProjection=false(1, NoPatientInRange);
 for SimNumber=1:NoParameterisations
     disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
-    
+    UndiagnosedCaseData(SimNumber).MSM=[];
+    UndiagnosedCaseData(SimNumber).InfectionDate=[];
+            
     YearIndex=0;
     for Year=YearVector
         YearIndex=YearIndex+1;
@@ -60,7 +62,7 @@ for SimNumber=1:NoParameterisations
             TotalDiagnosedInBackprojectionEstimate=DiagnosedInfectionsByYear(CurrentSim, YearIndex);
             %create a really big vector to sample from. This should be about 50 times bigger than what's needed.
             replacement=true;
-            SampleIndex=randsample(TotalInTimeVector, 10*TotalInTimeVector, replacement);
+            SampleIndex=randsample(TotalInTimeVector, 10*TotalInTimeVector, replacement);%under a 5 year aeverage, this gives 50 times the samples per year, which should be sufficient
             
             RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
             MSMSampleVector=MSMCaseIndicator(SampleIndex);
@@ -109,16 +111,11 @@ for SimNumber=1:NoParameterisations
             MSMUndiagnosedEstimateInThisStep=sum(MSMSampleVector(NumericalIncludeInForwardProjection));
             
             
-            
-            
             DistributionUndiagnosedInfections(SimNumber, YearIndex)=UndiagnosedEstimateInThisStep;
             MSMDistributionUndiagnosedInfections(SimNumber, YearIndex)=MSMUndiagnosedEstimateInThisStep;
-            
-            UndiagnosedCaseData(SimNumber, YearIndex).MSM=[];
-            UndiagnosedCaseData(SimNumber, YearIndex).InfectionDate=[];%NumericalIncludeInForwardProjection
-            
-            
-            
+
+            UndiagnosedCaseData(SimNumber).MSM=[UndiagnosedCaseData(SimNumber).MSM MSMSampleVector(NumericalIncludeInForwardProjection)];
+            UndiagnosedCaseData(SimNumber).InfectionDate=[UndiagnosedCaseData(SimNumber).InfectionDate RandomisedInfectionDate(NumericalIncludeInForwardProjection)];%NumericalIncludeInForwardProjection
             
         end
     end
@@ -129,7 +126,7 @@ for SimNumber=1:NoParameterisations
     
 end
 
-plot(YearVector, (DistributionDiagnosedInfections+DistributionUndiagnosedInfections)')
+
 
 
 
@@ -140,6 +137,17 @@ DistributionDiagnosedInfectionsPrecise(SimNumber, :)=InfectionsByYearDiagnosed;
 %     MSMDistributionUndiagnosedInfectionsPrecise(SimNumber, :)=MSMTotalUndiagnosedInfections;
 %     DistributionDiagnosedInfectionsPrecise(SimNumber, :)=InfectionsByYearDiagnosed;
 %     MSMDistributionDiagnosedInfectionsPrecise(SimNumber, :)=MSMInfectionsByYearDiagnosed;
+
+HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize))+0.5*StepSize;
+for SimNumber=1:NoParameterisations
+    DistributionUndiagnosedInfectionsPrecise(SimNumber, :)=hist(UndiagnosedCaseData(SimNumber).InfectionDate, HistYearSlots);
+    DistributionDiagnosedInfectionsPrecise(SimNumber, :)=hist(DateMatrix(SimNumber,:), HistYearSlots);
+end
+
+%Plotting multiple simulations
+plot(YearVector, (DistributionDiagnosedInfections+DistributionUndiagnosedInfections)')
+plot(HistYearSlots, DistributionDiagnosedInfectionsPrecise')
+
 
 
 
