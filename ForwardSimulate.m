@@ -43,12 +43,10 @@ for CurrentSim=1:NoParameterisations
     end
 end
 
-
+%% Step 3: randomly sample the population that is passed into a structure that preserves the undiagnosed cases
 CutOffYear=CD4BackProjectionYearsWhole(2)+1;
 
 IncludeInForwardProjection=false(1, NoPatientInRange);
-% Step 2: randomly sample the population that is passed into a structure
-% that preserves the undiagnosed cases
 for SimNumber=1:NoParameterisations
     disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
@@ -64,11 +62,11 @@ for SimNumber=1:NoParameterisations
             
             %create a really big vector to sample from. This should be about 50 times bigger than what's needed.
             replacement=true;
-            SampleIndex=randsample(TotalInTimeVector, TotalInTimeVector, replacement);
+            SampleIndex=randsample(10*TotalInTimeVector, TotalInTimeVector, replacement);
             
             RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
             MSMSampleVector=MSMCaseIndicator(SampleIndex);
-            RandomisedInfectionDate=Year+rand(1, TotalInTimeVector);
+            RandomisedInfectionDate=Year+rand(1, 10*TotalInTimeVector);
             
             %Add the simulated cases to a structure to store for later use
             CountSamples=0;
@@ -84,8 +82,8 @@ for SimNumber=1:NoParameterisations
                 % Determine if the infection would have occured in this time step
                 if RandomisedInfectionDate(CountSamples) + RandomisedExpectedTimesVector(CountSamples)<CutOffYear
                     NumberFoundDiagnosed=NumberFoundDiagnosed+1;
-                else
-                    IncludeInForwardProjection(CountSamples)=true;
+                else % if the simulated individual has not been diagnosed by the cut off date
+                    IncludeInForwardProjection(CountSamples)=true; % note this vector is not a true indicator of whether the person is 
                     NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
                     MSMIncludedInforwardProjection=MSMIncludedInforwardProjection+MSMSampleVector(CountSamples);
                 end
@@ -106,25 +104,21 @@ for SimNumber=1:NoParameterisations
             DiffInUndiagnosedEstimate=UpperBoundNumberOfUnidagnosedInfectionsThisStep-LowerBoundNumberOfUnidagnosedInfectionsThisStep;
             UndiagnosedEstimateInThisStep=round(LowerBoundNumberOfUnidagnosedInfectionsThisStep+rand*DiffInUndiagnosedEstimate);
             TotalUndiagnosedInfections(YearIndex)=UndiagnosedEstimateInThisStep;
-            if (DiffInUndiagnosedEstimate==0)%to avoid divide by zero error
-                MSMTotalUndiagnosedInfections(YearIndex)=LowerBoundNumberOfUnidagnosedInfectionsThisStep;
-            else
-                ProportionInUncertainZoneThatAreMSM=(UpperBoundOfUndiagnosedMSM-LowerBoundOfUndiagnosedMSM)/DiffInUndiagnosedEstimate;
-                UncertainZoneMSM=round((UpperBoundOfUndiagnosedMSM-LowerBoundOfUndiagnosedMSM)*ProportionInUncertainZoneThatAreMSM*rand);
-                MSMTotalUndiagnosedInfections(YearIndex)=LowerBoundNumberOfUnidagnosedInfectionsThisStep+UncertainZoneMSM;
+            
+            % Clear out IncludeInForwardProjection greater than UndiagnosedEstimateInThisStep
+            NumericalIncludeInForwardProjection=1:(10*TotalInTimeVector);
+            NumericalIncludeInForwardProjection=NumericalIncludeInForwardProjection(IncludeInForwardProjection);
+            if sum(IncludeInForwardProjection)>UndiagnosedEstimateInThisStep
+                NumericalIncludeInForwardProjection(UndiagnosedEstimateInThisStep+1:end)=[];%delete excess contents
             end
+            
+            MSMTotalUndiagnosedInfections(YearIndex)=sum(MSMSampleVector(NumericalIncludeInForwardProjection));
+            
+            
+            UndiagnosedCaseData(SimNumber, YearIndex).MSM
+            UndiagnosedCaseData(SimNumber, YearIndex).InfectionDate
         end
     end
-    
-    
-    
-    %choose a random time in the period
-    MaxYears
-    % each time a sample occur
-    UndiagnosedCase[SimNumber, YearIndex].MSM
-    UndiagnosedCase[SimNumber, YearIndex].InfectionDate
-    
-    
 end
 %     DateIndeterminantWB
 %     EarlietTimeWB=DateIndeterminantWB-40;
