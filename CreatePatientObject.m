@@ -23,6 +23,11 @@ for i=1:LineDataMatrix.NumberOfPatients
     Patient(i).RecentInfection=LineDataMatrix.RecentInfection(i);
     Patient(i).CountryOfBirth=LineDataMatrix.CountryOfBirth(i);
     Patient(i).PreviouslyDiagnosedOverseas=LineDataMatrix.PreviouslyDiagnosedOverseas(i);
+    
+    Patient(i).DateIll=LineDataMatrix.DateIll(i);
+    Patient(i).DateIndetWesternBlot=LineDataMatrix.DateIndetWesternBlot(i);
+    Patient(i).DateLastNegative=LineDataMatrix.DateLastNegative(i);
+    
     Patient(i).SimulatedIndividual=0;
     
     %Patient(i).IndigenousStatus=LineDataMatrix.IndigenousStatus(i);

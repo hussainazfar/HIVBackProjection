@@ -22,6 +22,13 @@ classdef PatientClass %< handle
       SLAAtDiagnosis;
       SRAtDiagnosis;
       SSDAtDiagnosis;
+      
+      %Variables that indicate recent diagnosis
+      DateIll;
+      DateIndetWesternBlot;
+      DateLastNeg;
+      
+      
 %       PopulationCategory;%Category values
 %       % GroupCode.MSM=1;
 %       % GroupCode.HeteroOnlyMale=2;

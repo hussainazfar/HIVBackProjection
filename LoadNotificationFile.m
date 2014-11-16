@@ -37,7 +37,58 @@ end
 LineDataMatrix.YearOfDiagnosis=year(datenum(LineDataMatrix.DateOfDiagnosis, 'dd/mm/yyyy'));
 LineDataMatrix.DateOfDiagnosisContinuous=LineDataMatrix.YearOfDiagnosis+  (datenum(LineDataMatrix.DateOfDiagnosis, 'dd/mm/yyyy')-datenum(LineDataMatrix.YearOfDiagnosis, 1,1))./yeardays(LineDataMatrix.YearOfDiagnosis);
 
-if sum(strcmp(VariableName, 'id'))==1
+
+% Load the date of last negative and the date of illness
+LineDataMatrix.LastNegative=NaN(1, NumberOfPatients);
+if sum(strcmp(VariableName, 'dateneg'))==1   %dateill dateindet
+    Column=strcmp(VariableName, 'dateneg');
+    for i=1:NumberOfPatients%this needs to be done line by line because it is a string
+        DateText=c(i,Column);
+        if strcmp(DateText, '')
+            % do nothing
+        else
+            Year=year(datenum(DateText, 'dd/mm/yyyy'));
+            DaysSinceYear=datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+            LineDataMatrix.LastNegative(i)=Year+  DaysSinceYear./yeardays(Year);
+        end
+    end
+end
+
+LineDataMatrix.DateIll=NaN(1, NumberOfPatients);
+if sum(strcmp(VariableName, 'dateill'))==1   %dateill dateindet
+    Column=strcmp(VariableName, 'dateill');
+    for i=1:NumberOfPatients%this needs to be done line by line because it is a string
+        DateText=c(i,Column);
+        if strcmp(DateText, '')
+            % do nothing
+        else
+            Year=year(datenum(DateText, 'dd/mm/yyyy'));
+            DaysSinceYear=datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+            LineDataMatrix.DateIll(i)=Year+  DaysSinceYear./yeardays(Year);
+        end
+    end
+end
+
+LineDataMatrix.DateIndetWesternBlot=NaN(1, NumberOfPatients);
+if sum(strcmp(VariableName, 'dateindet'))==1   %dateill dateindet
+    Column=strcmp(VariableName, 'dateindet');
+    for i=1:NumberOfPatients%this needs to be done line by line because it is a string
+        DateText=c(i,Column);
+        if strcmp(DateText, '')
+            % do nothing
+        else
+            Year=year(datenum(DateText, 'dd/mm/yyyy'));
+            DaysSinceYear=datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+            LineDataMatrix.DateIndetWesternBlot(i)=Year+  DaysSinceYear./yeardays(Year);
+        end
+    end
+end
+
+
+
+
+% Load indigenous status
+if sum(strcmp(VariableName, 'indigenous'))==1
     LineDataMatrix.IndigenousStatus=cell2mat(c(:,strcmp(VariableName, 'indigenous')));
 end
 LineDataMatrix.CD4CountAtDiagnosis=cell2mat(c(:,strcmp(VariableName, 'cd4base')));
