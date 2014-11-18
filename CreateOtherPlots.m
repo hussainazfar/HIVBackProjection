@@ -339,7 +339,7 @@ set(gca,'YTick',0:1:20)
 set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
-h_legend=legend([ MSMHandle NonMSMHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthWest');
+h_legend=legend([ MSMHandle NonMSMHandle], {'MSM', 'Non-MSM'} ,  'Location','NorthEast');
 print('-dpng ','-r300','ResultsPlots/Appendix MSM vs non-MSM Infection Diagnosis.png')
 
 
