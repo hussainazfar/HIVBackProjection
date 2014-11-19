@@ -100,7 +100,7 @@ UncertaintyHandle=plot(YearVectorLabel, UCI, 'Color' , [0.5 0.5 0.5],'LineWidth'
 plot(YearVectorLabel, LCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');
 
 
-TotalEstimatedInfectionsHandle=plot(YearVectorLabel, MSMMedian, 'Color' , [0.0 0.0 0.0],'LineWidth',2, 'LineStyle', '-');
+plot(YearVectorLabel, MSMMedian, 'Color' , [0.0 0.0 0.0],'LineWidth',2, 'LineStyle', '-');
 UncertaintyHandle=plot(YearVectorLabel, MSMUCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');
 plot(YearVectorLabel, MSMLCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '-');
 

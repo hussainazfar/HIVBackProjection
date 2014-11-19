@@ -8,28 +8,44 @@ DateMatrix=zeros(NoParameterisations, NumberOfPatients);
 
 InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
 MSMCaseIndicator=false(1, NumberOfPatients);
+RecentMSMCaseIndicator=false(1, NumberOfPatients);
 
 
 NoPatientInRange=0;
 for i=1:NumberOfPatients
     DateMatrix(:, i)=Patient(i).InfectionDateDistribution;
+    
+    if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
+        MSMCaseIndicator(i)=true;
+    else
+        MSMCaseIndicator(i)=false;
+    end
+    
+    
     if Patient(i).DateOfDiagnosisContinuous>= RangeOfCD4Averages(1) && Patient(i).DateOfDiagnosisContinuous< RangeOfCD4Averages(2)
         NoPatientInRange=NoPatientInRange+1;
         InfectionTimeMatrix(:, NoPatientInRange)=Patient(i).TimeFromInfectionToDiagnosis;
         if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
-            MSMCaseIndicator(NoPatientInRange)=true;
+            RecentMSMCaseIndicator(NoPatientInRange)=true;
         else
-            MSMCaseIndicator(NoPatientInRange)=false;
+            RecentMSMCaseIndicator(NoPatientInRange)=false;
         end
     end
 end
 %remove all those elements that are not used
 InfectionTimeMatrix(:, NoPatientInRange+1:NumberOfPatients)=[];
-MSMCaseIndicator( NoPatientInRange+1:NumberOfPatients)=[];
+RecentMSMCaseIndicator( NoPatientInRange+1:NumberOfPatients)=[];
+
+% Find all MSM
 MSMCount=sum(MSMCaseIndicator);
 MSMDateMatrix=zeros(NoParameterisations, MSMCount);
-
-
+MSMi=0;
+for i=1:NumberOfPatients
+    if MSMCaseIndicator(i)==true
+        MSMi=MSMi+1;
+        MSMDateMatrix(:, MSMi)=Patient(i).InfectionDateDistribution;
+    end
+end
 HistWholeYearVec=(CD4BackProjectionYearsWhole(1):1:CD4BackProjectionYearsWhole(2))+0.5;
 
 %% Step 2: determine the number of people in diagnosed in each whole year
@@ -71,7 +87,7 @@ for SimNumber=1:NoParameterisations
             SampleIndex=randsample(TotalInTimeVector, 10*TotalInTimeVector, replacement);%under a 5 year aeverage, this gives 50 times the samples per year, which should be sufficient
             
             RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
-            MSMSampleVector=MSMCaseIndicator(SampleIndex);
+            MSMSampleVector=RecentMSMCaseIndicator(SampleIndex);
             RandomisedInfectionDate=Year+rand(1, 10*TotalInTimeVector);
             
             %Add the simulated cases to a structure to store for later use
@@ -150,32 +166,19 @@ DiagnosisDistributionPrecise=hist(DiagnosisDateVec, HistYearSlots);
 
 
 %Plotting multiple simulations
-hold on;
-plot(YearVector, TotalInfectionsPerYear');
-plot(YearVector, DistributionDiagnosedInfections');
-hold off;
+% hold on;
+% plot(YearVector, TotalInfectionsPerYear');
+% plot(YearVector, DistributionDiagnosedInfections');
+% hold off;
+% 
+% 
+% plot(HistYearSlots, DistributionDiagnosedInfectionsPrecise')
+% 
+% 
+% hold on;
+% plot(HistYearSlots, mean(DistributionDiagnosedInfectionsPrecise, 1)')
+% plot(HistYearSlots, mean(DistributionUndiagnosedInfectionsPrecise, 1)')
+% plot(HistYearSlots, mean(DistributionDiagnosedInfectionsPrecise+DistributionUndiagnosedInfectionsPrecise, 1)')
+% plot(HistYearSlots, DiagnosisDistributionPrecise, 'r')
+% hold off;
 
-
-plot(HistYearSlots, DistributionDiagnosedInfectionsPrecise')
-
-
-hold on;
-plot(HistYearSlots, mean(DistributionDiagnosedInfectionsPrecise, 1)')
-plot(HistYearSlots, mean(DistributionUndiagnosedInfectionsPrecise, 1)')
-plot(HistYearSlots, mean(DistributionDiagnosedInfectionsPrecise+DistributionUndiagnosedInfectionsPrecise, 1)')
-plot(HistYearSlots, DiagnosisDistributionPrecise, 'r')
-hold off;
-
-%     DateIndeterminantWB
-%     EarlietTimeWB=DateIndeterminantWB-40;
-% 
-%     EarlietTimeLN=LastNegative;
-% 
-%     EarlietTimeSeroConvIll=DateIll-40;
-% 
-%     EarliestTime=max(EarlietTimeWB, EarlietTimeLN, EarlietTimeSeroConvIll);
-% 
-%     ApproxDate
-% 
-% 
-% end
