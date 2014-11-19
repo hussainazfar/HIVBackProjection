@@ -7,22 +7,15 @@
 DateMatrix=zeros(NoParameterisations, NumberOfPatients);
 
 InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
-MSMCaseIndicator=false(1, NumberOfPatients);
+
 RecentMSMCaseIndicator=false(1, NumberOfPatients);
 
 
 NoPatientInRange=0;
 for i=1:NumberOfPatients
     DateMatrix(:, i)=Patient(i).InfectionDateDistribution;
-    
-    if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
-        MSMCaseIndicator(i)=true;
-    else
-        MSMCaseIndicator(i)=false;
-    end
-    
-    
-    if Patient(i).DateOfDiagnosisContinuous>= RangeOfCD4Averages(1) && Patient(i).DateOfDiagnosisContinuous< RangeOfCD4Averages(2)
+
+    if RangeOfCD4Averages(1)<=Patient(i).DateOfDiagnosisContinuous  && Patient(i).DateOfDiagnosisContinuous< RangeOfCD4Averages(2)
         NoPatientInRange=NoPatientInRange+1;
         InfectionTimeMatrix(:, NoPatientInRange)=Patient(i).TimeFromInfectionToDiagnosis;
         if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
@@ -36,9 +29,9 @@ end
 InfectionTimeMatrix(:, NoPatientInRange+1:NumberOfPatients)=[];
 RecentMSMCaseIndicator( NoPatientInRange+1:NumberOfPatients)=[];
 
-% Find all MSM
-MSMCount=sum(MSMCaseIndicator);
-MSMDateMatrix=zeros(NoParameterisations, MSMCount);
+
+TotalMSM=sum(MSMCaseIndicator);
+MSMDateMatrix=zeros(NoParameterisations, TotalMSM);
 MSMi=0;
 for i=1:NumberOfPatients
     if MSMCaseIndicator(i)==true

@@ -468,28 +468,30 @@ end
 %     
 %     PropMSMDistributionDiagnosedInfections(SimNumber, :)=MSMDistributionDiagnosedInfections(SimNumber, :)./DistributionDiagnosedInfections(SimNumber, :);
 % end
+
+%% Identifying MSM
+% Find all MSM
+MSMCaseIndicator=false(1, NumberOfPatients);
+for i=1:NumberOfPatients
+    if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
+        MSMCaseIndicator(i)=true;
+    else
+        MSMCaseIndicator(i)=false;
+    end
+end
+
+
 %% Forward simulate 
 ForwardSimulate
 
 %% Create a diagnosis plot
-SizeOfDiagnosisVector=ceil((CD4BackProjectionYears(2)-CD4BackProjectionYears(1))/StepSize);
+[FineDiagnoses]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), StepSize, CD4BackProjectionYearsWhole(2)+1-StepSize);
+Diagnoses=FineDiagnoses.N;
 
-Diagnoses=zeros(1, SizeOfDiagnosisVector);
-DiagnosesByYear=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
+[DiagnosesByYear]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
-[~, NumberOfPatients]=size(Patient);
 
-for i=1:NumberOfPatients
 
-    %add diagnosis date to appropriate position for a fine level reporting
-    Ref=ceil((Patient(i).DateOfDiagnosisContinuous-CD4BackProjectionYears(1))/StepSize);
-    Diagnoses(Ref)=Diagnoses(Ref)+1;
-    
-    %Determine which year the diagnosis occurred
-    RefYear=ceil((Patient(i).DateOfDiagnosisContinuous-CD4BackProjectionYearsWhole(1)));
-
-    DiagnosesByYear(RefYear)=DiagnosesByYear(RefYear)+1;
-end
 
 %% Find total undiagnosed at all points in time
 HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
