@@ -1,5 +1,4 @@
 function [Diagnosis]=DiagnosesByTime(Patient, StartDate, StepSize, EndDate)%End date + stepsize
-
     Diagnosis.Time=StartDate:StepSize:EndDate;
     Diagnosis.N=zeros(size(Diagnosis.Time));
 
@@ -12,7 +11,6 @@ function [Diagnosis]=DiagnosesByTime(Patient, StartDate, StepSize, EndDate)%End 
             Diagnosis.N(Ref)=Diagnosis.N(Ref)+1;
         end
     end
-
 end
 
 

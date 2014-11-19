@@ -121,7 +121,7 @@ clf;%clear the current figure ready for plotting
     box off;
     
     xlim([PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)])
-    ylim([0 max(DiagnosesByYear)])
+    ylim([0 max(DiagnosesByYear.N)])
     
     %legend([DiagnosesHandle BackProjectedInfectionsHandle ], 'Diagnoses                    ', 'Back-projected infections' ,  'Location','NorthEast')
     
