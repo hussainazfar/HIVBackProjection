@@ -1,4 +1,4 @@
-NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
+NoParameterisations=6; % the number of parameterisations used to generate uncertainty. Should be set to 200
 IncludePreviouslyDiagnosedOverseas=false;
 DeduplicateDiagnoses=true;
 
@@ -490,7 +490,7 @@ Diagnoses=FineDiagnoses.N;
 
 [DiagnosesByYear]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
-
+[MSMDiagnosesByYear]=DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
 
 %% Find total undiagnosed at all points in time
