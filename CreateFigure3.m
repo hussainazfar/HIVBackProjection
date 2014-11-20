@@ -1,7 +1,7 @@
 
 %% Figure 3a 
 
-DiagnosesByYear.Time=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));
+YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));
 
 %find the mean and the 95% confidence interval
 UCI=prctile(DistributionDiagnosedInfections, 97.5, 1);
