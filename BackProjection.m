@@ -486,7 +486,7 @@ ForwardSimulate
 
 %% Create a diagnosis plot
 [FineDiagnoses]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), StepSize, CD4BackProjectionYearsWhole(2)+1-StepSize);
-Diagnoses=FineDiagnoses.N;
+
 
 [DiagnosesByYear]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
@@ -519,11 +519,15 @@ Diagnoses=FineDiagnoses.N;
 
 
 %Add the undiagnosed with time (who have been diagnosed) to the people we know will be diagnosed in the future
-TotalUndiagnosedByTime=UndiagnosedSummed+UndiagnosedPatient.N ;
+TotalUndiagnosedByTime.Time=UndiagnosedPatient.Time ;
+TotalUndiagnosedByTime.N=UndiagnosedSummed+UndiagnosedPatient.N ;
+MSMTotalUndiagnosedByTime.Time=MSMUndiagnosedPatient.Time ;
+MSMTotalUndiagnosedByTime.N=MSMUndiagnosedSummed+MSMUndiagnosedPatient.N ;
 
-[NumSims, NumStepsInYearDimension]=size(TotalUndiagnosedByTime);
+[NumSims, NumStepsInYearDimension]=size(TotalUndiagnosedByTime.N);
 for SimCout=1:NumSims
-    EffectiveTestingRate(SimCout, :)=FineDiagnoses.N./TotalUndiagnosedByTime(SimCout, :);
+    EffectiveTestingRate(SimCout, :)=FineDiagnoses.N./TotalUndiagnosedByTime.N(SimCout, :);
+    MSMEffectiveTestingRate(SimCout, :)=MSMFineDiagnoses.N./MSMTotalUndiagnosedByTime.N(SimCout, :);
 end
 
 YearCount=0;
@@ -535,6 +539,19 @@ for YearStepCount=1:10:NumStepsInYearDimension
     RaisedPower=round(1/StepSize);
     YearlyEffectiveTestingRate(:, YearCount)=1-(1-YearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
 end
+
+YearCount=0;
+StepsToAverageOver=round(1/StepSize);
+MSMYearlyEffectiveTestingRate=[];
+for YearStepCount=1:10:NumStepsInYearDimension
+    YearCount=YearCount+1;
+    MSMYearlyEffectiveTestingRate(:, YearCount)=mean(MSMEffectiveTestingRate(:, YearStepCount:YearStepCount+StepsToAverageOver-1), 2);
+    RaisedPower=round(1/StepSize);
+    MSMYearlyEffectiveTestingRate(:, YearCount)=1-(1-MSMYearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
+end
+
+
+
 
 %% Determine the time until infection for the population with time
 [~, NumberOfPatients]=size(Patient);
@@ -567,16 +584,43 @@ end
 CreateFigure1
 CreateFigure2
 CreateFigure3
-CreateFigure4
+CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime')
+CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime')
+PropMSMUndiagnosed=MSMTotalUndiagnosedByTime;
+PropMSMUndiagnosed.N=MSMTotalUndiagnosedByTime.N./TotalUndiagnosedByTime.N;
+CreateFigure4(PropMSMUndiagnosed, PlotSettings.YearsToPlot, 'Appendix PropMSMTotalUndiagnosedByTime')
+
+
 CreateFigure5
 CreateOtherPlots
 CreateResultUncertaintyAroundTime
 %OutputPlots %old plots output
 toc(TimeALL)
 
+YearValueVector=CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize);
+'Figure 4 TotalUndiagnosedByTime'
+[PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)]
+
 
 %% Sensitivity analysis
 SensitivityAnalysis
+
+%% Paper sentences
+[~, YearIndex]=min(abs(YearVectorLabel-1985));
+String1985max=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
+[~, YearIndex]=min(abs(YearVectorLabel-1998.6));
+String1998min=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
+[~, YearIndex]=min(abs(YearVectorLabel-(YearOfDiagnosedDataEnd-0.1)));
+StringLastYearData=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
+disp(['The model estimates that the number of people living with undiagnosed HIV peaked in 1985 at ' String1985max ', before falling to a low of ' String1998min ' people in 1998.' ...
+    ' It is estimated that at the end of the last year of data, ' StringLastYearData ' people were living with undiagnosed HIV.']);
+
+
+
+
+
+
+
 
 %% Return diagnosed overseas to the population
 AllPatients=[Patient PreviouslyDiagnosedOverseasPatient];
