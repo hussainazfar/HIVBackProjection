@@ -491,44 +491,39 @@ Diagnoses=FineDiagnoses.N;
 [DiagnosesByYear]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
 [MSMDiagnosesByYear]=DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
-
+[MSMFineDiagnoses]=DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), StepSize, CD4BackProjectionYearsWhole(2)+1-StepSize);
 
 %% Find total undiagnosed at all points in time
-HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
-[~, NumberOfYearSlots]=size(HistYearSlots);
-UndiagnosedMatrix=zeros(NoParameterisations, NumberOfYearSlots );
-for i=1:NumberOfPatients
-    if mod(i, 100)==0
-        disp(['Finding when patient ' num2str(i) ' is undiagnosed']);
-    end
-    if Patient(i).PreviouslyDiagnosedOverseas==0%exclude those who were diagnosed overseas
-        YearSlotCount=0;
-        for YearStep=HistYearSlots
-            YearSlotCount=YearSlotCount+1;
-            UndiagnosedAddtionVector=Patient(i).InfectionDateDistribution<YearStep & YearStep<Patient(i).DateOfDiagnosisContinuous ;
-            %Add this value to the matrix across the no. simulations dimension
-            UndiagnosedMatrix(:, YearSlotCount)=UndiagnosedMatrix(:, YearSlotCount)+UndiagnosedAddtionVector';
-        end
-    end
-end
+% HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
+% [~, NumberOfYearSlots]=size(HistYearSlots);
+% UndiagnosedMatrix=zeros(NoParameterisations, NumberOfYearSlots );
+% for i=1:NumberOfPatients
+%     if mod(i, 100)==0
+%         disp(['Finding when patient ' num2str(i) ' is undiagnosed']);
+%     end
+%     if Patient(i).PreviouslyDiagnosedOverseas==0%exclude those who were diagnosed overseas
+%         YearSlotCount=0;
+%         for YearStep=HistYearSlots
+%             YearSlotCount=YearSlotCount+1;
+%             UndiagnosedAddtionVector=Patient(i).InfectionDateDistribution<YearStep & YearStep<Patient(i).DateOfDiagnosisContinuous ;
+%             %Add this value to the matrix across the no. simulations dimension
+%             UndiagnosedMatrix(:, YearSlotCount)=UndiagnosedMatrix(:, YearSlotCount)+UndiagnosedAddtionVector';
+%         end
+%     end
+% end
 
-%Find the total currently undiagnosed
-% Note that all the diagnoses in the DistributionUndiagnosedInfectionsPrecise are undiagnosed.  
-UndiagnosedSummed=[];
-for IndexCount=1:NumberOfYearSlots
-    % Find sum of all currently undiagnosed
-    if IndexCount==1
-        UndiagnosedSummed(:, IndexCount)=DistributionUndiagnosedInfectionsPrecise(:, IndexCount);
-    else
-        UndiagnosedSummed(:, IndexCount)=UndiagnosedSummed(:, IndexCount-1)+DistributionUndiagnosedInfectionsPrecise(:, IndexCount);
-    end
-end
+[UndiagnosedPatient]=UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), StepSize, (CD4BackProjectionYearsWhole(2)+1-StepSize));
+[MSMUndiagnosedPatient]=UndiagnosedByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), StepSize, (CD4BackProjectionYearsWhole(2)+1-StepSize));
+
+
+
+
 %Add the undiagnosed with time (who have been diagnosed) to the people we know will be diagnosed in the future
-TotalUndiagnosedByTime=UndiagnosedSummed+UndiagnosedMatrix ;
+TotalUndiagnosedByTime=UndiagnosedSummed+UndiagnosedPatient.N ;
 
 [NumSims, NumStepsInYearDimension]=size(TotalUndiagnosedByTime);
 for SimCout=1:NumSims
-    EffectiveTestingRate(SimCout, :)=Diagnoses./TotalUndiagnosedByTime(SimCout, :);
+    EffectiveTestingRate(SimCout, :)=FineDiagnoses.N./TotalUndiagnosedByTime(SimCout, :);
 end
 
 YearCount=0;

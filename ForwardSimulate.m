@@ -61,10 +61,10 @@ CutOffYear=CD4BackProjectionYearsWhole(2)+1;
 
 IncludeInForwardProjection=false(1, NoPatientInRange);
 for SimNumber=1:NoParameterisations
-    disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
+    disp(['Forward projecting undiagnosed sim ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
     [~, TotalInTimeVector]=size(ExpectedTimesVector);
-    UndiagnosedCaseData(SimNumber).MSM=[];
+    UndiagnosedCaseData(SimNumber).MSM=false(1,0);% because [] creates an empty NUMERICAL array which causes a type problem later on
     UndiagnosedCaseData(SimNumber).InfectionDate=[];
             
     YearIndex=0;
@@ -148,6 +148,40 @@ for SimNumber=1:NoParameterisations
     DistributionUndiagnosedInfectionsPrecise(SimNumber, :)=hist(UndiagnosedCaseData(SimNumber).InfectionDate, HistYearSlots);
     DistributionDiagnosedInfectionsPrecise(SimNumber, :)=hist(DateMatrix(SimNumber,:), HistYearSlots);
 end
+
+%Perform the above operation, but instead look at msm only
+for SimNumber=1:NoParameterisations
+    MSMDistributionUndiagnosedInfectionsPrecise(SimNumber, :)=hist(UndiagnosedCaseData(SimNumber).InfectionDate(UndiagnosedCaseData(SimNumber).MSM), HistYearSlots);
+    MSMDistributionDiagnosedInfectionsPrecise(SimNumber, :)=hist(MSMDateMatrix(SimNumber,:), HistYearSlots);
+end
+
+
+
+
+%Find the number of people undiagnosed by end of 2013 in each year
+% Note that all the diagnoses in the DistributionUndiagnosedInfectionsPrecise are undiagnosed.  
+UndiagnosedSummed=[];
+for IndexCount=1:NumberOfYearSlots
+    % Find sum of all currently undiagnosed
+    if IndexCount==1
+        UndiagnosedSummed(:, IndexCount)=DistributionUndiagnosedInfectionsPrecise(:, IndexCount);
+    else
+        UndiagnosedSummed(:, IndexCount)=UndiagnosedSummed(:, IndexCount-1)+DistributionUndiagnosedInfectionsPrecise(:, IndexCount);
+    end
+end
+
+%Find the number of people undiagnosed by end of 2013 in each year
+% Note that all the diagnoses in the DistributionUndiagnosedInfectionsPrecise are undiagnosed.  
+MSMUndiagnosedSummed=[];
+for IndexCount=1:NumberOfYearSlots
+    % Find sum of all currently undiagnosed
+    if IndexCount==1
+        MSMUndiagnosedSummed(:, IndexCount)=MSMDistributionUndiagnosedInfectionsPrecise(:, IndexCount);
+    else
+        MSMUndiagnosedSummed(:, IndexCount)=MSMUndiagnosedSummed(:, IndexCount-1)+MSMDistributionUndiagnosedInfectionsPrecise(:, IndexCount);
+    end
+end
+
 
 
 DiagnosisDateVec=zeros(1, NumberOfPatients);
