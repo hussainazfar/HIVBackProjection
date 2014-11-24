@@ -606,14 +606,28 @@ YearValueVector=CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsW
 SensitivityAnalysis
 
 %% Paper sentences
-[~, YearIndex]=min(abs(YearVectorLabel-1985));
-String1985max=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-[~, YearIndex]=min(abs(YearVectorLabel-1998.6));
-String1998min=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-[~, YearIndex]=min(abs(YearVectorLabel-(YearOfDiagnosedDataEnd-0.1)));
-StringLastYearData=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-disp(['The model estimates that the number of people living with undiagnosed HIV peaked in 1985 at ' String1985max ', before falling to a low of ' String1998min ' people in 1998.' ...
-    ' It is estimated that at the end of the last year of data, ' StringLastYearData ' people were living with undiagnosed HIV.']);
+TotalUndiagnosedByTime.Median=median(TotalUndiagnosedByTime.N, 1);
+[MaxMedUndiagnosed, IndexOfMax]= max(TotalUndiagnosedByTime.Median);
+YearMaxMedUndiagnosed=TotalUndiagnosedByTime.Time(IndexOfMax);
+LCI=prctile(TotalUndiagnosedByTime.N(:, IndexOfMax), 2.5);
+UCI=prctile(TotalUndiagnosedByTime.N(:, IndexOfMax), 97.5);
+disp(['The model estimates that the number of people living with undiagnosed HIV peaked in ' num2str(YearMaxMedUndiagnosed) ' at ' num2str(MaxMedUndiagnosed) '(' num2str(LCI) '-' num2str(UCI) ') cases.']);
+
+LCI=prctile(TotalUndiagnosedByTime.N(:, end), 2.5);
+UCI=prctile(TotalUndiagnosedByTime.N(:, end), 97.5);
+disp(['Final year of undiagnosed ' num2str(TotalUndiagnosedByTime.Median(end)) '(' num2str(LCI) '-' num2str(UCI) ') cases.']);
+
+
+SubsetUndiagnosed.N=TotalUndiagnosedByTime.N(:, IndexOfMax:end);
+SubsetUndiagnosed.Median=TotalUndiagnosedByTime.Median(IndexOfMax:end);
+SubsetUndiagnosed.Time=TotalUndiagnosedByTime.Time(IndexOfMax:end);
+[MinMedUndiagnosed, IndexOfMin]= min(SubsetUndiagnosed.Median);
+LCI=prctile(SubsetUndiagnosed.N(:, IndexOfMin), 2.5);
+UCI=prctile(SubsetUndiagnosed.N(:, IndexOfMin), 97.5);
+YearMinMedUndiagnosed=SubsetUndiagnosed.Time(IndexOfMin);
+disp(['Min since max occurred in ' num2str(YearMinMedUndiagnosed) ' with ' num2str(MinMedUndiagnosed) '(' num2str(LCI) '-' num2str(UCI) ') cases.']);
+
+
 
 
 
