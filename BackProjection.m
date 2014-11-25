@@ -588,6 +588,9 @@ CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalU
 CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime')
 PropMSMUndiagnosed=MSMTotalUndiagnosedByTime;
 PropMSMUndiagnosed.N=MSMTotalUndiagnosedByTime.N./TotalUndiagnosedByTime.N;
+PropMSMUndiagnosed.Median=median(PropMSMUndiagnosed.N, 1);
+PropMSMUndiagnosed.UCI=prctile(PropMSMUndiagnosed.N, 97.5, 1);
+PropMSMUndiagnosed.LCI=prctile(PropMSMUndiagnosed.N, 2.5, 1);
 CreateFigure4(PropMSMUndiagnosed, PlotSettings.YearsToPlot, 'Appendix PropMSMTotalUndiagnosedByTime')
 
 

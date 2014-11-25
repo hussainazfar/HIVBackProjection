@@ -1,10 +1,11 @@
 %function SensitivityAnalysis
 
 
-% Compare the max incidence with the forced start dates
+%% Compare the max incidence with the forced start dates
+clf;
 [MaxIncidence, MaxIncidenceYearIndex]=max(DistributionTotal, [], 2);
 plot(Px.FirstInfectionDateVec, MaxIncidence, '.', 'MarkerSize', 20)
-ylim([0, inf])
+ylim([0, max(MaxIncidence)])
 
 %Display R values and P values
 [r, rp]=corrcoef(Px.FirstInfectionDateVec, MaxIncidence);
@@ -33,9 +34,10 @@ print('-dpng ','-r300','ResultsPlots/Appendix Max inc v first infection.png')
 
 %plot(Px.FirstInfectionDateVec,YearVectorLabel(MaxIncidenceYearIndex))
 
-% Compare post primary CD4 infection to time between infection and diagnosis
+%% Compare post primary CD4 infection to time between infection and diagnosis
+clf;
 plot(Px.BaselineCD4MedianVec,TimeSinceInfectionMatrix(end).Median, '.', 'MarkerSize', 20)
-ylim([0, inf])
+ylim([0, max(TimeSinceInfectionMatrix(end).Median)])
 
 %Display R values and P values
 [r, rp]=corrcoef(Px.BaselineCD4MedianVec, TimeSinceInfectionMatrix(end).Median);
@@ -63,9 +65,10 @@ print('-dpng ','-r300','ResultsPlots/Appendix post-primary CD4 v time until diag
 
 
 
-% Compare CD4 decline to time between infection and diagnosis
+%% Compare CD4 decline to time between infection and diagnosis
+clf;
 plot(Px.SQRCD4DeclineVec,TimeSinceInfectionMatrix(end).Median, '.', 'MarkerSize', 20)
-ylim([0, inf])
+ylim([0, max(TimeSinceInfectionMatrix(end).Median)])
 
 %Display R values and P values
 [r, rp]=corrcoef(Px.SQRCD4DeclineVec, TimeSinceInfectionMatrix(end).Median);
@@ -91,9 +94,10 @@ print('-dpng ','-r300','ResultsPlots/Appendix sqr decline v time until diag.png'
 
 
 
-% Compare CD4 decline to incidence in final year
+%% Compare CD4 decline to incidence in final year
+clf;
 plot(Px.SQRCD4DeclineVec,DistributionTotal(:, end), '.', 'MarkerSize', 20)
-ylim([0, inf])
+ylim([0, max(DistributionTotal(:, end))])
 
 %Display R values and P values
 [r, rp]=corrcoef(Px.SQRCD4DeclineVec, DistributionTotal(:, end));
@@ -118,9 +122,10 @@ lsline
 print('-dpng ','-r300','ResultsPlots/Appendix sqr decline v incidence in final year.png')
 
 
-% Compare baseline post-primary infection CD4 to incidence in final year
+%% Compare baseline post-primary infection CD4 to incidence in final year
+clf;
 plot(Px.BaselineCD4MedianVec,DistributionTotal(:, end), '.', 'MarkerSize', 20)
-ylim([0, inf])
+ylim([0, max(DistributionTotal(:, end))])
 
 %Display R values and P values
 [r, rp]=corrcoef(Px.BaselineCD4MedianVec, DistributionTotal(:, end));

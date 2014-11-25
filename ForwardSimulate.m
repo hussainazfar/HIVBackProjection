@@ -161,7 +161,9 @@ end
 %Find the number of people undiagnosed by end of 2013 in each year
 % Note that all the diagnoses in the DistributionUndiagnosedInfectionsPrecise are undiagnosed.  
 UndiagnosedSummed=[];
-for IndexCount=1:NumberOfYearSlots
+IndexCount=0;
+for TempYear=HistYearSlots
+    IndexCount=IndexCount+1;
     % Find sum of all currently undiagnosed
     if IndexCount==1
         UndiagnosedSummed(:, IndexCount)=DistributionUndiagnosedInfectionsPrecise(:, IndexCount);
@@ -173,7 +175,9 @@ end
 %Find the number of people undiagnosed by end of 2013 in each year
 % Note that all the diagnoses in the DistributionUndiagnosedInfectionsPrecise are undiagnosed.  
 MSMUndiagnosedSummed=[];
-for IndexCount=1:NumberOfYearSlots
+IndexCount=0;
+for TempYear=HistYearSlots
+    IndexCount=IndexCount+1;
     % Find sum of all currently undiagnosed
     if IndexCount==1
         MSMUndiagnosedSummed(:, IndexCount)=MSMDistributionUndiagnosedInfectionsPrecise(:, IndexCount);

@@ -74,7 +74,7 @@ clf;%clear the current figure ready for plotting
     hold off
     
     hold on
-    DiagnosesHandle=plot(CD4BackProjectionYears(1):StepSize:CD4BackProjectionYears(2), Diagnoses, 'k.');
+    DiagnosesHandle=plot(FineDiagnoses.Time, FineDiagnoses.N, 'k.');
     hold off
     
     xlabel('Year','fontsize', 22);
