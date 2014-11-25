@@ -62,6 +62,30 @@ if DeduplicateDiagnoses
     [Patient, DuplicatePatient]=RemoveDuplicates(Patient);
 end
 
+%% Adjust category 12 exposures for MSM
+% it is likely that many in this category will be MSM. Based on approximately 8% females, and assuming therefore 8% heterosexual males, 84% of people in this category may be MSM
+[~, NoPatient]=size(Patient);
+% Count females
+TotalFemalesNotSpecified=0;
+TotalNotSpecified=0;
+for i=1:NoPatient
+    if Patient(i).ExposureRoute==12 %not specified
+        TotalNotSpecified=TotalNotSpecified+1;
+        if Patient(i).Sex==2
+            TotalFemalesNotSpecified=TotalFemalesNotSpecified+1;
+        end
+    end
+end
+TotalMalesNotSpecified=TotalNotSpecified-TotalFemalesNotSpecified;
+ProbabilityMaleMSM=(TotalMalesNotSpecified-TotalFemalesNotSpecified)/TotalMalesNotSpecified;
+for i=1:NoPatient
+    if Patient(i).ExposureRoute==12 && Patient(i).Sex==1%not specified
+        Patient(i).ExposureRoute=1;
+    end
+end
+
+
+
 %% Sort Patients into those who have an infection known to be in the last 12 months, and those who have not. 
 % if ConsiderRecentInfection==true
 % %     disp('Removing Recent cases to be utilised later');
@@ -225,17 +249,18 @@ if ConsiderRecentInfection==true
             % Serconversion illness indicates a likely recent infection
             LatestFirstDateEstFromIllness=NaN;
             LatestFirstDateEstFromWesternBlot=NaN;
-            % if the time of illness is 
+            % if the time of illness is more than 40 days after diagnosis,
+            % it's likely not to be serconversion illness so we ignore
             if (Patient(i).DateIll-Patient(i).DateOfDiagnosisContinuous)<40/365 % if NaN, do nothing
                 LatestFirstDateEstFromIllness=Patient(i).DateIll-40/365;
             end
-            % if it is more than 40 days, there's probably an issue, so we ignore the western blot result
+            % if it is more than 40 days after diagnosis, there's probably an issue, so we ignore the western blot result
             if (Patient(i).DateIndetWesternBlot-Patient(i).DateOfDiagnosisContinuous)<40/365 % if NaN, do nothing
                 LatestFirstDateEstFromWesternBlot=Patient(i).DateIndetWesternBlot-40/365;
             end
             
             
-            if Patient(i).InfectionDateDistribution(SimCount)<Patient(i).DateLastNegative % if NaN, do nothing
+            if Patient(i).InfectionDateDistribution(SimCount)<Patient(i).DateLastNegative && Patient(i).DateLastNegative<Patient(i).DateOfDiagnosisContinuous % if NaN, do nothing
                 LatestFirstDateEstFromLastNegative=Patient(i).DateLastNegative;
             else
                 LatestFirstDateEstFromLastNegative=NaN;
@@ -264,7 +289,7 @@ end
 
 
 
-% %% This section is where all of the information is collected up to make a population wide calculation of the incidence
+%% This section is where all of the information is collected up to make a population wide calculation of the incidence
 % clear DistributionUndiagnosedInfectionsPrecise;
 % clear DistributionDiagnosedInfectionsPrecise;
 % clear DistributionDiagnosedInfections;
@@ -584,14 +609,49 @@ end
 CreateFigure1
 CreateFigure2
 CreateFigure3
-CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime')
-CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime')
+CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime');
+CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime');
 PropMSMUndiagnosed=MSMTotalUndiagnosedByTime;
 PropMSMUndiagnosed.N=MSMTotalUndiagnosedByTime.N./TotalUndiagnosedByTime.N;
 PropMSMUndiagnosed.Median=median(PropMSMUndiagnosed.N, 1);
 PropMSMUndiagnosed.UCI=prctile(PropMSMUndiagnosed.N, 97.5, 1);
 PropMSMUndiagnosed.LCI=prctile(PropMSMUndiagnosed.N, 2.5, 1);
 CreateFigure4(PropMSMUndiagnosed, PlotSettings.YearsToPlot, 'Appendix PropMSMTotalUndiagnosedByTime')
+
+plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median)
+
+PropMSM=DiagnosesByYear;
+PropMSM.Value=MSMDiagnosesByYear.N./DiagnosesByYear.N;
+plot(PropMSM.Time, PropMSM.Value)
+mean(RecentMSMCaseIndicator)% a mean of the MSM appearance in the last 5 years of diagnoses
+
+% inspecting the proportion of people undiagnosed
+plot(median(MSMUndiagnosedSummed./UndiagnosedSummed, 1))
+%comes out to a flat 70% which is not expected
+
+[xITM, yITM]=size(InfectionTimeMatrix);
+for ii=1:xITM
+    for jj=1:yITM
+        if (InfectionTimeMatrix(ii, jj)<0)
+            disp([ii jj]);
+        end
+    end
+end
+
+[~, NoPatients]=size(Patient);
+for i=1:NoPatients
+    if sum(Patient(i).TimeFromInfectionToDiagnosis<0)>0
+        disp(i)
+    end
+end
+
+
+DistComparisonYear=0.5:1:20;
+MSMSampleDistribution=hist(reshape(InfectionTimeMatrix(:, RecentMSMCaseIndicator), 1, []), DistComparisonYear);
+NonMSMSampleDistribution=hist(reshape(InfectionTimeMatrix(:, ~RecentMSMCaseIndicator), 1, []), DistComparisonYear);
+MSMSampleDistribution=MSMSampleDistribution/sum(MSMSampleDistribution);
+NonMSMSampleDistribution=NonMSMSampleDistribution/sum(NonMSMSampleDistribution);
+plot(DistComparisonYear+0.5, [MSMSampleDistribution; NonMSMSampleDistribution])
 
 
 CreateFigure5
@@ -601,8 +661,6 @@ CreateResultUncertaintyAroundTime
 toc(TimeALL)
 
 YearValueVector=CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize);
-'Figure 4 TotalUndiagnosedByTime'
-[PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)]
 
 
 %% Sensitivity analysis

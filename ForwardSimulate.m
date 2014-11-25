@@ -113,6 +113,9 @@ for SimNumber=1:NoParameterisations
                 end
             end
             
+            %work out the difference in the upper and lower estimate, find
+            %a random value between the two, and select up to those many
+            %individuals
             DiffInUndiagnosedEstimate=UpperBoundNumberOfUnidagnosedInfectionsThisStep-LowerBoundNumberOfUnidagnosedInfectionsThisStep;
             UndiagnosedEstimateInThisStep=round(LowerBoundNumberOfUnidagnosedInfectionsThisStep+rand*DiffInUndiagnosedEstimate);
             
