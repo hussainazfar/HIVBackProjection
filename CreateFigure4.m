@@ -22,6 +22,8 @@ set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
 box off;
 xlim(YearsToPlot)
+size(UCI)
+ylim([0, max(UCI)])
 
 h_legend=legend([hmed h95], {'Median', '95% uncertainty bound'},  'Location','NorthEast');
 set(h_legend,'FontSize',16);

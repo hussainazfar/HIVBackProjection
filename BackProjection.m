@@ -618,7 +618,7 @@ PropMSMUndiagnosed.UCI=prctile(PropMSMUndiagnosed.N, 97.5, 1);
 PropMSMUndiagnosed.LCI=prctile(PropMSMUndiagnosed.N, 2.5, 1);
 CreateFigure4(PropMSMUndiagnosed, PlotSettings.YearsToPlot, 'Appendix PropMSMTotalUndiagnosedByTime')
 
-plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median)
+
 
 PropMSM=DiagnosesByYear;
 PropMSM.Value=MSMDiagnosesByYear.N./DiagnosesByYear.N;
@@ -626,7 +626,10 @@ plot(PropMSM.Time, PropMSM.Value)
 mean(RecentMSMCaseIndicator)% a mean of the MSM appearance in the last 5 years of diagnoses
 
 % inspecting the proportion of people undiagnosed
-plot(median(MSMUndiagnosedSummed./UndiagnosedSummed, 1))
+hold on;
+plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median)
+plot(PropMSMUndiagnosed.Time, median(MSMUndiagnosedSummed./UndiagnosedSummed, 1))
+hold off;
 %comes out to a flat 70% which is not expected
 
 [xITM, yITM]=size(InfectionTimeMatrix);
@@ -645,6 +648,23 @@ for i=1:NoPatients
     end
 end
 
+RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
+            MSMSampleVector=RecentMSMCaseIndicator(SampleIndex);
+DistComparisonYear=0.5:1:20;
+MSMSampleDistribution=hist(RandomisedExpectedTimesVector(MSMSampleVector), DistComparisonYear);
+NonMSMSampleDistribution=hist(RandomisedExpectedTimesVector(~MSMSampleVector), DistComparisonYear);
+MSMSampleDistribution=MSMSampleDistribution/sum(MSMSampleDistribution);
+NonMSMSampleDistribution=NonMSMSampleDistribution/sum(NonMSMSampleDistribution);
+plot(DistComparisonYear+0.5, [MSMSampleDistribution; NonMSMSampleDistribution])
+plot(DistComparisonYear+0.5, MSMSampleDistribution./(MSMSampleDistribution+NonMSMSampleDistribution))
+   
+
+
+MSMDateDistribution=hist(UndiagnosedCaseData(SimNumber).InfectionDate(UndiagnosedCaseData(SimNumber).MSM), PropMSM.Time+0.5);
+DateDistribution=hist(UndiagnosedCaseData(SimNumber).InfectionDate(), PropMSM.Time+0.5);
+plot(PropMSM.Time, [MSMDateDistribution; DateDistribution])
+plot(PropMSM.Time, MSMDateDistribution./DateDistribution)
+            
 
 DistComparisonYear=0.5:1:20;
 MSMSampleDistribution=hist(reshape(InfectionTimeMatrix(:, RecentMSMCaseIndicator), 1, []), DistComparisonYear);

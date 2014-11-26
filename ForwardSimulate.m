@@ -98,7 +98,7 @@ for SimNumber=1:NoParameterisations
                 if RandomisedInfectionDate(CountSamples) + RandomisedExpectedTimesVector(CountSamples)<CutOffYear %%% THIS LINE COULD BE PROBLEMATIC DUE TO OVER SAMPLING
                     NumberFoundDiagnosed=NumberFoundDiagnosed+1;
                 else % if the simulated individual has not been diagnosed by the cut off date
-                    IncludeInForwardProjection(CountSamples)=true; % note this vector is not a true indicator of whether the person is 
+                    IncludeInForwardProjection(CountSamples)=true; 
                     NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
                 end
                 
@@ -134,7 +134,7 @@ for SimNumber=1:NoParameterisations
 
             UndiagnosedCaseData(SimNumber).MSM=[UndiagnosedCaseData(SimNumber).MSM MSMSampleVector(NumericalIncludeInForwardProjection)];
             UndiagnosedCaseData(SimNumber).InfectionDate=[UndiagnosedCaseData(SimNumber).InfectionDate RandomisedInfectionDate(NumericalIncludeInForwardProjection)];%NumericalIncludeInForwardProjection
-            
+            UndiagnosedCaseData(SimNumber).ExpectedTimeUntilDiagnoses=[UndiagnosedCaseData(SimNumber).ExpectedTimeUntilDiagnoses RandomisedExpectedTimesVector(NumericalIncludeInForwardProjection)];
         end
     end
     
