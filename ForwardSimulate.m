@@ -59,7 +59,7 @@ MSMDistributionForThisSimulationUndiagnosedInfections=zeros(1, (CD4BackProjectio
 
 CutOffYear=CD4BackProjectionYearsWhole(2)+1;
 
-IncludeInForwardProjection=false(1, NoPatientInRange);
+
 for SimNumber=1:NoParameterisations
     disp(['Forward projecting undiagnosed sim ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
@@ -68,6 +68,7 @@ for SimNumber=1:NoParameterisations
     UndiagnosedCaseData(SimNumber).InfectionDate=[];
             
     YearIndex=0;
+    IncludeInForwardProjection=false(1, NoPatientInRange);
     for Year=YearVector
         YearIndex=YearIndex+1;
         if CutOffYear-Year>MaxYears %i.e if year step is greater than 20 years
@@ -93,8 +94,7 @@ for SimNumber=1:NoParameterisations
             while (UpperBoundFound==false)%NumberFoundDiagnosed<TotalDiagnosedInBackprojectionEstimate+1
                 CountSamples=CountSamples+1;
 
-                % Determine if the infection would have occured in this time step
-                
+                % Determine if the infection represents one that is undiagnosed by the last data
                 if RandomisedInfectionDate(CountSamples) + RandomisedExpectedTimesVector(CountSamples)<CutOffYear %%% THIS LINE COULD BE PROBLEMATIC DUE TO OVER SAMPLING
                     NumberFoundDiagnosed=NumberFoundDiagnosed+1;
                 else % if the simulated individual has not been diagnosed by the cut off date

@@ -632,33 +632,43 @@ plot(PropMSMUndiagnosed.Time, median(MSMUndiagnosedSummed./UndiagnosedSummed, 1)
 hold off;
 %comes out to a flat 70% which is not expected
 
-[xITM, yITM]=size(InfectionTimeMatrix);
-for ii=1:xITM
-    for jj=1:yITM
-        if (InfectionTimeMatrix(ii, jj)<0)
-            disp([ii jj]);
-        end
-    end
-end
+% Ok at 
+% RandomisedExpectedTimesVector
+% MSMSampleVector
 
-[~, NoPatients]=size(Patient);
-for i=1:NoPatients
-    if sum(Patient(i).TimeFromInfectionToDiagnosis<0)>0
-        disp(i)
-    end
-end
+% Definitely something wrong by
+% UndiagnosedCaseData
+% UndiagnosedSummed
+
+plot(median(MSMDistributionUndiagnosedInfections./DistributionUndiagnosedInfections, 1))
+
+
+
+
+
 
 RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
-            MSMSampleVector=RecentMSMCaseIndicator(SampleIndex);
+MSMSampleVector=RecentMSMCaseIndicator(SampleIndex);
 DistComparisonYear=0.5:1:20;
 MSMSampleDistribution=hist(RandomisedExpectedTimesVector(MSMSampleVector), DistComparisonYear);
 NonMSMSampleDistribution=hist(RandomisedExpectedTimesVector(~MSMSampleVector), DistComparisonYear);
-MSMSampleDistribution=MSMSampleDistribution/sum(MSMSampleDistribution);
-NonMSMSampleDistribution=NonMSMSampleDistribution/sum(NonMSMSampleDistribution);
-plot(DistComparisonYear+0.5, [MSMSampleDistribution; NonMSMSampleDistribution])
+NormMSMSampleDistribution=MSMSampleDistribution/sum(MSMSampleDistribution);
+NormNonMSMSampleDistribution=NonMSMSampleDistribution/sum(NonMSMSampleDistribution);
+plot(DistComparisonYear+0.5, [NormMSMSampleDistribution; NormNonMSMSampleDistribution])
 plot(DistComparisonYear+0.5, MSMSampleDistribution./(MSMSampleDistribution+NonMSMSampleDistribution))
    
+tempMSM=false(1, 0);
+tempDate=[];
+for iSim=1:NoParameterisations
+    iSim
+    tempDate=[tempDate UndiagnosedCaseData(iSim).InfectionDate];
+    tempMSM=[tempMSM UndiagnosedCaseData(iSim).MSM];
+end
 
+MSMDateDistribution=hist(tempDate(tempMSM), PropMSM.Time+0.5);
+DateDistribution=hist(tempDate, PropMSM.Time+0.5);
+plot(PropMSM.Time, [MSMDateDistribution; DateDistribution])
+plot(PropMSM.Time, MSMDateDistribution./DateDistribution)
 
 MSMDateDistribution=hist(UndiagnosedCaseData(SimNumber).InfectionDate(UndiagnosedCaseData(SimNumber).MSM), PropMSM.Time+0.5);
 DateDistribution=hist(UndiagnosedCaseData(SimNumber).InfectionDate(), PropMSM.Time+0.5);
