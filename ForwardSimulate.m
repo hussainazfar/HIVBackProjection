@@ -66,7 +66,8 @@ for SimNumber=1:NoParameterisations
     [~, TotalInTimeVector]=size(ExpectedTimesVector);
     UndiagnosedCaseData(SimNumber).MSM=false(1,0);% because [] creates an empty NUMERICAL array which causes a type problem later on
     UndiagnosedCaseData(SimNumber).InfectionDate=[];
-            
+    UndiagnosedCaseData(SimNumber).ExpectedTimeUntilDiagnosis=[];
+    
     YearIndex=0;
     IncludeInForwardProjection=false(1, NoPatientInRange);
     for Year=YearVector
@@ -134,7 +135,7 @@ for SimNumber=1:NoParameterisations
 
             UndiagnosedCaseData(SimNumber).MSM=[UndiagnosedCaseData(SimNumber).MSM MSMSampleVector(NumericalIncludeInForwardProjection)];
             UndiagnosedCaseData(SimNumber).InfectionDate=[UndiagnosedCaseData(SimNumber).InfectionDate RandomisedInfectionDate(NumericalIncludeInForwardProjection)];%NumericalIncludeInForwardProjection
-            UndiagnosedCaseData(SimNumber).ExpectedTimeUntilDiagnoses=[UndiagnosedCaseData(SimNumber).ExpectedTimeUntilDiagnoses RandomisedExpectedTimesVector(NumericalIncludeInForwardProjection)];
+            UndiagnosedCaseData(SimNumber).ExpectedTimeUntilDiagnosis=[UndiagnosedCaseData(SimNumber).ExpectedTimeUntilDiagnosis RandomisedExpectedTimesVector(NumericalIncludeInForwardProjection)];
         end
     end
     
