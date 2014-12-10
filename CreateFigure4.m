@@ -23,7 +23,8 @@ set(gca, 'fontsize', 18)
 box off;
 xlim(YearsToPlot)
 size(UCI)
-ylim([0, max(UCI)])
+ylim([0 10000])
+%ylim([0 ceil(max(UCI)/1000)*1000])
 
 h_legend=legend([hmed h95], {'Median', '95% uncertainty bound'},  'Location','NorthEast');
 set(h_legend,'FontSize',16);

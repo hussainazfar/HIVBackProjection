@@ -138,13 +138,13 @@ clf;%clear the current figure ready for plotting
 clf;%clear the current figure ready for plotting
 
 InfectionTimeToPlot=reshape(InfectionTimeMatrix, 1, []);
-MeanTimeDistribution=hist(InfectionTimeToPlot, 0.05:0.1:MaxYears);
+MeanTimeDistribution=hist(InfectionTimeToPlot, 0.125:0.25:MaxYears);
 % MeanTimeDistribution=hist(InfectionTimeToPlot, 0.0:StepSize:MaxYears);
     %MeanTimeDistribution=hist(TimeDistributionOfRecentDiagnoses, 0.0:StepSize:MaxYears);
     MeanTimeDistribution=MeanTimeDistribution/sum(MeanTimeDistribution);
 %     area(0.0:StepSize:MaxYears, MeanTimeDistribution);%, 'k.','MarkerSize',20);
 %bar(1:1:MaxYears, MeanTimeDistribution);%, 'k.','MarkerSize',20);
-plot(0.05:0.1:MaxYears, MeanTimeDistribution);
+bar(0.125:0.25:MaxYears, MeanTimeDistribution);
     xlabel({'Time between infection and diagnosis' '(years)'},'fontsize', 22);
     ylabel('Proportion of cases','fontsize', 22);
     set(gca,'Color',[1.0 1.0 1.0]);
@@ -152,8 +152,13 @@ plot(0.05:0.1:MaxYears, MeanTimeDistribution);
     set(gca, 'fontsize', 18)
     box off;
     set(gca,'XTick',0.0:MaxYears)
-    xlim([0.5 15.5])
+    xlim([0.0 15.5])
     print('-dpng ','-r300','ResultsPlots/Unused Figure Distribution of times until diagnosis.png');%(using fit times only)
+
+    disp('The propotion of cases diagnosed in the first quarter of a year is')
+    disp(MeanTimeDistribution(1))
+    
+    
     
 %% output median CD4 count at diagnosis
 clf;%clear the current figure ready for plotting

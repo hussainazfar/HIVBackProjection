@@ -27,7 +27,7 @@ set(gca, 'fontsize', 18)
 box off;
 
 xlim([PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)])
-ylim([0 ceil((max(DiagnosesByYear.N))/100)*100])
+ylim([0 ceil((max(DiagnosesByYear.N))/500)*500])
 
 
 h_legend=legend([DiagnosesHandle BackProjectedInfectionsHandle BackProjectedInfectionsHandle UncertaintyHandle], 'Diagnoses', 'Back-projected incidence', 'of diagnosed cases', '95% uncertainty bound',  'Location','NorthEast');
@@ -71,7 +71,7 @@ set(gca, 'fontsize', 18)
 box off;
 
 xlim([PlotSettings.YearsToPlot(1) PlotSettings.YearsToPlot(2)])
-ylim([0 ceil((max(DiagnosesByYear.N))/100)*100])
+ylim([0 ceil((max(DiagnosesByYear.N))/500)*500])
 
 %h_legend=legend([DiagnosesHandle BackProjectedInfectionsHandle TotalEstimatedInfectionsHandle], 'Diagnoses                    ', 'Diagnosed infections' , 'All infections', 'Location','NorthEast');
 h_legend=legend([DiagnosesHandle TotalEstimatedInfectionsHandle, UncertaintyHandle], 'Diagnoses',  'Estimated incidence', '95% uncertainty bound', 'Location','NorthEast');
