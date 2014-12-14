@@ -3,7 +3,7 @@
 
 
 tic
-NumSims=100;
+NumSims=200;
 
 %% Load the results of the back projection
 % load('PatientSaveFiles/BackProjectedResults.mat');
@@ -22,7 +22,7 @@ SMR=SMR.LoadData(MortalityTableFile, SMRFile, NumSims);
     % Load up save patient data from backprojection calculations
     disp('Loading patient data');
     Identifier=1;
-    Patient=LoadPatientClass('PatientSaveFiles', Identifier);
+%     Patient=LoadPatientClass('PatientSaveFiles', Identifier);
     %% AIDS related functions
     [AIDSProgression, ViralLoadProbability, VLCD4Locator]=SetUpAIDSProgession;
     %Progress people to AIDS
