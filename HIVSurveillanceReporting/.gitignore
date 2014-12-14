@@ -1,0 +1,8 @@
+#The following includes the surveillance data which we can't synchronise for privacy reasons
+#ImputationData/
+
+#Other folders that have ignore their data include Imputation, ResultsPlots and PatientSaveFiles
+
+
+#Ignore the following file types
+*.asv
