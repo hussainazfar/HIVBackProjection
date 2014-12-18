@@ -780,4 +780,6 @@ toc(TimeALL)
 % To do this, change folder to the MoralityCalculations
 % Run CalculateAIDSAndMortality
 % Run CollateResultsForOutput
-
+% NOTE: care should be taken to ensure that all individuals (previously
+% diagnosed overseas or not) to get the correct figure for proportion of
+% people living with HIV 
