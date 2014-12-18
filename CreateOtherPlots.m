@@ -348,4 +348,28 @@ h_legend=legend([ MSMHandle NonMSMHandle], {'MSM', 'Non-MSM'} ,  'Location','Nor
 print('-dpng ','-r300','ResultsPlots/Appendix MSM vs non-MSM Infection Diagnosis.png')
 
 
+%% Testing probaility plots
+clf;
+hold on;
+MeanTestingHolder=zeros(NoParameterisations, 1001);
+for SimCount=1:NoParameterisations
+    [DiagnosisResult, AnnualTestingProbability]=DiagnosedDuringStep(OptimisationResults(30).TestingParameter(SimCount).Result, [0:1:1000], 1);
+    plot([0:1:1000], AnnualTestingProbability, 'LineWidth', 0.1);
+    MeanTestingHolder(SimCount, :)=AnnualTestingProbability;
+end
+MeanTestingProabilityByCD4=mean(MeanTestingHolder);
+
+ plot([0:1:1000], MeanTestingProabilityByCD4, 'r', 'LineWidth', 2);
+hold off;
+xlabel('CD4 count','fontsize', 22);
+ylabel('Probability of diagnosis per year','fontsize', 22);
+set(gca,'Color',[1.0 1.0 1.0]);
+set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+set(gca, 'fontsize', 18)
+print('-dpng ','-r300','ResultsPlots/Appendix Probability of testing per year by CD4 count.png')
+
+disp('The mean testing rate at CD4=0 is');
+disp(MeanTestingProabilityByCD4(1));
+disp('The mean testing rate at CD4=1000 is');
+disp(MeanTestingProabilityByCD4(1001));
 

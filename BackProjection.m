@@ -516,6 +516,11 @@ ForwardSimulate
 [DiagnosesByYear]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
 [MSMDiagnosesByYear]=DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
+
+[NonMSMDiagnosesByYear]=DiagnosesByTime(Patient(~MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
+
+
+
 [MSMFineDiagnoses]=DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), StepSize, CD4BackProjectionYearsWhole(2)+1-StepSize);
 
 %% Find total undiagnosed at all points in time
@@ -548,6 +553,12 @@ TotalUndiagnosedByTime.Time=UndiagnosedPatient.Time ;
 TotalUndiagnosedByTime.N=UndiagnosedSummed+UndiagnosedPatient.N ;
 MSMTotalUndiagnosedByTime.Time=MSMUndiagnosedPatient.Time ;
 MSMTotalUndiagnosedByTime.N=MSMUndiagnosedSummed+MSMUndiagnosedPatient.N ;
+
+NonMSMTotalUndiagnosedByTime.Time=TotalUndiagnosedByTime.Time;
+NonMSMTotalUndiagnosedByTime.N=TotalUndiagnosedByTime.N-MSMTotalUndiagnosedByTime.N ;
+
+
+
 
 [NumSims, NumStepsInYearDimension]=size(TotalUndiagnosedByTime.N);
 for SimCout=1:NumSims
@@ -611,6 +622,11 @@ CreateFigure2
 CreateFigure3
 CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime');
 CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime');
+CreateFigure4(NonMSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 NonMSMTotalUndiagnosedByTime');
+h_legend=legend( {'Median', '95% uncertainty bound'},  'Location','SouthEast');
+legend('boxoff');
+print('-dpng ','-r300',['ResultsPlots/Figure 4 NonMSMTotalUndiagnosedByTime.png']) 
+
 PropMSMUndiagnosed=MSMTotalUndiagnosedByTime;
 PropMSMUndiagnosed.N=MSMTotalUndiagnosedByTime.N./TotalUndiagnosedByTime.N;
 PropMSMUndiagnosed.Median=median(PropMSMUndiagnosed.N, 1);
@@ -756,15 +772,9 @@ disp('Saving individual patient records, this may take a while');
 Identifier=1;
 SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
 
-% clear Patient;
-% clear RecentPatient;
-% clear LineDataMatrix;
-% clear LocationDataMatrix;
-% clear OldCombinedCD4Vector;
-% clear OldCombinedTimeVector;
-% clear OtherOutput;
+
 % save('PatientSaveFiles/SimulationState.mat');
 toc(TimeALL)
 
-%publication commit message
-% Publication commit BP002
+% At the end of the simulation, it may be desirable
+

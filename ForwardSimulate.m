@@ -145,6 +145,9 @@ for SimNumber=1:NoParameterisations
     
 end
 
+NonMSMDistributionUndiagnosedInfections=DistributionUndiagnosedInfections-MSMDistributionUndiagnosedInfections;
+NonMSMDistributionDiagnosedInfections=DistributionDiagnosedInfections-MSMDistributionDiagnosedInfections;
+
 TotalInfectionsPerYear=DistributionDiagnosedInfections+DistributionUndiagnosedInfections;
 
 HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize))+0.5*StepSize;
