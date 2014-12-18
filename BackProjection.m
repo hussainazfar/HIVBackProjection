@@ -776,5 +776,8 @@ SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
 % save('PatientSaveFiles/SimulationState.mat');
 toc(TimeALL)
 
-% At the end of the simulation, it may be desirable
+% At the end of the simulation, it may be desirable to perform a mortlaity calculation
+% To do this, change folder to the MoralityCalculations
+% Run CalculateAIDSAndMortality
+% Run CollateResultsForOutput
 
