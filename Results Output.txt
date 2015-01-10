@@ -1,0 +1,1263 @@
+>> BackProjection
+Initialising PCToSR system
+Loading saved basic patient class data
+Loading Notification Data File
+Openning the Excel file
+Elapsed time is 3.272599 seconds.
+Loading notification 1000 of 35286
+Loading notification 2000 of 35286
+Loading notification 3000 of 35286
+Loading notification 4000 of 35286
+Loading notification 5000 of 35286
+Loading notification 6000 of 35286
+Loading notification 7000 of 35286
+Loading notification 8000 of 35286
+Loading notification 9000 of 35286
+Loading notification 10000 of 35286
+Loading notification 11000 of 35286
+Loading notification 12000 of 35286
+Loading notification 13000 of 35286
+Loading notification 14000 of 35286
+Loading notification 15000 of 35286
+Loading notification 16000 of 35286
+Loading notification 17000 of 35286
+Loading notification 18000 of 35286
+Loading notification 19000 of 35286
+Loading notification 20000 of 35286
+Loading notification 21000 of 35286
+Loading notification 22000 of 35286
+Loading notification 23000 of 35286
+Loading notification 24000 of 35286
+Loading notification 25000 of 35286
+Loading notification 26000 of 35286
+Loading notification 27000 of 35286
+Loading notification 28000 of 35286
+Loading notification 29000 of 35286
+Loading notification 30000 of 35286
+Loading notification 31000 of 35286
+Loading notification 32000 of 35286
+Loading notification 33000 of 35286
+Loading notification 34000 of 35286
+Loading notification 35000 of 35286
+Loading notification 1000 of 35286
+Loading notification 2000 of 35286
+Loading notification 3000 of 35286
+Loading notification 4000 of 35286
+Loading notification 5000 of 35286
+Loading notification 6000 of 35286
+Loading notification 7000 of 35286
+Loading notification 8000 of 35286
+Loading notification 9000 of 35286
+Loading notification 10000 of 35286
+Loading notification 11000 of 35286
+Loading notification 12000 of 35286
+Loading notification 13000 of 35286
+Loading notification 14000 of 35286
+Loading notification 15000 of 35286
+Loading notification 16000 of 35286
+Loading notification 17000 of 35286
+Loading notification 18000 of 35286
+Loading notification 19000 of 35286
+Loading notification 20000 of 35286
+Loading notification 21000 of 35286
+Loading notification 22000 of 35286
+Loading notification 23000 of 35286
+Loading notification 24000 of 35286
+Loading notification 25000 of 35286
+Loading notification 26000 of 35286
+Loading notification 27000 of 35286
+Loading notification 28000 of 35286
+Loading notification 29000 of 35286
+Loading notification 30000 of 35286
+Loading notification 31000 of 35286
+Loading notification 32000 of 35286
+Loading notification 33000 of 35286
+Loading notification 34000 of 35286
+Loading notification 35000 of 35286
+Removing undefinded postcodes
+Elapsed time is 0.287709 seconds.
+Assigning patients without postcodes a postcode based on other diagnoses
+Elapsed time is 2.840180 seconds.
+Removing overseas diagnosed cases to be utilised later
+Elapsed time is 0.461404 seconds.
+172 expected out of 137 in 1900
+1 expected out of 1 in 1902
+2 expected out of 2 in 1904
+1 expected out of 1 in 1905
+4 expected out of 4 in 1908
+1 expected out of 1 in 1909
+1 expected out of 1 in 1910
+2 expected out of 2 in 1911
+4 expected out of 4 in 1912
+2 expected out of 2 in 1913
+4 expected out of 4 in 1914
+3 expected out of 3 in 1915
+4 expected out of 4 in 1916
+1 expected out of 1 in 1917
+6 expected out of 7 in 1918
+11 expected out of 14 in 1919
+15 expected out of 15 in 1920
+20 expected out of 20 in 1921
+17 expected out of 18 in 1922
+11 expected out of 12 in 1923
+23 expected out of 24 in 1924
+35 expected out of 36 in 1925
+26 expected out of 28 in 1926
+24 expected out of 26 in 1927
+40 expected out of 42 in 1928
+48 expected out of 51 in 1929
+68 expected out of 74 in 1930
+58 expected out of 65 in 1931
+63 expected out of 70 in 1932
+85 expected out of 89 in 1933
+102 expected out of 113 in 1934
+101 expected out of 111 in 1935
+137 expected out of 156 in 1936
+148 expected out of 179 in 1937
+146 expected out of 160 in 1938
+170 expected out of 199 in 1939
+209 expected out of 217 in 1940
+185 expected out of 222 in 1941
+268 expected out of 295 in 1942
+303 expected out of 351 in 1943
+354 expected out of 400 in 1944
+371 expected out of 429 in 1945
+422 expected out of 493 in 1946
+487 expected out of 563 in 1947
+539 expected out of 613 in 1948
+532 expected out of 654 in 1949
+653 expected out of 673 in 1950
+545 expected out of 670 in 1951
+674 expected out of 741 in 1952
+619 expected out of 763 in 1953
+704 expected out of 789 in 1954
+726 expected out of 859 in 1955
+759 expected out of 865 in 1956
+950 expected out of 960 in 1957
+924 expected out of 980 in 1958
+835 expected out of 957 in 1959
+916 expected out of 1122 in 1960
+1009 expected out of 1161 in 1961
+1009 expected out of 1164 in 1962
+979 expected out of 1188 in 1963
+859 expected out of 1044 in 1964
+979 expected out of 1057 in 1965
+912 expected out of 987 in 1966
+789 expected out of 818 in 1967
+839 expected out of 862 in 1968
+740 expected out of 773 in 1969
+711 expected out of 765 in 1970
+578 expected out of 639 in 1971
+534 expected out of 569 in 1972
+487 expected out of 469 in 1973
+403 expected out of 451 in 1974
+377 expected out of 409 in 1975
+336 expected out of 351 in 1976
+350 expected out of 317 in 1977
+301 expected out of 321 in 1978
+283 expected out of 287 in 1979
+305 expected out of 310 in 1980
+279 expected out of 256 in 1981
+231 expected out of 240 in 1982
+256 expected out of 252 in 1983
+223 expected out of 223 in 1984
+180 expected out of 181 in 1985
+152 expected out of 159 in 1986
+135 expected out of 144 in 1987
+121 expected out of 113 in 1988
+73 expected out of 77 in 1989
+63 expected out of 70 in 1990
+43 expected out of 46 in 1991
+39 expected out of 38 in 1992
+31 expected out of 31 in 1993
+9 expected out of 9 in 1994
+8 expected out of 9 in 1995
+8 expected out of 8 in 1996
+2 expected out of 2 in 1997
+3 expected out of 3 in 1998
+2 expected out of 2 in 1999
+6 expected out of 6 in 2000
+2 expected out of 2 in 2002
+3 expected out of 3 in 2003
+3 expected out of 3 in 2005
+3 expected out of 3 in 2007
+1 expected out of 1 in 2009
+1 expected out of 1 in 2010
+1 expected out of 1 in 2012
+33 expected out of 32 in 1900
+1 expected out of 1 in 1908
+1 expected out of 1 in 1911
+2 expected out of 2 in 1912
+1 expected out of 1 in 1913
+1 expected out of 1 in 1914
+3 expected out of 3 in 1915
+1 expected out of 1 in 1916
+2 expected out of 2 in 1917
+2 expected out of 2 in 1918
+4 expected out of 4 in 1919
+2 expected out of 2 in 1920
+2 expected out of 2 in 1921
+7 expected out of 7 in 1923
+1 expected out of 1 in 1924
+6 expected out of 6 in 1925
+5 expected out of 5 in 1926
+8 expected out of 8 in 1927
+5 expected out of 5 in 1928
+4 expected out of 4 in 1929
+2 expected out of 2 in 1930
+3 expected out of 3 in 1931
+2 expected out of 2 in 1932
+4 expected out of 4 in 1933
+4 expected out of 4 in 1934
+6 expected out of 6 in 1935
+9 expected out of 9 in 1936
+7 expected out of 7 in 1937
+11 expected out of 11 in 1938
+8 expected out of 8 in 1939
+10 expected out of 10 in 1940
+4 expected out of 4 in 1941
+15 expected out of 16 in 1942
+5 expected out of 5 in 1943
+10 expected out of 10 in 1944
+14 expected out of 14 in 1945
+6 expected out of 7 in 1946
+16 expected out of 16 in 1947
+17 expected out of 18 in 1948
+26 expected out of 27 in 1949
+23 expected out of 22 in 1950
+29 expected out of 29 in 1951
+31 expected out of 31 in 1952
+25 expected out of 24 in 1953
+32 expected out of 33 in 1954
+46 expected out of 47 in 1955
+42 expected out of 43 in 1956
+37 expected out of 37 in 1957
+47 expected out of 49 in 1958
+50 expected out of 50 in 1959
+54 expected out of 58 in 1960
+64 expected out of 62 in 1961
+62 expected out of 62 in 1962
+93 expected out of 98 in 1963
+79 expected out of 86 in 1964
+74 expected out of 75 in 1965
+85 expected out of 89 in 1966
+63 expected out of 67 in 1967
+69 expected out of 70 in 1968
+95 expected out of 94 in 1969
+75 expected out of 81 in 1970
+85 expected out of 87 in 1971
+89 expected out of 91 in 1972
+57 expected out of 58 in 1973
+76 expected out of 76 in 1974
+68 expected out of 71 in 1975
+74 expected out of 75 in 1976
+70 expected out of 70 in 1977
+68 expected out of 67 in 1978
+46 expected out of 48 in 1979
+62 expected out of 63 in 1980
+62 expected out of 64 in 1981
+66 expected out of 64 in 1982
+45 expected out of 42 in 1983
+43 expected out of 46 in 1984
+26 expected out of 26 in 1985
+23 expected out of 24 in 1986
+18 expected out of 18 in 1987
+23 expected out of 22 in 1988
+12 expected out of 12 in 1989
+16 expected out of 17 in 1990
+11 expected out of 12 in 1991
+9 expected out of 9 in 1992
+6 expected out of 6 in 1993
+9 expected out of 9 in 1994
+5 expected out of 5 in 1995
+6 expected out of 6 in 1996
+3 expected out of 3 in 1997
+3 expected out of 3 in 1998
+4 expected out of 4 in 1999
+4 expected out of 4 in 2000
+1 expected out of 1 in 2001
+2 expected out of 2 in 2002
+2 expected out of 2 in 2003
+3 expected out of 3 in 2004
+3 expected out of 4 in 2005
+5 expected out of 6 in 2006
+2 expected out of 2 in 2007
+2 expected out of 2 in 2008
+2 expected out of 2 in 2009
+2 expected out of 2 in 2011
+1 expected out of 1 in 2013
+Determining the time between infection and diagnosis
+Starting parallel Matlab...
+Starting matlabpool using the 'local' profile ... connected to 6 labs.
+        1984
+
+        1985
+
+        1986
+
+        1987
+
+        1988
+
+        1989
+
+        1990
+
+        1991
+
+        1992
+
+        1993
+
+        1994
+
+        1995
+
+        1996
+
+        1997
+
+        1998
+
+        1999
+
+        2000
+
+        2001
+
+        2002
+
+        2003
+
+        2004
+
+        2005
+
+        2006
+
+        2007
+
+        2008
+
+        2009
+
+        2010
+
+        2011
+
+        2012
+
+        2013
+
+Sending a stop signal to all the labs ... stopped.
+Elapsed time is 30523.432657 seconds.
+Forward projecting undiagnosed sim 1 of 200
+Forward projecting undiagnosed sim 2 of 200
+Forward projecting undiagnosed sim 3 of 200
+Forward projecting undiagnosed sim 4 of 200
+Forward projecting undiagnosed sim 5 of 200
+Forward projecting undiagnosed sim 6 of 200
+Forward projecting undiagnosed sim 7 of 200
+Forward projecting undiagnosed sim 8 of 200
+Forward projecting undiagnosed sim 9 of 200
+Forward projecting undiagnosed sim 10 of 200
+Forward projecting undiagnosed sim 11 of 200
+Forward projecting undiagnosed sim 12 of 200
+Forward projecting undiagnosed sim 13 of 200
+Forward projecting undiagnosed sim 14 of 200
+Forward projecting undiagnosed sim 15 of 200
+Forward projecting undiagnosed sim 16 of 200
+Forward projecting undiagnosed sim 17 of 200
+Forward projecting undiagnosed sim 18 of 200
+Forward projecting undiagnosed sim 19 of 200
+Forward projecting undiagnosed sim 20 of 200
+Forward projecting undiagnosed sim 21 of 200
+Forward projecting undiagnosed sim 22 of 200
+Forward projecting undiagnosed sim 23 of 200
+Forward projecting undiagnosed sim 24 of 200
+Forward projecting undiagnosed sim 25 of 200
+Forward projecting undiagnosed sim 26 of 200
+Forward projecting undiagnosed sim 27 of 200
+Forward projecting undiagnosed sim 28 of 200
+Forward projecting undiagnosed sim 29 of 200
+Forward projecting undiagnosed sim 30 of 200
+Forward projecting undiagnosed sim 31 of 200
+Forward projecting undiagnosed sim 32 of 200
+Forward projecting undiagnosed sim 33 of 200
+Forward projecting undiagnosed sim 34 of 200
+Forward projecting undiagnosed sim 35 of 200
+Forward projecting undiagnosed sim 36 of 200
+Forward projecting undiagnosed sim 37 of 200
+Forward projecting undiagnosed sim 38 of 200
+Forward projecting undiagnosed sim 39 of 200
+Forward projecting undiagnosed sim 40 of 200
+Forward projecting undiagnosed sim 41 of 200
+Forward projecting undiagnosed sim 42 of 200
+Forward projecting undiagnosed sim 43 of 200
+Forward projecting undiagnosed sim 44 of 200
+Forward projecting undiagnosed sim 45 of 200
+Forward projecting undiagnosed sim 46 of 200
+Forward projecting undiagnosed sim 47 of 200
+Forward projecting undiagnosed sim 48 of 200
+Forward projecting undiagnosed sim 49 of 200
+Forward projecting undiagnosed sim 50 of 200
+Forward projecting undiagnosed sim 51 of 200
+Forward projecting undiagnosed sim 52 of 200
+Forward projecting undiagnosed sim 53 of 200
+Forward projecting undiagnosed sim 54 of 200
+Forward projecting undiagnosed sim 55 of 200
+Forward projecting undiagnosed sim 56 of 200
+Forward projecting undiagnosed sim 57 of 200
+Forward projecting undiagnosed sim 58 of 200
+Forward projecting undiagnosed sim 59 of 200
+Forward projecting undiagnosed sim 60 of 200
+Forward projecting undiagnosed sim 61 of 200
+Forward projecting undiagnosed sim 62 of 200
+Forward projecting undiagnosed sim 63 of 200
+Forward projecting undiagnosed sim 64 of 200
+Forward projecting undiagnosed sim 65 of 200
+Forward projecting undiagnosed sim 66 of 200
+Forward projecting undiagnosed sim 67 of 200
+Forward projecting undiagnosed sim 68 of 200
+Forward projecting undiagnosed sim 69 of 200
+Forward projecting undiagnosed sim 70 of 200
+Forward projecting undiagnosed sim 71 of 200
+Forward projecting undiagnosed sim 72 of 200
+Forward projecting undiagnosed sim 73 of 200
+Forward projecting undiagnosed sim 74 of 200
+Forward projecting undiagnosed sim 75 of 200
+Forward projecting undiagnosed sim 76 of 200
+Forward projecting undiagnosed sim 77 of 200
+Forward projecting undiagnosed sim 78 of 200
+Forward projecting undiagnosed sim 79 of 200
+Forward projecting undiagnosed sim 80 of 200
+Forward projecting undiagnosed sim 81 of 200
+Forward projecting undiagnosed sim 82 of 200
+Forward projecting undiagnosed sim 83 of 200
+Forward projecting undiagnosed sim 84 of 200
+Forward projecting undiagnosed sim 85 of 200
+Forward projecting undiagnosed sim 86 of 200
+Forward projecting undiagnosed sim 87 of 200
+Forward projecting undiagnosed sim 88 of 200
+Forward projecting undiagnosed sim 89 of 200
+Forward projecting undiagnosed sim 90 of 200
+Forward projecting undiagnosed sim 91 of 200
+Forward projecting undiagnosed sim 92 of 200
+Forward projecting undiagnosed sim 93 of 200
+Forward projecting undiagnosed sim 94 of 200
+Forward projecting undiagnosed sim 95 of 200
+Forward projecting undiagnosed sim 96 of 200
+Forward projecting undiagnosed sim 97 of 200
+Forward projecting undiagnosed sim 98 of 200
+Forward projecting undiagnosed sim 99 of 200
+Forward projecting undiagnosed sim 100 of 200
+Forward projecting undiagnosed sim 101 of 200
+Forward projecting undiagnosed sim 102 of 200
+Forward projecting undiagnosed sim 103 of 200
+Forward projecting undiagnosed sim 104 of 200
+Forward projecting undiagnosed sim 105 of 200
+Forward projecting undiagnosed sim 106 of 200
+Forward projecting undiagnosed sim 107 of 200
+Forward projecting undiagnosed sim 108 of 200
+Forward projecting undiagnosed sim 109 of 200
+Forward projecting undiagnosed sim 110 of 200
+Forward projecting undiagnosed sim 111 of 200
+Forward projecting undiagnosed sim 112 of 200
+Forward projecting undiagnosed sim 113 of 200
+Forward projecting undiagnosed sim 114 of 200
+Forward projecting undiagnosed sim 115 of 200
+Forward projecting undiagnosed sim 116 of 200
+Forward projecting undiagnosed sim 117 of 200
+Forward projecting undiagnosed sim 118 of 200
+Forward projecting undiagnosed sim 119 of 200
+Forward projecting undiagnosed sim 120 of 200
+Forward projecting undiagnosed sim 121 of 200
+Forward projecting undiagnosed sim 122 of 200
+Forward projecting undiagnosed sim 123 of 200
+Forward projecting undiagnosed sim 124 of 200
+Forward projecting undiagnosed sim 125 of 200
+Forward projecting undiagnosed sim 126 of 200
+Forward projecting undiagnosed sim 127 of 200
+Forward projecting undiagnosed sim 128 of 200
+Forward projecting undiagnosed sim 129 of 200
+Forward projecting undiagnosed sim 130 of 200
+Forward projecting undiagnosed sim 131 of 200
+Forward projecting undiagnosed sim 132 of 200
+Forward projecting undiagnosed sim 133 of 200
+Forward projecting undiagnosed sim 134 of 200
+Forward projecting undiagnosed sim 135 of 200
+Forward projecting undiagnosed sim 136 of 200
+Forward projecting undiagnosed sim 137 of 200
+Forward projecting undiagnosed sim 138 of 200
+Forward projecting undiagnosed sim 139 of 200
+Forward projecting undiagnosed sim 140 of 200
+Forward projecting undiagnosed sim 141 of 200
+Forward projecting undiagnosed sim 142 of 200
+Forward projecting undiagnosed sim 143 of 200
+Forward projecting undiagnosed sim 144 of 200
+Forward projecting undiagnosed sim 145 of 200
+Forward projecting undiagnosed sim 146 of 200
+Forward projecting undiagnosed sim 147 of 200
+Forward projecting undiagnosed sim 148 of 200
+Forward projecting undiagnosed sim 149 of 200
+Forward projecting undiagnosed sim 150 of 200
+Forward projecting undiagnosed sim 151 of 200
+Forward projecting undiagnosed sim 152 of 200
+Forward projecting undiagnosed sim 153 of 200
+Forward projecting undiagnosed sim 154 of 200
+Forward projecting undiagnosed sim 155 of 200
+Forward projecting undiagnosed sim 156 of 200
+Forward projecting undiagnosed sim 157 of 200
+Forward projecting undiagnosed sim 158 of 200
+Forward projecting undiagnosed sim 159 of 200
+Forward projecting undiagnosed sim 160 of 200
+Forward projecting undiagnosed sim 161 of 200
+Forward projecting undiagnosed sim 162 of 200
+Forward projecting undiagnosed sim 163 of 200
+Forward projecting undiagnosed sim 164 of 200
+Forward projecting undiagnosed sim 165 of 200
+Forward projecting undiagnosed sim 166 of 200
+Forward projecting undiagnosed sim 167 of 200
+Forward projecting undiagnosed sim 168 of 200
+Forward projecting undiagnosed sim 169 of 200
+Forward projecting undiagnosed sim 170 of 200
+Forward projecting undiagnosed sim 171 of 200
+Forward projecting undiagnosed sim 172 of 200
+Forward projecting undiagnosed sim 173 of 200
+Forward projecting undiagnosed sim 174 of 200
+Forward projecting undiagnosed sim 175 of 200
+Forward projecting undiagnosed sim 176 of 200
+Forward projecting undiagnosed sim 177 of 200
+Forward projecting undiagnosed sim 178 of 200
+Forward projecting undiagnosed sim 179 of 200
+Forward projecting undiagnosed sim 180 of 200
+Forward projecting undiagnosed sim 181 of 200
+Forward projecting undiagnosed sim 182 of 200
+Forward projecting undiagnosed sim 183 of 200
+Forward projecting undiagnosed sim 184 of 200
+Forward projecting undiagnosed sim 185 of 200
+Forward projecting undiagnosed sim 186 of 200
+Forward projecting undiagnosed sim 187 of 200
+Forward projecting undiagnosed sim 188 of 200
+Forward projecting undiagnosed sim 189 of 200
+Forward projecting undiagnosed sim 190 of 200
+Forward projecting undiagnosed sim 191 of 200
+Forward projecting undiagnosed sim 192 of 200
+Forward projecting undiagnosed sim 193 of 200
+Forward projecting undiagnosed sim 194 of 200
+Forward projecting undiagnosed sim 195 of 200
+Forward projecting undiagnosed sim 196 of 200
+Forward projecting undiagnosed sim 197 of 200
+Forward projecting undiagnosed sim 198 of 200
+Forward projecting undiagnosed sim 199 of 200
+Forward projecting undiagnosed sim 200 of 200
+Finding when patient 100 is undiagnosed
+Finding when patient 200 is undiagnosed
+Finding when patient 300 is undiagnosed
+Finding when patient 400 is undiagnosed
+Finding when patient 500 is undiagnosed
+Finding when patient 600 is undiagnosed
+Finding when patient 700 is undiagnosed
+Finding when patient 800 is undiagnosed
+Finding when patient 900 is undiagnosed
+Finding when patient 1000 is undiagnosed
+Finding when patient 1100 is undiagnosed
+Finding when patient 1200 is undiagnosed
+Finding when patient 1300 is undiagnosed
+Finding when patient 1400 is undiagnosed
+Finding when patient 1500 is undiagnosed
+Finding when patient 1600 is undiagnosed
+Finding when patient 1700 is undiagnosed
+Finding when patient 1800 is undiagnosed
+Finding when patient 1900 is undiagnosed
+Finding when patient 2000 is undiagnosed
+Finding when patient 2100 is undiagnosed
+Finding when patient 2200 is undiagnosed
+Finding when patient 2300 is undiagnosed
+Finding when patient 2400 is undiagnosed
+Finding when patient 2500 is undiagnosed
+Finding when patient 2600 is undiagnosed
+Finding when patient 2700 is undiagnosed
+Finding when patient 2800 is undiagnosed
+Finding when patient 2900 is undiagnosed
+Finding when patient 3000 is undiagnosed
+Finding when patient 3100 is undiagnosed
+Finding when patient 3200 is undiagnosed
+Finding when patient 3300 is undiagnosed
+Finding when patient 3400 is undiagnosed
+Finding when patient 3500 is undiagnosed
+Finding when patient 3600 is undiagnosed
+Finding when patient 3700 is undiagnosed
+Finding when patient 3800 is undiagnosed
+Finding when patient 3900 is undiagnosed
+Finding when patient 4000 is undiagnosed
+Finding when patient 4100 is undiagnosed
+Finding when patient 4200 is undiagnosed
+Finding when patient 4300 is undiagnosed
+Finding when patient 4400 is undiagnosed
+Finding when patient 4500 is undiagnosed
+Finding when patient 4600 is undiagnosed
+Finding when patient 4700 is undiagnosed
+Finding when patient 4800 is undiagnosed
+Finding when patient 4900 is undiagnosed
+Finding when patient 5000 is undiagnosed
+Finding when patient 5100 is undiagnosed
+Finding when patient 5200 is undiagnosed
+Finding when patient 5300 is undiagnosed
+Finding when patient 5400 is undiagnosed
+Finding when patient 5500 is undiagnosed
+Finding when patient 5600 is undiagnosed
+Finding when patient 5700 is undiagnosed
+Finding when patient 5800 is undiagnosed
+Finding when patient 5900 is undiagnosed
+Finding when patient 6000 is undiagnosed
+Finding when patient 6100 is undiagnosed
+Finding when patient 6200 is undiagnosed
+Finding when patient 6300 is undiagnosed
+Finding when patient 6400 is undiagnosed
+Finding when patient 6500 is undiagnosed
+Finding when patient 6600 is undiagnosed
+Finding when patient 6700 is undiagnosed
+Finding when patient 6800 is undiagnosed
+Finding when patient 6900 is undiagnosed
+Finding when patient 7000 is undiagnosed
+Finding when patient 7100 is undiagnosed
+Finding when patient 7200 is undiagnosed
+Finding when patient 7300 is undiagnosed
+Finding when patient 7400 is undiagnosed
+Finding when patient 7500 is undiagnosed
+Finding when patient 7600 is undiagnosed
+Finding when patient 7700 is undiagnosed
+Finding when patient 7800 is undiagnosed
+Finding when patient 7900 is undiagnosed
+Finding when patient 8000 is undiagnosed
+Finding when patient 8100 is undiagnosed
+Finding when patient 8200 is undiagnosed
+Finding when patient 8300 is undiagnosed
+Finding when patient 8400 is undiagnosed
+Finding when patient 8500 is undiagnosed
+Finding when patient 8600 is undiagnosed
+Finding when patient 8700 is undiagnosed
+Finding when patient 8800 is undiagnosed
+Finding when patient 8900 is undiagnosed
+Finding when patient 9000 is undiagnosed
+Finding when patient 9100 is undiagnosed
+Finding when patient 9200 is undiagnosed
+Finding when patient 9300 is undiagnosed
+Finding when patient 9400 is undiagnosed
+Finding when patient 9500 is undiagnosed
+Finding when patient 9600 is undiagnosed
+Finding when patient 9700 is undiagnosed
+Finding when patient 9800 is undiagnosed
+Finding when patient 9900 is undiagnosed
+Finding when patient 10000 is undiagnosed
+Finding when patient 10100 is undiagnosed
+Finding when patient 10200 is undiagnosed
+Finding when patient 10300 is undiagnosed
+Finding when patient 10400 is undiagnosed
+Finding when patient 10500 is undiagnosed
+Finding when patient 10600 is undiagnosed
+Finding when patient 10700 is undiagnosed
+Finding when patient 10800 is undiagnosed
+Finding when patient 10900 is undiagnosed
+Finding when patient 11000 is undiagnosed
+Finding when patient 11100 is undiagnosed
+Finding when patient 11200 is undiagnosed
+Finding when patient 11300 is undiagnosed
+Finding when patient 11400 is undiagnosed
+Finding when patient 11500 is undiagnosed
+Finding when patient 11600 is undiagnosed
+Finding when patient 11700 is undiagnosed
+Finding when patient 11800 is undiagnosed
+Finding when patient 11900 is undiagnosed
+Finding when patient 12000 is undiagnosed
+Finding when patient 12100 is undiagnosed
+Finding when patient 12200 is undiagnosed
+Finding when patient 12300 is undiagnosed
+Finding when patient 12400 is undiagnosed
+Finding when patient 12500 is undiagnosed
+Finding when patient 12600 is undiagnosed
+Finding when patient 12700 is undiagnosed
+Finding when patient 12800 is undiagnosed
+Finding when patient 12900 is undiagnosed
+Finding when patient 13000 is undiagnosed
+Finding when patient 13100 is undiagnosed
+Finding when patient 13200 is undiagnosed
+Finding when patient 13300 is undiagnosed
+Finding when patient 13400 is undiagnosed
+Finding when patient 13500 is undiagnosed
+Finding when patient 13600 is undiagnosed
+Finding when patient 13700 is undiagnosed
+Finding when patient 13800 is undiagnosed
+Finding when patient 13900 is undiagnosed
+Finding when patient 14000 is undiagnosed
+Finding when patient 14100 is undiagnosed
+Finding when patient 14200 is undiagnosed
+Finding when patient 14300 is undiagnosed
+Finding when patient 14400 is undiagnosed
+Finding when patient 14500 is undiagnosed
+Finding when patient 14600 is undiagnosed
+Finding when patient 14700 is undiagnosed
+Finding when patient 14800 is undiagnosed
+Finding when patient 14900 is undiagnosed
+Finding when patient 15000 is undiagnosed
+Finding when patient 15100 is undiagnosed
+Finding when patient 15200 is undiagnosed
+Finding when patient 15300 is undiagnosed
+Finding when patient 15400 is undiagnosed
+Finding when patient 15500 is undiagnosed
+Finding when patient 15600 is undiagnosed
+Finding when patient 15700 is undiagnosed
+Finding when patient 15800 is undiagnosed
+Finding when patient 15900 is undiagnosed
+Finding when patient 16000 is undiagnosed
+Finding when patient 16100 is undiagnosed
+Finding when patient 16200 is undiagnosed
+Finding when patient 16300 is undiagnosed
+Finding when patient 16400 is undiagnosed
+Finding when patient 16500 is undiagnosed
+Finding when patient 16600 is undiagnosed
+Finding when patient 16700 is undiagnosed
+Finding when patient 16800 is undiagnosed
+Finding when patient 16900 is undiagnosed
+Finding when patient 17000 is undiagnosed
+Finding when patient 17100 is undiagnosed
+Finding when patient 17200 is undiagnosed
+Finding when patient 17300 is undiagnosed
+Finding when patient 17400 is undiagnosed
+Finding when patient 17500 is undiagnosed
+Finding when patient 17600 is undiagnosed
+Finding when patient 17700 is undiagnosed
+Finding when patient 17800 is undiagnosed
+Finding when patient 17900 is undiagnosed
+Finding when patient 18000 is undiagnosed
+Finding when patient 18100 is undiagnosed
+Finding when patient 18200 is undiagnosed
+Finding when patient 18300 is undiagnosed
+Finding when patient 18400 is undiagnosed
+Finding when patient 18500 is undiagnosed
+Finding when patient 18600 is undiagnosed
+Finding when patient 18700 is undiagnosed
+Finding when patient 18800 is undiagnosed
+Finding when patient 18900 is undiagnosed
+Finding when patient 19000 is undiagnosed
+Finding when patient 19100 is undiagnosed
+Finding when patient 19200 is undiagnosed
+Finding when patient 19300 is undiagnosed
+Finding when patient 19400 is undiagnosed
+Finding when patient 19500 is undiagnosed
+Finding when patient 19600 is undiagnosed
+Finding when patient 19700 is undiagnosed
+Finding when patient 19800 is undiagnosed
+Finding when patient 19900 is undiagnosed
+Finding when patient 20000 is undiagnosed
+Finding when patient 20100 is undiagnosed
+Finding when patient 20200 is undiagnosed
+Finding when patient 20300 is undiagnosed
+Finding when patient 20400 is undiagnosed
+Finding when patient 20500 is undiagnosed
+Finding when patient 20600 is undiagnosed
+Finding when patient 20700 is undiagnosed
+Finding when patient 20800 is undiagnosed
+Finding when patient 20900 is undiagnosed
+Finding when patient 21000 is undiagnosed
+Finding when patient 21100 is undiagnosed
+Finding when patient 21200 is undiagnosed
+Finding when patient 21300 is undiagnosed
+Finding when patient 21400 is undiagnosed
+Finding when patient 21500 is undiagnosed
+Finding when patient 21600 is undiagnosed
+Finding when patient 21700 is undiagnosed
+Finding when patient 21800 is undiagnosed
+Finding when patient 21900 is undiagnosed
+Finding when patient 22000 is undiagnosed
+Finding when patient 22100 is undiagnosed
+Finding when patient 22200 is undiagnosed
+Finding when patient 22300 is undiagnosed
+Finding when patient 22400 is undiagnosed
+Finding when patient 22500 is undiagnosed
+Finding when patient 22600 is undiagnosed
+Finding when patient 22700 is undiagnosed
+Finding when patient 22800 is undiagnosed
+Finding when patient 22900 is undiagnosed
+Finding when patient 23000 is undiagnosed
+Finding when patient 23100 is undiagnosed
+Finding when patient 23200 is undiagnosed
+Finding when patient 23300 is undiagnosed
+Finding when patient 23400 is undiagnosed
+Finding when patient 23500 is undiagnosed
+Finding when patient 23600 is undiagnosed
+Finding when patient 23700 is undiagnosed
+Finding when patient 23800 is undiagnosed
+Finding when patient 23900 is undiagnosed
+Finding when patient 24000 is undiagnosed
+Finding when patient 24100 is undiagnosed
+Finding when patient 24200 is undiagnosed
+Finding when patient 24300 is undiagnosed
+Finding when patient 24400 is undiagnosed
+Finding when patient 24500 is undiagnosed
+Finding when patient 24600 is undiagnosed
+Finding when patient 24700 is undiagnosed
+Finding when patient 24800 is undiagnosed
+Finding when patient 24900 is undiagnosed
+Finding when patient 25000 is undiagnosed
+Finding when patient 25100 is undiagnosed
+Finding when patient 25200 is undiagnosed
+Finding when patient 25300 is undiagnosed
+Finding when patient 25400 is undiagnosed
+Finding when patient 25500 is undiagnosed
+Finding when patient 25600 is undiagnosed
+Finding when patient 25700 is undiagnosed
+Finding when patient 25800 is undiagnosed
+Finding when patient 25900 is undiagnosed
+Finding when patient 26000 is undiagnosed
+Finding when patient 26100 is undiagnosed
+Finding when patient 26200 is undiagnosed
+Finding when patient 26300 is undiagnosed
+Finding when patient 26400 is undiagnosed
+Finding when patient 26500 is undiagnosed
+Finding when patient 26600 is undiagnosed
+Finding when patient 26700 is undiagnosed
+Finding when patient 26800 is undiagnosed
+Finding when patient 26900 is undiagnosed
+Finding when patient 27000 is undiagnosed
+Finding when patient 27100 is undiagnosed
+Finding when patient 27200 is undiagnosed
+Finding when patient 27300 is undiagnosed
+Finding when patient 27400 is undiagnosed
+Finding when patient 27500 is undiagnosed
+Finding when patient 27600 is undiagnosed
+Finding when patient 27700 is undiagnosed
+Finding when patient 27800 is undiagnosed
+Finding when patient 27900 is undiagnosed
+Finding when patient 28000 is undiagnosed
+Finding when patient 28100 is undiagnosed
+Finding when patient 28200 is undiagnosed
+Finding when patient 28300 is undiagnosed
+Finding when patient 28400 is undiagnosed
+Finding when patient 28500 is undiagnosed
+Finding when patient 28600 is undiagnosed
+Finding when patient 28700 is undiagnosed
+Finding when patient 28800 is undiagnosed
+Finding when patient 28900 is undiagnosed
+Finding when patient 29000 is undiagnosed
+Finding when patient 29100 is undiagnosed
+Finding when patient 29200 is undiagnosed
+Finding when patient 29300 is undiagnosed
+Finding when patient 29400 is undiagnosed
+Finding when patient 29500 is undiagnosed
+Finding when patient 29600 is undiagnosed
+Finding when patient 29700 is undiagnosed
+Finding when patient 29800 is undiagnosed
+Finding when patient 29900 is undiagnosed
+Finding when patient 30000 is undiagnosed
+Finding when patient 30100 is undiagnosed
+Finding when patient 30200 is undiagnosed
+Finding when patient 30300 is undiagnosed
+Finding when patient 30400 is undiagnosed
+Finding when patient 30500 is undiagnosed
+Finding when patient 30600 is undiagnosed
+Finding when patient 30700 is undiagnosed
+Finding when patient 30800 is undiagnosed
+Finding when patient 30900 is undiagnosed
+Finding when patient 100 is undiagnosed
+Finding when patient 200 is undiagnosed
+Finding when patient 300 is undiagnosed
+Finding when patient 400 is undiagnosed
+Finding when patient 500 is undiagnosed
+Finding when patient 600 is undiagnosed
+Finding when patient 700 is undiagnosed
+Finding when patient 800 is undiagnosed
+Finding when patient 900 is undiagnosed
+Finding when patient 1000 is undiagnosed
+Finding when patient 1100 is undiagnosed
+Finding when patient 1200 is undiagnosed
+Finding when patient 1300 is undiagnosed
+Finding when patient 1400 is undiagnosed
+Finding when patient 1500 is undiagnosed
+Finding when patient 1600 is undiagnosed
+Finding when patient 1700 is undiagnosed
+Finding when patient 1800 is undiagnosed
+Finding when patient 1900 is undiagnosed
+Finding when patient 2000 is undiagnosed
+Finding when patient 2100 is undiagnosed
+Finding when patient 2200 is undiagnosed
+Finding when patient 2300 is undiagnosed
+Finding when patient 2400 is undiagnosed
+Finding when patient 2500 is undiagnosed
+Finding when patient 2600 is undiagnosed
+Finding when patient 2700 is undiagnosed
+Finding when patient 2800 is undiagnosed
+Finding when patient 2900 is undiagnosed
+Finding when patient 3000 is undiagnosed
+Finding when patient 3100 is undiagnosed
+Finding when patient 3200 is undiagnosed
+Finding when patient 3300 is undiagnosed
+Finding when patient 3400 is undiagnosed
+Finding when patient 3500 is undiagnosed
+Finding when patient 3600 is undiagnosed
+Finding when patient 3700 is undiagnosed
+Finding when patient 3800 is undiagnosed
+Finding when patient 3900 is undiagnosed
+Finding when patient 4000 is undiagnosed
+Finding when patient 4100 is undiagnosed
+Finding when patient 4200 is undiagnosed
+Finding when patient 4300 is undiagnosed
+Finding when patient 4400 is undiagnosed
+Finding when patient 4500 is undiagnosed
+Finding when patient 4600 is undiagnosed
+Finding when patient 4700 is undiagnosed
+Finding when patient 4800 is undiagnosed
+Finding when patient 4900 is undiagnosed
+Finding when patient 5000 is undiagnosed
+Finding when patient 5100 is undiagnosed
+Finding when patient 5200 is undiagnosed
+Finding when patient 5300 is undiagnosed
+Finding when patient 5400 is undiagnosed
+Finding when patient 5500 is undiagnosed
+Finding when patient 5600 is undiagnosed
+Finding when patient 5700 is undiagnosed
+Finding when patient 5800 is undiagnosed
+Finding when patient 5900 is undiagnosed
+Finding when patient 6000 is undiagnosed
+Finding when patient 6100 is undiagnosed
+Finding when patient 6200 is undiagnosed
+Finding when patient 6300 is undiagnosed
+Finding when patient 6400 is undiagnosed
+Finding when patient 6500 is undiagnosed
+Finding when patient 6600 is undiagnosed
+Finding when patient 6700 is undiagnosed
+Finding when patient 6800 is undiagnosed
+Finding when patient 6900 is undiagnosed
+Finding when patient 7000 is undiagnosed
+Finding when patient 7100 is undiagnosed
+Finding when patient 7200 is undiagnosed
+Finding when patient 7300 is undiagnosed
+Finding when patient 7400 is undiagnosed
+Finding when patient 7500 is undiagnosed
+Finding when patient 7600 is undiagnosed
+Finding when patient 7700 is undiagnosed
+Finding when patient 7800 is undiagnosed
+Finding when patient 7900 is undiagnosed
+Finding when patient 8000 is undiagnosed
+Finding when patient 8100 is undiagnosed
+Finding when patient 8200 is undiagnosed
+Finding when patient 8300 is undiagnosed
+Finding when patient 8400 is undiagnosed
+Finding when patient 8500 is undiagnosed
+Finding when patient 8600 is undiagnosed
+Finding when patient 8700 is undiagnosed
+Finding when patient 8800 is undiagnosed
+Finding when patient 8900 is undiagnosed
+Finding when patient 9000 is undiagnosed
+Finding when patient 9100 is undiagnosed
+Finding when patient 9200 is undiagnosed
+Finding when patient 9300 is undiagnosed
+Finding when patient 9400 is undiagnosed
+Finding when patient 9500 is undiagnosed
+Finding when patient 9600 is undiagnosed
+Finding when patient 9700 is undiagnosed
+Finding when patient 9800 is undiagnosed
+Finding when patient 9900 is undiagnosed
+Finding when patient 10000 is undiagnosed
+Finding when patient 10100 is undiagnosed
+Finding when patient 10200 is undiagnosed
+Finding when patient 10300 is undiagnosed
+Finding when patient 10400 is undiagnosed
+Finding when patient 10500 is undiagnosed
+Finding when patient 10600 is undiagnosed
+Finding when patient 10700 is undiagnosed
+Finding when patient 10800 is undiagnosed
+Finding when patient 10900 is undiagnosed
+Finding when patient 11000 is undiagnosed
+Finding when patient 11100 is undiagnosed
+Finding when patient 11200 is undiagnosed
+Finding when patient 11300 is undiagnosed
+Finding when patient 11400 is undiagnosed
+Finding when patient 11500 is undiagnosed
+Finding when patient 11600 is undiagnosed
+Finding when patient 11700 is undiagnosed
+Finding when patient 11800 is undiagnosed
+Finding when patient 11900 is undiagnosed
+Finding when patient 12000 is undiagnosed
+Finding when patient 12100 is undiagnosed
+Finding when patient 12200 is undiagnosed
+Finding when patient 12300 is undiagnosed
+Finding when patient 12400 is undiagnosed
+Finding when patient 12500 is undiagnosed
+Finding when patient 12600 is undiagnosed
+Finding when patient 12700 is undiagnosed
+Finding when patient 12800 is undiagnosed
+Finding when patient 12900 is undiagnosed
+Finding when patient 13000 is undiagnosed
+Finding when patient 13100 is undiagnosed
+Finding when patient 13200 is undiagnosed
+Finding when patient 13300 is undiagnosed
+Finding when patient 13400 is undiagnosed
+Finding when patient 13500 is undiagnosed
+Finding when patient 13600 is undiagnosed
+Finding when patient 13700 is undiagnosed
+Finding when patient 13800 is undiagnosed
+Finding when patient 13900 is undiagnosed
+Finding when patient 14000 is undiagnosed
+Finding when patient 14100 is undiagnosed
+Finding when patient 14200 is undiagnosed
+Finding when patient 14300 is undiagnosed
+Finding when patient 14400 is undiagnosed
+Finding when patient 14500 is undiagnosed
+Finding when patient 14600 is undiagnosed
+Finding when patient 14700 is undiagnosed
+Finding when patient 14800 is undiagnosed
+Finding when patient 14900 is undiagnosed
+Finding when patient 15000 is undiagnosed
+Finding when patient 15100 is undiagnosed
+Finding when patient 15200 is undiagnosed
+Finding when patient 15300 is undiagnosed
+Finding when patient 15400 is undiagnosed
+Finding when patient 15500 is undiagnosed
+Finding when patient 15600 is undiagnosed
+Finding when patient 15700 is undiagnosed
+Finding when patient 15800 is undiagnosed
+Finding when patient 15900 is undiagnosed
+Finding when patient 16000 is undiagnosed
+Finding when patient 16100 is undiagnosed
+Finding when patient 16200 is undiagnosed
+Finding when patient 16300 is undiagnosed
+Finding when patient 16400 is undiagnosed
+Finding when patient 16500 is undiagnosed
+Finding when patient 16600 is undiagnosed
+Finding when patient 16700 is undiagnosed
+Finding when patient 16800 is undiagnosed
+Finding when patient 16900 is undiagnosed
+Finding when patient 17000 is undiagnosed
+Finding when patient 17100 is undiagnosed
+Finding when patient 17200 is undiagnosed
+Finding when patient 17300 is undiagnosed
+Finding when patient 17400 is undiagnosed
+Finding when patient 17500 is undiagnosed
+Finding when patient 17600 is undiagnosed
+Finding when patient 17700 is undiagnosed
+Finding when patient 17800 is undiagnosed
+Finding when patient 17900 is undiagnosed
+Finding when patient 18000 is undiagnosed
+Finding when patient 18100 is undiagnosed
+Finding when patient 18200 is undiagnosed
+Finding when patient 18300 is undiagnosed
+Finding when patient 18400 is undiagnosed
+Finding when patient 18500 is undiagnosed
+Finding when patient 18600 is undiagnosed
+Finding when patient 18700 is undiagnosed
+Finding when patient 18800 is undiagnosed
+Finding when patient 18900 is undiagnosed
+Finding when patient 19000 is undiagnosed
+Finding when patient 19100 is undiagnosed
+Finding when patient 19200 is undiagnosed
+Finding when patient 19300 is undiagnosed
+Finding when patient 19400 is undiagnosed
+Finding when patient 19500 is undiagnosed
+Finding when patient 19600 is undiagnosed
+Finding when patient 19700 is undiagnosed
+Finding when patient 19800 is undiagnosed
+Finding when patient 19900 is undiagnosed
+Finding when patient 20000 is undiagnosed
+Finding when patient 20100 is undiagnosed
+Finding when patient 20200 is undiagnosed
+Finding when patient 20300 is undiagnosed
+Finding when patient 20400 is undiagnosed
+Finding when patient 20500 is undiagnosed
+Finding when patient 20600 is undiagnosed
+Finding when patient 20700 is undiagnosed
+Finding when patient 20800 is undiagnosed
+Finding when patient 20900 is undiagnosed
+Finding when patient 21000 is undiagnosed
+Finding when patient 21100 is undiagnosed
+Finding when patient 21200 is undiagnosed
+Finding when patient 21300 is undiagnosed
+Finding when patient 21400 is undiagnosed
+Finding when patient 21500 is undiagnosed
+Finding when patient 21600 is undiagnosed
+Finding when patient 21700 is undiagnosed
+Finding when patient 21800 is undiagnosed
+Finding when patient 21900 is undiagnosed
+Finding when patient 22000 is undiagnosed
+Finding when patient 22100 is undiagnosed
+Finding when patient 22200 is undiagnosed
+Finding when patient 22300 is undiagnosed
+Finding when patient 22400 is undiagnosed
+Finding when patient 22500 is undiagnosed
+Finding when patient 22600 is undiagnosed
+Finding when patient 22700 is undiagnosed
+Finding when patient 22800 is undiagnosed
+Finding when patient 22900 is undiagnosed
+Finding when patient 23000 is undiagnosed
+Finding when patient 23100 is undiagnosed
+Finding when patient 23200 is undiagnosed
+Finding when patient 23300 is undiagnosed
+Finding when patient 23400 is undiagnosed
+Finding when patient 23500 is undiagnosed
+Finding when patient 23600 is undiagnosed
+Finding when patient 23700 is undiagnosed
+Finding when patient 23800 is undiagnosed
+Finding when patient 23900 is undiagnosed
+Finding when patient 24000 is undiagnosed
+Finding when patient 24100 is undiagnosed
+Finding when patient 24200 is undiagnosed
+Finding when patient 24300 is undiagnosed
+Finding when patient 24400 is undiagnosed
+Finding when patient 24500 is undiagnosed
+Finding when patient 24600 is undiagnosed
+Finding when patient 24700 is undiagnosed
+Finding when patient 24800 is undiagnosed
+Finding when patient 24900 is undiagnosed
+Finding when patient 25000 is undiagnosed
+Finding when patient 25100 is undiagnosed
+Finding when patient 25200 is undiagnosed
+Finding when patient 25300 is undiagnosed
+Finding when patient 25400 is undiagnosed
+Finding when patient 25500 is undiagnosed
+Finding when patient 25600 is undiagnosed
+Finding when patient 25700 is undiagnosed
+Calcualting the output for plot 1
+Figure 1
+The healthy CD4 count distribution had a median of 890 and standard deviation of 0.338
+The healthy CD4 count distribution had an interquartile range of (710-1120)
+
+
+
+The time it takes for the median CD4 count to reach 500 is 1.7(0.8-2.55) years.
+The time it takes for the median CD4 count to reach 350 is 3.9(3-4.95) years.
+The time it takes for the median CD4 count to reach 200 is 6.4(5.4-7.6) years.
+Starting parallel Matlab...
+Starting matlabpool using the 'local' profile ... connected to 6 labs.
+Sending a stop signal to all the labs ... stopped.
+The median estimated time between infection and diagnosis was 4.5 (IQR: 2.9-6.6) years for diagnoses with CD4 counts of 200cells/microL at diagnosis.
+The median estimated time between infection and diagnosis was 2.8 (IQR: 1.4-4.7) years for diagnoses with CD4 counts of 350cells/microL at diagnosis.
+The median estimated time between infection and diagnosis was 2.0 (IQR: 0.9-3.6) years for diagnoses with CD4 counts of 500cells/microL at diagnosis.
+Warning: Setting marker type based on 'LineStyle' property
+""         'Marker' and 'LineStyle' have been made separate properties
+""         Use 'Marker' property to remove this warning 
+> In CreateFigure3 at 13
+  In BackProjection at 622 
+the number of infections that are placed in 2013 is 350 (331-377)
+The peak estimated infections (1384 [1251-1647]) that occurred in 1984 is somewhat lower than the peak diagnoses (2148) in 1987 as there was a back-log of infections that occurred earlier which needed to be cleared.
+Following this peak, infections reached a low of 627 (586-677) in 1997.
+There were 912 (835-1002) infections in the final year of data, with 938 diagnoses in the final year of data, ... 
+There were 726 (666-803) MSM infections in the final year of data, with 710 diagnoses in the final year of data, ... 
+There were 190 (159-215) Non-MSM infections in the final year of data, with 228 diagnoses in the final year of data, ... 
+
+
+
+Figure 5a
+The model estimates that the annual testing probabilty fell to the lowest point (p=0.26 [0.23-0.30]) in 1999, the year which coincides with the lowest number of diagnoses. Testing probailities are calculated to have increased since then, with the annual testing probability in the final year of data at p=0.34 (0.28-0.39). 
+Figure 5b
+ The median time between infection and diagnosis for people diagnosed in the last year of data was estimated at 0.9 (IQR: 0.1-3.7) years.
+Mean time between infection and diagnosis in the final year of data was 2.423 years
+ This is a substantial reduction from 1985, where median time until diagnosis was estimated to be 4.1 (IQR: 2.1-5.7) years.
+Mean time between infection and diagnosis in 1985 was 3.9927 years
+The propotion of cases diagnosed in the first quarter of a year is
+    0.3223
+
+        1980
+
+        1981
+
+        1982
+
+        1983
+
+        1984
+
+        1985
+
+        1986
+
+        1987
+
+        1988
+
+        1989
+
+        1990
+
+        1991
+
+        1992
+
+        1993
+
+        1994
+
+        1995
+
+        1996
+
+        1997
+
+        1998
+
+        1999
+
+        2000
+
+        2001
+
+        2002
+
+        2003
+
+        2004
+
+        2005
+
+        2006
+
+        2007
+
+        2008
+
+        2009
+
+        2010
+
+        2011
+
+        2012
+
+        2013
+
+        2014
+
+There were 3113 duplicates and 30947 records included in the final simulation.
+There were 1226 previously diagnosed cases excluded.
+The mean testing rate at CD4=0 is
+    0.3302
+
+The mean testing rate at CD4=1000 is
+    0.1954
+
+Note that this section calculates the uncertainty in the mean and median estimate, and does not represent the distribution of individuals within a particular simulation
+The mean time between infection and diagnosis in the final year of simulation is etimated to be 2.423(1.9968-2.9514) years.
+The median time between infection and diagnosis in the final year of simulation is etimated to be 0.95391(0.7653-1.158) years.
+Elapsed time is 31280.437426 seconds.
+The model estimates that the number of people living with undiagnosed HIV peaked in 1984.9 at 8456(7616-9318.5) cases.
+Final year of undiagnosed 2280.5(1899.5-2830) cases.
+Min since max occurred in 1998.6 with 2083.5(1794.5-2453.5) cases.
+In the following section, data is to be saved to put into a file for reuse later
+Saving individual patient records, this may take a while
+5.0139 seconds 17001 of 32173
+5.3264 seconds 18001 of 32173
+5.6445 seconds 19001 of 32173
+5.9484 seconds 20001 of 32173
+6.2435 seconds 21001 of 32173
+6.5446 seconds 22001 of 32173
+6.844 seconds 23001 of 32173
+7.1387 seconds 24001 of 32173
+7.4351 seconds 25001 of 32173
+7.7278 seconds 26001 of 32173
+8.0214 seconds 27001 of 32173
+8.3138 seconds 28001 of 32173
+8.6016 seconds 29001 of 32173
+8.89 seconds 30001 of 32173
+9.1793 seconds 31001 of 32173
+9.377 seconds 32001 of 32173
+Elapsed time is 31293.359274 seconds.
