@@ -1261,3 +1261,23 @@ Saving individual patient records, this may take a while
 9.1793 seconds 31001 of 32173
 9.377 seconds 32001 of 32173
 Elapsed time is 31293.359274 seconds.
+
+
+
+
+
+
+Results from imputation
+16568 had cd4s out of 35286 = 46.95%
+18718 did not have CD4s
+
+Prior to 1990
+10612 cases, 730 had CD4 counts
+
+Previously diagnosed overseas 1226
+
+14028 diagnosed after 2000, 11444 had CD4 counts 
+
+
+The propotion of cases diagnosed in the first quarter of a year is
+0.3229
