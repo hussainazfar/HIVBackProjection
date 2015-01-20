@@ -105,13 +105,13 @@ disp(['The healthy CD4 count distribution had an interquartile range of (' num2s
 
 %% Create uncertainty in time between infection and diagnosis
 
-PopulationSizeToSimulate=10000;%makesure there are at least 1000 samples per point
+PopulationSizeToSimulate=100000;%makesure there are at least 1000 samples per point
 Median500=[];
 Median350=[];
 Median200=[];
 CurrentMedianStore=zeros(NoParameterisations, 200);
 for CurrentParamNumber=1:NoParameterisations
-    CurrentParamNumber
+    disp(['Figure 1 appendices sim' num2str(CurrentParamNumber)]);
     Pxi=Px;
     
     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber); % select a sample of this parameter
@@ -188,7 +188,11 @@ box off;
 print('-dpng ','-r300','ResultsPlots/Appendix uncertainty of median CD4 between simulations with time.png');
 
 clf;
-plot(0.1:0.5:10.1, CurrentMedianStore(1:min([NoParameterisations, 10]), 1:5:101)')
+hold on;
+for i=1:NoParameterisations
+    %plot(0.05:0.1:10.1, CurrentMedianStore(1:min([NoParameterisations, 10]), 1:101)')
+    plot(0.05:0.1:10.1, CurrentMedianStore(i, 1:101)','LineWidth',0.5)
+end
 xlabel('Time since infection (years)','fontsize', 22);
 ylabel({'Median CD4 count'},'fontsize', 22);
 set(gca,'XTick', 1:10);
@@ -197,4 +201,4 @@ xlim([0 11]);
 set(gca,'Color',[1.0 1.0 1.0]);
 set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
-print('-dpng ','-r300','ResultsPlots/Other Individual simulations of median CD4.png');
+print('-dpng ','-r1200','ResultsPlots/Other Individual simulations of median CD4.png');
