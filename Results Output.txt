@@ -1122,11 +1122,11 @@ Figure 1
 The healthy CD4 count distribution had a median of 890 and standard deviation of 0.338
 The healthy CD4 count distribution had an interquartile range of (710-1120)
 
+The time it takes for the median CD4 count to reach 500 is 2(1.35-2.7) years.
+The time it takes for the median CD4 count to reach 350 is 4.4(3.6-5.3) years.
+The time it takes for the median CD4 count to reach 200 is 7(6.2-8.05) years.
 
 
-The time it takes for the median CD4 count to reach 500 is 1.7(0.8-2.55) years.
-The time it takes for the median CD4 count to reach 350 is 3.9(3-4.95) years.
-The time it takes for the median CD4 count to reach 200 is 6.4(5.4-7.6) years.
 Starting parallel Matlab...
 Starting matlabpool using the 'local' profile ... connected to 6 labs.
 Sending a stop signal to all the labs ... stopped.
