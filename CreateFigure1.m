@@ -105,13 +105,23 @@ disp(['The healthy CD4 count distribution had an interquartile range of (' num2s
 
 %% Create uncertainty in time between infection and diagnosis
 
-PopulationSizeToSimulate=100000;%makesure there are at least 1000 samples per point
+PopulationSizeToSimulate=1000000;%makesure there are at least 50000 samples per point
 Median500=[];
 Median350=[];
 Median200=[];
 CurrentMedianStore=zeros(NoParameterisations, 200);
+UncertaintyTimer=tic;
 for CurrentParamNumber=1:NoParameterisations
     disp(['Figure 1 appendices sim' num2str(CurrentParamNumber)]);
+    if (CurrentParamNumber>1)
+        UncertaintyTimerCurrentTime=toc(UncertaintyTimer);
+        UncertaintySimsComplete=CurrentParamNumber-1;
+        TimePerSim=UncertaintyTimerCurrentTime/UncertaintySimsComplete;
+        UncertaintySimsRemaining=NoParameterisations-UncertaintySimsComplete;
+        UncertaintyTimeRemaining=(TimePerSim*UncertaintySimsRemaining)/3600;
+        disp(['Hours remaining: ' num2str(UncertaintyTimeRemaining)]);
+    end
+    
     Pxi=Px;
     
     Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber); % select a sample of this parameter

@@ -38,7 +38,7 @@ Data.InitialCD4=InitialCD4Vector;
 
 %% For all people, find the probability of being diagnosed in the firt 17 days during the rapid decline
 UntestedIndex=NumIndex(IndexTest==false);%in this case, all
-MeanCD4Count=InitialCD4Vector(UntestedIndex)*(1+Pxi.FractionalDeclineToTrough)/2;
+MeanCD4Count=InitialCD4Vector(UntestedIndex)*(1+Pxi.FractionalDeclineToTrough)/2;% note here that the mean CD4 count refers to the mean that an individual would have on that day. It does not have any of the variation due to time of day effects etc which give large swings
 Duration=Pxi.TimeUntilTrough;
 DiagnosedThisStepSubIndex=DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
 DiagnosedThisStepIndexInTheMainArray=UntestedIndex(DiagnosedThisStepSubIndex);
