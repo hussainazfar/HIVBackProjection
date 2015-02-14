@@ -6,7 +6,7 @@ YearRanges=1980:YearOfDiagnosedDataEnd;
 SimSize=200;
 GenderSize=2;
 StateSize=9;
-[~, NoPatients]=size(Patient);
+[~, NoPatients]=size(AllPatients);
 TotalPeople=zeros(YearOfDiagnosedDataEnd-1980+1, SimSize);
 
 MatrixValues=zeros(YearSize, GenderSize, StateSize, SimSize);
@@ -17,17 +17,17 @@ for Year=1980:YearOfDiagnosedDataEnd
     disp(Year)
     for i=1:NoPatients
         
-        TotalPeople(YearCount, :)=TotalPeople(YearCount, :)+Patient(i).AliveAndHIVPosInYear(Year);
-        Temp(1, 1, 1, :)=Patient(i).AliveAndHIVPosInYear(Year);
+        TotalPeople(YearCount, :)=TotalPeople(YearCount, :)+AllPatients(i).AliveAndHIVPosInYear(Year);
+        Temp(1, 1, 1, :)=AllPatients(i).AliveAndHIVPosInYear(Year);
 
-        if Patient(i).Sex==1 || Patient(i).Sex==3
+        if AllPatients(i).Sex==1 || AllPatients(i).Sex==3
             SexValue=1;
         else
             SexValue=2;
         end
         
 
-        MatrixValues(YearCount, SexValue,  Patient(i).StateAtDiagnosis, :)=MatrixValues(YearCount, SexValue,  Patient(i).StateAtDiagnosis, :)+Temp;
+        MatrixValues(YearCount, SexValue,  AllPatients(i).StateAtDiagnosis, :)=MatrixValues(YearCount, SexValue,  AllPatients(i).StateAtDiagnosis, :)+Temp;
     end
 end
 
