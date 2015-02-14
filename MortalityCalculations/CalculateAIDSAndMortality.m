@@ -27,13 +27,13 @@ SMR=SMR.LoadData(MortalityTableFile, SMRFile, NumSims);
     [AIDSProgression, ViralLoadProbability, VLCD4Locator]=SetUpAIDSProgession;
     %Progress people to AIDS
     disp('Performing AIDS progression');
-    [Patient, YearOfDiagnosisArray]=ProgressToAIDS(Patient, AIDSProgression, ViralLoadProbability, VLCD4Locator);
+    [AllPatients, YearOfDiagnosisArray]=ProgressToAIDS(AllPatients, AIDSProgression, ViralLoadProbability, VLCD4Locator);
     hist(YearOfDiagnosisArray, 1980:2012);%Compare with Nakhaee et al. Table 4 AIDS diagnoses
     hold off;
     CheckAIDSResults=false;
     if CheckAIDSResults==true
         AIDSDiagnosisVector=[];
-        for CurrentPatient=Patient
+        for CurrentPatient=AllPatients
             AIDSDiagnosisVector=[AIDSDiagnosisVector CurrentPatient.YearOfAIDSDiagnosis];
         end
         [AIDSDiagnosisVectorHisty, AIDSDiagnosisVectorHistx]=hist(AIDSDiagnosisVector, 1980.5:1999.5);
@@ -64,7 +64,7 @@ SMR=SMR.LoadData(MortalityTableFile, SMRFile, NumSims);
     end
 
     %% Calculating moratlity
-    [~, NoPatients]=size(Patient);
+    [~, NoPatients]=size(AllPatients);
 %     YearOfDeathMat=zeros(NoPatients, NumSims);
     
     for SimNum=1:NumSims
@@ -80,7 +80,7 @@ SMR=SMR.LoadData(MortalityTableFile, SMRFile, NumSims);
 %     for SimNum=1:NumSims
         disp(['Performing mortality calculation on sim ' num2str(SimNum) ' of ' num2str(NumSims) ' ' num2str(toc(MortalityTimer)) 'seconds']);
         LoopSMR=SMR.RestartRandomNumbers();%Put here to ensure matlab parfor doesn't get confused
-        LPatient=Patient;%same as above
+        LPatient=AllPatients;%same as above
         for i=1:NoPatients
             DateOfDiagnosis=LPatient(i).DateOfDiagnosisContinuous;
             AgeAtInfection=LPatient(i).CurrentAge(DateOfDiagnosis);
@@ -96,9 +96,9 @@ SMR=SMR.LoadData(MortalityTableFile, SMRFile, NumSims);
     %Copy mortality information back into the patient structure
     for i=1:NoPatients
         %Patient(i).YearOfDeath=YearOfDeathMat(i, :);
-        Patient(i).YearOfDeath=zeros(1, NumSims);
+        AllPatients(i).YearOfDeath=zeros(1, NumSims);
         for SimNum=1:NumSims
-            Patient(i).YearOfDeath(SimNum)=YearOfDeathStorage(SimNum).v(i);
+            AllPatients(i).YearOfDeath(SimNum)=YearOfDeathStorage(SimNum).v(i);
         end
     end
 
@@ -139,8 +139,8 @@ end
 plot(1980:2100, CummDiagnosis) 
     
     %% Save data to a new patient file, identifier 2
-    Identifier=2;
-    SavePatientClass(Patient, 'PatientSaveFiles',  Identifier);
+    Identifier=4;
+    SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
     
     save('PatientSaveFiles/SMR.mat', 'SMR');
 
