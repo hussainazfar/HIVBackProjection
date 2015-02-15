@@ -40,28 +40,6 @@ if PerformGeographicCalculations ==true
     Patient=GeoAddLocationData(Patient, LocationDataMatrix, PC2SR);
 end
 
-
-%% Sort Patients into those who have a previous overseas diagnosis, and those who have not. 
-PreviouslyDiagnosedOverseasPatient=[];
-if (IncludePreviouslyDiagnosedOverseas==false)
-    disp('Removing overseas diagnosed cases to be utilised later');
-    PatientSplitTimer=tic;
-    OverseasDiagID=[];
-    [~, NumberInPatientCurrently]=size(Patient);
-    for i=1:NumberInPatientCurrently
-        if Patient(i).PreviouslyDiagnosedOverseas==1
-            OverseasDiagID=[OverseasDiagID i];
-        end
-    end
-    PreviouslyDiagnosedOverseasPatient=Patient(OverseasDiagID);
-    Patient(OverseasDiagID)=[];
-    toc(PatientSplitTimer)
-end
-%% Remove records to adjust for duplicate diagnoses
-if DeduplicateDiagnoses
-    [Patient, DuplicatePatient]=RemoveDuplicates(Patient);
-end
-
 %% Adjust category 12 exposures for MSM
 % it is likely that many in this category will be MSM. Based on approximately 8% females, and assuming therefore 8% heterosexual males, 84% of people in this category may be MSM
 [~, NoPatient]=size(Patient);
@@ -83,6 +61,28 @@ for i=1:NoPatient
         Patient(i).ExposureRoute=1;
     end
 end
+%% Sort Patients into those who have a previous overseas diagnosis, and those who have not. 
+PreviouslyDiagnosedOverseasPatient=[];
+if (IncludePreviouslyDiagnosedOverseas==false)
+    disp('Removing overseas diagnosed cases to be utilised later');
+    PatientSplitTimer=tic;
+    OverseasDiagID=[];
+    [~, NumberInPatientCurrently]=size(Patient);
+    for i=1:NumberInPatientCurrently
+        if Patient(i).PreviouslyDiagnosedOverseas==1
+            OverseasDiagID=[OverseasDiagID i];
+        end
+    end
+    PreviouslyDiagnosedOverseasPatient=Patient(OverseasDiagID);
+    Patient(OverseasDiagID)=[];
+    toc(PatientSplitTimer)
+end
+
+%% Remove records to adjust for duplicate diagnoses, assuming previously diagnosed overseas do not have duplicates
+if DeduplicateDiagnoses
+    [Patient, DuplicatePatient]=RemoveDuplicates(Patient);
+end
+
 
 
 

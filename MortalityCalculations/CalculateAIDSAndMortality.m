@@ -125,7 +125,7 @@ plot(1980:2100, CummDeaths)
 %% Collect up diagnoses
 DiagnosisVector=zeros(1, NoPatients);
 for i=1:NoPatients
-    DiagnosisVector(i)=Patient(i).DateOfDiagnosisContinuous;
+    DiagnosisVector(i)=AllPatients(i).DateOfDiagnosisContinuous;
 end
 DiagnosisHist=hist(DiagnosisVector, (1980:2100)+0.5);
 plot(1980:2100, DiagnosisHist) 

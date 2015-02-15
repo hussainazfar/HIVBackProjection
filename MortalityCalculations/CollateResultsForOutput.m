@@ -3,7 +3,7 @@
 clear Temp
 YearRanges=1980:YearOfDiagnosedDataEnd;
 [~, YearSize]=size(YearRanges);
-SimSize=200;
+SimSize=NoParameterisations;%200
 GenderSize=2;
 StateSize=9;
 [~, NoPatients]=size(AllPatients);
@@ -86,3 +86,45 @@ ResultForReportUCI=ThisYearsTableUCI';
 % TAS	6	6
 % NT	3	7
 % ACT	1	8
+
+
+
+%Reporting on msm alive
+
+MSMInMoratlityCalcs=0;
+MSMIndicatorForMortality=false(1, NoPatients);
+NonMSMInMoratlityCalcs=0;
+NonMSMIndicatorForMortality=false(1, NoPatients);
+
+for i=1:NoPatients
+    if AllPatients(i).ExposureRoute<=4
+        MSMInMoratlityCalcs=MSMInMoratlityCalcs+1;
+        MSMIndicatorForMortality(i)=true;
+    else
+        NonMSMInMoratlityCalcs=NonMSMInMoratlityCalcs+1;
+        NonMSMIndicatorForMortality(i)=true;
+    end
+end
+
+MSMMort=AllPatients(MSMIndicatorForMortality);
+NonMSMMort=AllPatients(NonMSMIndicatorForMortality);
+
+% Determine the number of MSM in the final year
+MSMMatrix=zeros(1, SimSize);
+for i=1:MSMInMoratlityCalcs
+    MSMMatrix=MSMMatrix+MSMMort(i).AliveAndHIVPosInYear(YearOfDiagnosedDataEnd);
+end
+
+NonMSMMatrix=zeros(1, SimSize);
+for i=1:NonMSMInMoratlityCalcs
+    NonMSMMatrix=NonMSMMatrix+NonMSMMort(i).AliveAndHIVPosInYear(YearOfDiagnosedDataEnd);
+end
+
+TotalMSMMedian=median(MSMMatrix);
+TotalMSMLCI=prctile(MSMMatrix, 2.5);
+TotalMSMUCI=prctile(MSMMatrix, 97.5);
+
+TotalNonMSMMedian=median(NonMSMMatrix);
+TotalNonMSMLCI=prctile(NonMSMMatrix, 2.5);
+TotalNonMSMUCI=prctile(NonMSMMatrix, 97.5);
+
