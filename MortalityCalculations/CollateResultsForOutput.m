@@ -124,7 +124,37 @@ TotalMSMMedian=median(MSMMatrix);
 TotalMSMLCI=prctile(MSMMatrix, 2.5);
 TotalMSMUCI=prctile(MSMMatrix, 97.5);
 
+disp('The total number of MSM currently living with diagnosed HIV is (95% uncertainty bounds)');
+disp([num2str(TotalMSMMedian) ' (' num2str(TotalMSMLCI) '-' num2str(TotalMSMUCI) ')']);
+
+
 TotalNonMSMMedian=median(NonMSMMatrix);
 TotalNonMSMLCI=prctile(NonMSMMatrix, 2.5);
 TotalNonMSMUCI=prctile(NonMSMMatrix, 97.5);
 
+disp('The total number of non-MSM currently living with diagnosed HIV is (95% uncertainty bounds)');
+disp([num2str(TotalNonMSMMedian) ' (' num2str(TotalNonMSMLCI) '-' num2str(TotalNonMSMUCI) ')']);
+
+
+SumMSM=MSMTotalUndiagnosedByTime.N(:, end)+MSMMatrix;
+SumNonMSM=NonMSMTotalUndiagnosedByTime(:, end)+NonMSMMatrix;
+
+ProportionMSMUndiagnosed=SumMSM/MSMTotalUndiagnosedByTime.N(:, end);
+ProportionNonMSMUndiagnosed=SumNonMSM/NonMSMTotalUndiagnosedByTime(:, end);
+
+
+
+ProportionMSMUndiagnosedMedian=median(ProportionMSMUndiagnosed);
+ProportionMSMUndiagnosedLCI=prctile(ProportionMSMUndiagnosed, 2.5);
+ProportionMSMUndiagnosedUCI=prctile(ProportionMSMUndiagnosed, 97.5);
+disp('The Proportion of MSM currently living with diagnosed HIV is (95% uncertainty bounds)');
+disp([num2str(ProportionMSMUndiagnosedMedian) ' (' num2str(ProportionMSMUndiagnosedLCI) '-' num2str(ProportionMSMUndiagnosedUCI) ')']);
+
+
+
+ProportionNonMSMUndiagnosedMedian=median(ProportionNonMSMUndiagnosed);
+ProportionNonMSMUndiagnosedLCI=prctile(ProportionNonMSMUndiagnosed, 2.5);
+ProportionNonMSMUndiagnosedUCI=prctile(ProportionNonMSMUndiagnosed, 97.5);
+
+disp('The Proportion of non-MSM currently living with diagnosed HIV is (95% uncertainty bounds)');
+disp([num2str(ProportionNonMSMUndiagnosedMedian) ' (' num2str(ProportionNonMSMUndiagnosedLCI) '-' num2str(ProportionNonMSMUndiagnosedLCI) ')']);

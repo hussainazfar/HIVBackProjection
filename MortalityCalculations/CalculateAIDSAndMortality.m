@@ -146,3 +146,7 @@ plot(1980:2100, CummDiagnosis)
 
     save('PatientSaveFiles/YearOfDeathStorage.mat', 'YearOfDeathStorage');
     save('PatientSaveFiles/YearOfDeathHist.mat', 'YearOfDeathHist');
+   
+    
+    %%
+    CollateResultsForOutput
