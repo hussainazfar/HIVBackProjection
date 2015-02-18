@@ -120,6 +120,12 @@ for i=1:NonMSMInMoratlityCalcs
     NonMSMMatrix=NonMSMMatrix+NonMSMMort(i).AliveAndHIVPosInYear(YearOfDiagnosedDataEnd);
 end
 
+
+TotalPLHIVMatrix=zeros(1, SimSize);
+for i=1:NoPatients
+    TotalPLHIVMatrix=TotalPLHIVMatrix+AllPatients(i).AliveAndHIVPosInYear(YearOfDiagnosedDataEnd);
+end
+
 TotalMSMMedian=median(MSMMatrix);
 TotalMSMLCI=prctile(MSMMatrix, 2.5);
 TotalMSMUCI=prctile(MSMMatrix, 97.5);
@@ -136,11 +142,18 @@ disp('The total number of non-MSM currently living with diagnosed HIV is (95% un
 disp([num2str(TotalNonMSMMedian) ' (' num2str(TotalNonMSMLCI) '-' num2str(TotalNonMSMUCI) ')']);
 
 
+TotalPLHIVMedian=median(TotalPLHIVMatrix);
+TotalPLHIVLCI=prctile(TotalPLHIVMatrix, 2.5);
+TotalPLHIVUCI=prctile(TotalPLHIVMatrix, 97.5);
+
+disp('The total number of PLHIV currently living with diagnosed HIV is (95% uncertainty bounds)');
+disp([num2str(TotalPLHIVMedian) ' (' num2str(TotalPLHIVLCI) '-' num2str(TotalPLHIVUCI) ')']);
+
 SumMSM=MSMTotalUndiagnosedByTime.N(:, end)'+MSMMatrix;
 SumNonMSM=NonMSMTotalUndiagnosedByTime.N(:, end)'+NonMSMMatrix;
 
-ProportionMSMUndiagnosed=MSMTotalUndiagnosedByTime.N(:, end)'/SumMSM;
-ProportionNonMSMUndiagnosed=NonMSMTotalUndiagnosedByTime.N(:, end)'/SumNonMSM;
+ProportionMSMUndiagnosed=MSMTotalUndiagnosedByTime.N(:, end)'./SumMSM;
+ProportionNonMSMUndiagnosed=NonMSMTotalUndiagnosedByTime.N(:, end)'./SumNonMSM;
 
 
 

@@ -102,6 +102,33 @@ disp([' This is a substantial reduction from 1985, where median time until diagn
 disp(['Mean time between infection and diagnosis in 1985 was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);
 
 
+%% Looking at results in the final year
+MSMTimeUntilDiagIndexFinalYear=false(size(Patient));
+NonMSMTimeUntilDiagIndexFinalYear=false(size(Patient));
+
+for i=1:NumberOfPatients
+    if 2013<=Patient(i).DateOfDiagnosisContinuous && Patient(i).DateOfDiagnosisContinuous<2014
+        if Patient(i).ExposureRoute<=4
+            MSMTimeUntilDiagIndexFinalYear(i)=true;
+        else
+            NonMSMTimeUntilDiagIndexFinalYear(i)=true;
+        end
+    end
+end
 
 
 
+%% Non MSM
+NonMSMTimeUntilDiagFinalYear=Patient(NonMSMTimeUntilDiagIndexFinalYear);
+[~, NumNonMSMDiagFinalYear]=size(NonMSMTimeUntilDiagFinalYear);
+NonMSMTimeUntilDiagnosisFinalYear=zeros(NoParameterisations, NumNonMSMDiagFinalYear);
+for i=1:NumNonMSMDiagFinalYear
+    NonMSMTimeUntilDiagnosisFinalYear(:, i)=NonMSMTimeUntilDiagFinalYear(i).TimeFromInfectionToDiagnosis;
+end
+
+MeanVectorNonMSMTime=mean(NonMSMTimeUntilDiagnosisFinalYear, 2);
+MeanMeanNonMSM=median(MeanVectorNonMSMTime, 1);
+MeanMeanNonMSMLLCI=prctile(MeanVectorNonMSMTime, 2.5, 1);
+MeanMeanNonMSMLUCI=prctile(MeanVectorNonMSMTime, 97.5, 1);
+disp('Median time to diagnosis in final year, non-MSM (figure 5)');
+disp([num2str(MeanMeanNonMSM),' ',  num2str(MeanMeanNonMSMLLCI),'-', num2str(MeanMeanNonMSMLUCI)]);
