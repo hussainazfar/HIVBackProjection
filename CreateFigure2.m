@@ -17,7 +17,7 @@
 
 
 disp( 'Starting parallel Matlab...');
-matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-2);%this may not work in all processors
+matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
 
 % NumberOfTimeSamples=100;
 % [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4 ]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Ax, NumberOfTimeSamples, RandomNumberStream);

@@ -53,7 +53,7 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
 %     plot([1 2 3], DistributionOfOptimisedParameters);
     
     % Rerun the best testing rate, match CD4 counts with
-    Pxi.SimulatedPopSize=100000;
+    Pxi.SimulatedPopSize=10000;
     
     [~, Data]=GenerateCD4Count(OptimisedParameters, Pxi);
     

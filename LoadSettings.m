@@ -8,7 +8,7 @@ StepSize=0.1;
 Sx.StepSize=StepSize;
 
 %% Data settings
-YearOfDiagnosedDataEnd=2014;% for data that doesn't go beyond 2014
+YearOfDiagnosedDataEnd=1987;% for data that doesn't go beyond 2014
 CD4BackProjectionYears=[1965.0 YearOfDiagnosedDataEnd-StepSize];
 CD4BackProjectionYearsWhole=[1965 YearOfDiagnosedDataEnd-1];
 
@@ -21,8 +21,8 @@ BackProjectStartSingleYearAnalysis=1984;
 
 %change the 2 following variables to false if geographic calculations unnecessary or
 %outside of the Australian region
-PerformGeographicCalculations=true;%do movement calculations and break up according to location
-InitialisePCToSRThisSim=true;%re-perform this function. Only relevant if geographic calculations take place. 
+PerformGeographicCalculations=false;%do movement calculations and break up according to location
+InitialisePCToSRThisSim=false;%re-perform this function. Only relevant if geographic calculations take place. 
 
 UseGeneticAlgorithmOptimisation=true;
 

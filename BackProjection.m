@@ -1,4 +1,4 @@
-NoParameterisations=200; % the number of parameterisations used to generate uncertainty. Should be set to 200
+NoParameterisations=21; % the number of parameterisations used to generate uncertainty. Should be set to 200
 IncludePreviouslyDiagnosedOverseas=false;
 DeduplicateDiagnoses=true;
 
@@ -17,13 +17,13 @@ RandStream.setGlobalStream(RandomNumberStream);
 LoadSettings
 
 
-if InitialisePCToSRThisSim==false
-    load([ParameterLocalStorageLocation 'PC2SR.mat']);%If PC2SR file cannot be found, it may need to be generated
-else
+%if InitialisePCToSRThisSim==false
+%    load([ParameterLocalStorageLocation 'PC2SR.mat']);%If PC2SR file cannot be found, it may need to be generated
+%else
     % Initialise postcode to statistical region coder
-    disp('Initialising PCToSR system');
-    [PC2SR]=InitialisePCToSR();
-end
+%    disp('Initialising PCToSR system');
+%    [PC2SR]=InitialisePCToSR();
+%end
 
 
 %% Load the patient data into a large matrix and create objects to store patient data
@@ -126,7 +126,7 @@ TicOptimisation=tic;
 
 
 disp( 'Starting parallel Matlab...');
-matlabpool(str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-2);%this may not work in all processors
+matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
 
 [Px]=LoadBackProjectionParameters(NoParameterisations);
 Px.ConsiderRecentInfection=ConsiderRecentInfection;
@@ -136,8 +136,12 @@ BackProjectStartSingleYearAnalysis=1984;
 
 [~, NumberInPatientCurrently]=size(Patient);
 YearIndex=0;
+
+rand_time = [];                     %%Only for testing purposes - Azfar
+
 for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     YearIndex=YearIndex+1;
+    test = tic                     %%Only for testing purposes - Azfar
     disp(Year)
     % For indivudals diagnosed prior to 1985, process as a group (as we have insufficient data on these individuals anyway)
     if Year==BackProjectStartSingleYearAnalysis
@@ -191,7 +195,7 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     CD4Comparison(YearIndex).RealTestingCD4=CD4ForOptimisation;
     CD4ComparisonLookup(YearIndex)=Year;
     %Store the appropriate probabilities
-    
+    rand_time(YearIndex) = toc(test);                     %%Only for testing purposes - Azfar
 end
 matlabpool close;
 TimeSpentOptimising=toc(TicOptimisation);
@@ -617,9 +621,9 @@ for Year=TimeSinceInfectionYearIndex
 end
 
 %% Plotting results
-CreateFigure1
-CreateFigure2
-CreateFigure3
+%CreateFigure1
+CreateFigure2;
+CreateFigure3;
 CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime');
 CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime');
 CreateFigure4(NonMSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 NonMSMTotalUndiagnosedByTime');
@@ -638,13 +642,13 @@ CreateFigure4(PropMSMUndiagnosed, PlotSettings.YearsToPlot, 'Appendix PropMSMTot
 
 PropMSM=DiagnosesByYear;
 PropMSM.Value=MSMDiagnosesByYear.N./DiagnosesByYear.N;
-plot(PropMSM.Time, PropMSM.Value)
+plot(PropMSM.Time, PropMSM.Value);
 mean(RecentMSMCaseIndicator)% a mean of the MSM appearance in the last 5 years of diagnoses
 
 % inspecting the proportion of people undiagnosed
 hold on;
-plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median)
-plot(PropMSMUndiagnosed.Time, median(MSMUndiagnosedSummed./UndiagnosedSummed, 1))
+plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median);
+plot(PropMSMUndiagnosed.Time, median(MSMUndiagnosedSummed./UndiagnosedSummed, 1));
 hold off;
 %comes out to a flat 70% which is not expected
 
@@ -656,7 +660,7 @@ hold off;
 % UndiagnosedCaseData
 % UndiagnosedSummed
 
-plot(median(MSMDistributionUndiagnosedInfections./DistributionUndiagnosedInfections, 1))
+plot(median(MSMDistributionUndiagnosedInfections./DistributionUndiagnosedInfections, 1));
 
 
 
@@ -670,8 +674,8 @@ MSMSampleDistribution=hist(RandomisedExpectedTimesVector(MSMSampleVector), DistC
 NonMSMSampleDistribution=hist(RandomisedExpectedTimesVector(~MSMSampleVector), DistComparisonYear);
 NormMSMSampleDistribution=MSMSampleDistribution/sum(MSMSampleDistribution);
 NormNonMSMSampleDistribution=NonMSMSampleDistribution/sum(NonMSMSampleDistribution);
-plot(DistComparisonYear+0.5, [NormMSMSampleDistribution; NormNonMSMSampleDistribution])
-plot(DistComparisonYear+0.5, MSMSampleDistribution./(MSMSampleDistribution+NonMSMSampleDistribution))
+plot(DistComparisonYear+0.5, [NormMSMSampleDistribution; NormNonMSMSampleDistribution]);
+plot(DistComparisonYear+0.5, MSMSampleDistribution./(MSMSampleDistribution+NonMSMSampleDistribution));
    
 tempMSM=false(1, 0);
 tempDate=[];
