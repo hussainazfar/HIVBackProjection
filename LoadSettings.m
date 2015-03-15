@@ -199,7 +199,7 @@ disp(' ');
 
 disp(' ');
 disp('-Total Data File Load Time-');
-DataLoadTime = toc(LoadTime)
+toc(LoadTime)
 disp(' ');
 %% Recent Infection Consideration
 result = false;
