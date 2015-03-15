@@ -53,21 +53,22 @@ for x = 1:NoPatient
         Patient(x).ExposureRoute = 1;
     end
 end
-%% Sort Patients into those who have a previous overseas diagnosis, and those who have not. 
-PreviouslyDiagnosedOverseasPatient=[];
-if (IncludePreviouslyDiagnosedOverseas==false)
+%% Sort Patients into those who have a previous overseas diagnosis, and those who have not
+PreviouslyDiagnosedOverseasPatient = [];
+
+if (Sx.IncludePreviouslyDiagnosedOverseas == false)
     disp('Removing overseas diagnosed cases to be utilised later');
-    PatientSplitTimer=tic;
-    OverseasDiagID=[];
-    [~, NumberInPatientCurrently]=size(Patient);
-    for i=1:NumberInPatientCurrently
-        if Patient(i).PreviouslyDiagnosedOverseas==1
-            OverseasDiagID=[OverseasDiagID i];
-        end
+    OverseasDiagID = [];
+    NumberInPatientCurrently = length(Patient);
+    
+    for x = 1:NumberInPatientCurrently
+        if Patient(x).PreviouslyDiagnosedOverseas == 1
+            OverseasDiagID = [OverseasDiagID x];
+        end 
     end
-    PreviouslyDiagnosedOverseasPatient=Patient(OverseasDiagID);
-    Patient(OverseasDiagID)=[];
-    toc(PatientSplitTimer)
+    
+    PreviouslyDiagnosedOverseasPatient = Patient(OverseasDiagID);
+    Patient(OverseasDiagID) = [];    
 end
 
 %% Remove records to adjust for duplicate diagnoses, assuming previously diagnosed overseas do not have duplicates
