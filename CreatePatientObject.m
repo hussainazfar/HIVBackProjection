@@ -1,36 +1,37 @@
-function [Patient]=CreatePatientObject(LineDataMatrix)
-%% Read data from the notifications file and do some clean up of the postcodes
-
-%Create a patient structure to return
-Patient(1:LineDataMatrix.NumberOfPatients)=PatientClass;
+function [ Patient ] = CreatePatientObject( LineDataMatrix )
+%Read data from the notifications file and do some clean up of the postcodes
+%   Create a patient structure to return to main program, all inputs are
+%   taken from LineDataMatrix which holds complete information from
+%   Imputation Data File
+Patient(1:LineDataMatrix.NumberOfPatients) = PatientClass;
 
 %% Assign the excel entries to the variables in Patient 
-for i=1:LineDataMatrix.NumberOfPatients
+for x = 1:LineDataMatrix.NumberOfPatients
     
-    if mod(i, 1000)==0
-        disp(['Loading notification ', num2str(i), ' of ',  num2str(LineDataMatrix.NumberOfPatients)]);
+    if mod(x, 1000)==0
+        disp(['Loading Notification Progress: ', num2str(100 * x / LineDataMatrix.NumberOfPatients), '%']);     
     end
     
-    Patient(i).ID=LineDataMatrix.ID(i);
-    Patient(i).YearBirth=LineDataMatrix.YearBirth(i);
-    Patient(i).DOB=LineDataMatrix.DOB(i);
-    Patient(i).Sex=LineDataMatrix.Sex(i);
-    Patient(i).DateOfDiagnosis=LineDataMatrix.DateOfDiagnosis(i);
-    Patient(i).YearOfDiagnosis=LineDataMatrix.YearOfDiagnosis(i);
-    Patient(i).DateOfDiagnosisContinuous=LineDataMatrix.DateOfDiagnosisContinuous(i);
-    Patient(i).CD4CountAtDiagnosis=LineDataMatrix.CD4CountAtDiagnosis(i);
-    Patient(i).ExposureRoute=LineDataMatrix.ExposureRoute(i);
-    Patient(i).RecentInfection=LineDataMatrix.RecentInfection(i);
-    Patient(i).CountryOfBirth=LineDataMatrix.CountryOfBirth(i);
-    Patient(i).PreviouslyDiagnosedOverseas=LineDataMatrix.PreviouslyDiagnosedOverseas(i);
+    Patient(x).ID = LineDataMatrix.ID(x);
+    Patient(x).YearBirth = LineDataMatrix.YearBirth(x);
+    Patient(x).DOB = LineDataMatrix.DOB(x);
+    Patient(x).Sex = LineDataMatrix.Sex(x);
+    Patient(x).DateOfDiagnosis = LineDataMatrix.DateOfDiagnosis(x);
+    Patient(x).YearOfDiagnosis = LineDataMatrix.YearOfDiagnosis(x);
+    Patient(x).DateOfDiagnosisContinuous = LineDataMatrix.DateOfDiagnosisContinuous(x);
+    Patient(x).CD4CountAtDiagnosis = LineDataMatrix.CD4CountAtDiagnosis(x);
+    Patient(x).ExposureRoute = LineDataMatrix.ExposureRoute(x);
+    Patient(x).RecentInfection = LineDataMatrix.RecentInfection(x);
+    Patient(x).CountryOfBirth = LineDataMatrix.CountryOfBirth(x);
+    Patient(x).PreviouslyDiagnosedOverseas = LineDataMatrix.PreviouslyDiagnosedOverseas(x);
     
-    Patient(i).DateIll=LineDataMatrix.DateIll(i);
-    Patient(i).DateIndetWesternBlot=LineDataMatrix.DateIndetWesternBlot(i);
-    Patient(i).DateLastNegative=LineDataMatrix.DateLastNegative(i);
+    Patient(x).DateIll = LineDataMatrix.DateIll(x);
+    Patient(x).DateIndetWesternBlot = LineDataMatrix.DateIndetWesternBlot(x);
+    Patient(x).DateLastNegative = LineDataMatrix.DateLastNegative(x);
     
-    Patient(i).SimulatedIndividual=0;
+    Patient(x).SimulatedIndividual = 0;
     
-    %Patient(i).IndigenousStatus=LineDataMatrix.IndigenousStatus(i);
+    %Patient(x).IndigenousStatus=LineDataMatrix.IndigenousStatus(x);
     
 end
 
@@ -47,5 +48,5 @@ end
 % %     end
 % end
 
-
 end
+
