@@ -106,6 +106,8 @@ clear result;
 %% Setup Random Variable Stream
 RandomNumberStream = RandStream('mlfg6331_64','Seed',1385646);
 RandStream.setGlobalStream(RandomNumberStream);
+%Use the below code in any parfor loop to use appropriate substreams for the rand generator (i is the loop number)
+%set(stream,'Substream',i);
 
 %% Simulation settings
 %Max years is the maximum number of years a person can spend without being diagnosed with HIV. 
