@@ -116,6 +116,20 @@ for i=1:NumberOfPatients
     end
 end
 
+%%  MSM
+MSMTimeUntilDiagFinalYear=Patient(MSMTimeUntilDiagIndexFinalYear);
+[~, NumMSMDiagFinalYear]=size(MSMTimeUntilDiagFinalYear);
+MSMTimeUntilDiagnosisFinalYear=zeros(NoParameterisations, NumMSMDiagFinalYear);
+for i=1:NumMSMDiagFinalYear
+    MSMTimeUntilDiagnosisFinalYear(:, i)=MSMTimeUntilDiagFinalYear(i).TimeFromInfectionToDiagnosis;
+end
+
+MeanVectorMSMTime=mean(MSMTimeUntilDiagnosisFinalYear, 2);
+MeanMeanMSM=median(MeanVectorMSMTime, 1);
+MeanMeanMSMLLCI=prctile(MeanVectorMSMTime, 2.5, 1);
+MeanMeanMSMLUCI=prctile(MeanVectorMSMTime, 97.5, 1);
+disp('Median time to diagnosis in final year, -MSM (figure 5)');
+disp([num2str(MeanMeanMSM),' ',  num2str(MeanMeanMSMLLCI),'-', num2str(MeanMeanMSMLUCI)]);
 
 
 %% Non MSM
