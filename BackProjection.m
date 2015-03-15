@@ -30,23 +30,27 @@ disp(' ');
 
 %% Adjust category 12 exposures for MSM
 % it is likely that many in this category will be MSM. Based on approximately 8% females, and assuming therefore 8% heterosexual males, 84% of people in this category may be MSM
-[~, NoPatient]=size(Patient);
-% Count females
-TotalFemalesNotSpecified=0;
-TotalNotSpecified=0;
-for i=1:NoPatient
-    if Patient(i).ExposureRoute==12 %not specified
-        TotalNotSpecified=TotalNotSpecified+1;
-        if Patient(i).Sex==2
-            TotalFemalesNotSpecified=TotalFemalesNotSpecified+1;
+NoPatient = length(Patient);
+
+% Count Number of females in population
+TotalFemalesNotSpecified = 0;
+TotalNotSpecified = 0;
+
+for x = 1:NoPatient
+    if Patient(x).ExposureRoute == 12                                       %not specified
+        TotalNotSpecified = TotalNotSpecified + 1;
+        if Patient(x).Sex == 2
+            TotalFemalesNotSpecified = TotalFemalesNotSpecified + 1;
         end
     end
 end
-TotalMalesNotSpecified=TotalNotSpecified-TotalFemalesNotSpecified;
-ProbabilityMaleMSM=(TotalMalesNotSpecified-TotalFemalesNotSpecified)/TotalMalesNotSpecified;
-for i=1:NoPatient
-    if Patient(i).ExposureRoute==12 && Patient(i).Sex==1%not specified
-        Patient(i).ExposureRoute=1;
+
+TotalMalesNotSpecified = TotalNotSpecified - TotalFemalesNotSpecified;
+ProbabilityMaleMSM = (TotalMalesNotSpecified - TotalFemalesNotSpecified) / TotalMalesNotSpecified;
+
+for x = 1:NoPatient
+    if Patient(x).ExposureRoute == 12 && Patient(x).Sex == 1                %not specified
+        Patient(x).ExposureRoute = 1;
     end
 end
 %% Sort Patients into those who have a previous overseas diagnosis, and those who have not. 
