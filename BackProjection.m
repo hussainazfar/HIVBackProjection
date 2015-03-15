@@ -1,22 +1,12 @@
-NoParameterisations=21; % the number of parameterisations used to generate uncertainty. Should be set to 200
-IncludePreviouslyDiagnosedOverseas=false;
-DeduplicateDiagnoses=true;
+clear all;
+clc;
 
-TimeALL=tic;
+TimeALL = tic;
 
-%% Seed the random variables
-RandomNumberStream = RandStream('mlfg6331_64','Seed',1385646);
-RandStream.setGlobalStream(RandomNumberStream);
+%% Load Settings for simulation
+LoadSettings;
 
-%Use the below code in any parfor loop to use appropriate substreams for the rand generator (i is the loop number)
-%set(stream,'Substream',i);
-
-
-%% Load settings for the simualtion
-% LoadSettings
-LoadSettings
-
-
+%Following section is not required as Geographical Data is not considered
 %if InitialisePCToSRThisSim==false
 %    load([ParameterLocalStorageLocation 'PC2SR.mat']);%If PC2SR file cannot be found, it may need to be generated
 %else
@@ -26,15 +16,13 @@ LoadSettings
 %end
 
 
-%% Load the patient data into a large matrix and create objects to store patient data
-disp('Loading saved basic patient class data');
-
-%open file format, return separately the postcodes and other subsections of the data 
-[LineDataMatrix, LocationDataMatrix] = LoadNotificationFile(HIVFile, SheetName, PerformGeographicCalculations);
-
+%% Creating Object Patient 
 %Place data from LineDataMatrix into PatientData
-[Patient]=CreatePatientObject(LineDataMatrix);
+disp('Loading saved basic patient class data');
+disp(' ');
+[Patient] = CreatePatientObject(LineDataMatrix);
 
+%Following section is not required as Geographocal Data is not considered
 %if PerformGeographicCalculations == true
     %Place data from LocationDataMatrix into PatientData
 %    Patient=GeoAddLocationData(Patient, LocationDataMatrix, PC2SR);
@@ -778,6 +766,9 @@ SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
 
 
 % save('PatientSaveFiles/SimulationState.mat');
+%% Calculating Total Simulation Time
+disp(' ');
+disp('-Total Simulation Time-');
 toc(TimeALL)
 
 % At the end of the simulation, it may be desirable to perform a mortlaity calculation
