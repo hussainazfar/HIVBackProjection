@@ -6,27 +6,11 @@ TimeALL = tic;
 %% Load Settings for simulation
 LoadSettings;
 
-%Following section is not required as Geographical Data is not considered
-%if InitialisePCToSRThisSim==false
-%    load([ParameterLocalStorageLocation 'PC2SR.mat']);%If PC2SR file cannot be found, it may need to be generated
-%else
-    % Initialise postcode to statistical region coder
-%    disp('Initialising PCToSR system');
-%    [PC2SR]=InitialisePCToSR();
-%end
-
-
 %% Creating Object Patient 
 %Place data from LineDataMatrix into PatientData
 disp('Loading saved basic patient class data');
 disp(' ');
 [Patient] = CreatePatientObject(LineDataMatrix);
-
-%Following section is not required as Geographocal Data is not considered
-%if PerformGeographicCalculations == true
-    %Place data from LocationDataMatrix into PatientData
-%    Patient=GeoAddLocationData(Patient, LocationDataMatrix, PC2SR);
-%end
 
 %% Adjust category 12 exposures for MSM
 % it is likely that many in this category will be MSM. Based on approximately 8% females, and assuming therefore 8% heterosexual males, 84% of people in this category may be MSM
