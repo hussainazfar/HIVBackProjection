@@ -30,15 +30,15 @@ LoadSettings
 disp('Loading saved basic patient class data');
 
 %open file format, return separately the postcodes and other subsections of the data 
-[LineDataMatrix, LocationDataMatrix]=LoadNotificationFile(HIVFile, SheetName, PerformGeographicCalculations);
+[LineDataMatrix, LocationDataMatrix] = LoadNotificationFile(HIVFile, SheetName, PerformGeographicCalculations);
 
 %Place data from LineDataMatrix into PatientData
 [Patient]=CreatePatientObject(LineDataMatrix);
 
-if PerformGeographicCalculations ==true
+%if PerformGeographicCalculations == true
     %Place data from LocationDataMatrix into PatientData
-    Patient=GeoAddLocationData(Patient, LocationDataMatrix, PC2SR);
-end
+%    Patient=GeoAddLocationData(Patient, LocationDataMatrix, PC2SR);
+%end
 
 %% Adjust category 12 exposures for MSM
 % it is likely that many in this category will be MSM. Based on approximately 8% females, and assuming therefore 8% heterosexual males, 84% of people in this category may be MSM
@@ -132,7 +132,7 @@ matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not wo
 Px.ConsiderRecentInfection=ConsiderRecentInfection;
 
 % Sort individuals by year of diagnosis
-BackProjectStartSingleYearAnalysis=1984;
+%BackProjectStartSingleYearAnalysis=2012;
 
 [~, NumberInPatientCurrently]=size(Patient);
 YearIndex=0;
