@@ -234,9 +234,9 @@ disp('------------------------------------------------------------------');
 
 %% Program Settings - Geographic Considerations first two variables to be set as false if not required
 RunID='BackProject';
-PerformGeographicCalculations = false;                                        %do movement calculations and break up according to location
-InitialisePCToSRThisSim = false;                                              %re-perform this function. Only relevant if geographic calculations take place
-UseGeneticAlgorithmOptimisation = true;
+Sx.PerformGeographicCalculations = false;                                        %do movement calculations and break up according to location
+Sx.InitialisePCToSRThisSim = false;                                              %re-perform this function. Only relevant if geographic calculations take place
+Sx.UseGeneticAlgorithmOptimisation = true;
 
 RangeOfCD4Averages = [(YearOfDiagnosedDataEnd-5+1) (YearOfDiagnosedDataEnd+1)];       %YearOfDiagnosedDataEnd not inclusive
 RangeOfCD4AveragesForForwardProjection = [(YearOfDiagnosedDataEnd-5+1) (YearOfDiagnosedDataEnd+1)];
