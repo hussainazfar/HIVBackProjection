@@ -37,10 +37,12 @@ for x = 1:NoPatient
         Patient(x).ExposureRoute = 1;
     end
 end
+
 %% Sort Patients into those who have a previous overseas diagnosis, and those who have not
 PreviouslyDiagnosedOverseasPatient = [];
 
 if (Sx.IncludePreviouslyDiagnosedOverseas == false)
+    disp('------------------------------------------------------------------');
     disp('Removing overseas diagnosed cases to be utilised later');
     OverseasDiagID = [];
     NumberInPatientCurrently = length(Patient);
@@ -56,12 +58,22 @@ if (Sx.IncludePreviouslyDiagnosedOverseas == false)
 end
 
 %% Remove records to adjust for duplicate diagnoses, assuming previously diagnosed overseas do not have duplicates
-if DeduplicateDiagnoses
-    [Patient, DuplicatePatient]=RemoveDuplicates(Patient);
+if Sx.DeduplicateDiagnoses == true
+    disp(' ');
+    disp('------------------------------------------------------------------');
+    disp('Analyzing and removing Duplication in Data ');
+    DuplicateTimer = tic;
+    
+    [Patient, DuplicatePatient] = RemoveDuplicates(Patient);
+    
+    disp(' ');
+    disp([num2str(length(DuplicatePatient)) ' duplicates detected out of ' num2str(length(DuplicatePatient) + length(Patient)) ' records ']);
+    disp(' ');
+    
+    disp('-Time to Remove Duplicate Copies-');
+    toc(DuplicateTimer)
+    disp('------------------------------------------------------------------');
 end
-
-
-
 
 %% Sort Patients into those who have an infection known to be in the last 12 months, and those who have not. 
 % if ConsiderRecentInfection==true
