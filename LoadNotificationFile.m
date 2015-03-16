@@ -3,14 +3,17 @@ function [LineDataMatrix, LocationDataMatrix, YearOfDiagnosedDataEnd, BackProjec
 
 LoadTime = tic;
 disp('Loading Excel Notification Data file');
-disp(' ');
 [a, b, c] = xlsread(HIVFile,  SheetName);
 
 disp(' ');
 disp('-Time to Load File-');
 toc(LoadTime)
+disp('------------------------------------------------------------------');
 disp(' ');
 
+disp('Arranging Data File into Appropriate Matrices');
+disp(' ');
+LoadTime = tic;
 if SamplingFactor ~= 0.0
     x = randsample(length(c)-1, ceil((1.0 - SamplingFactor) * length(c)-1));
     x = sort(x, 'descend');    
@@ -136,4 +139,7 @@ LocationDataMatrix.PostcodeAtDiagnosis = cell2mat(c(:, strcmp(VariableName, 'pos
 LocationDataMatrix.StateAtDiagnosis = cell2mat(c(:, strcmp(VariableName, 'state')));
 LocationDataMatrix.StateAtDiagnosis = NotificationStateToABSState(LocationDataMatrix.StateAtDiagnosis);
 
+disp('-Time to Rearrange Data into Matrices-');
+toc(LoadTime)
+disp('------------------------------------------------------------------');
 end
