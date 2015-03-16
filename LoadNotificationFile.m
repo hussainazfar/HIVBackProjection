@@ -17,13 +17,11 @@ LoadTime = tic;
 if SamplingFactor ~= 0.0
     x = randsample(length(c)-1, ceil((1.0 - SamplingFactor) * length(c)-1));
     x = sort(x, 'descend');    
-    %for y = 1:length(x)                                                         %Reshape vectors a, b and c to Compressed State with randomnly selected indexes from Notification File
-        %g = y + 1;
-        a(x, :) = [];
-        b(x, :) = [];
-        c(x, :) = [];
-        %disp('Loop: ');
-    %end    
+    
+    a(x, :) = [];                                                       %Reshape vector a to Compressed State with randomnly selected indexes from Notification File
+    b(x, :) = [];                                                       %Reshape vector b to Compressed State with randomnly selected indexes from Notification File
+    c(x, :) = [];                                                       %Reshape vector c to Compressed State with randomnly selected indexes from Notification File
+        
 end
 clear x;
 

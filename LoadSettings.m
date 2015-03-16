@@ -116,7 +116,7 @@ result = 20;
 while  result == 20
     disp('');
     disp('Maximum Age is the maximum number of years a person  can spend without being diagnosed with HIV');
-    disp('Range: 0 - 20 Years');
+    disp('Range: 1 - 20 Years');
     prompt = 'Please Enter Maximum Age(Press Enter/Return for default): '; 
     x = input(prompt);
     
@@ -198,7 +198,7 @@ while  result == 0.5
         break
         
     elseif x <= 0.9 
-        if x >= 0.1
+        if x >= 0.0
             result = x;
             break
         else
@@ -222,7 +222,7 @@ ParameterLocalStorageLocation = 'Parameters/';
 HIVFile = 'Imputation\Data\notifications2014imputationformatted.xls';
 SheetName='Dataset_1';
 
-pause(0.4);
+pause(0.5);
 clc;
 %open file format, return separately the postcodes and other subsections of the data 
 [LineDataMatrix, LocationDataMatrix, YearOfDiagnosedDataEnd, BackProjectStartSingleYearAnalysis, CD4BackProjectionYearsWhole] = LoadNotificationFile(HIVFile, SheetName, Sx.SamplingFactor);
