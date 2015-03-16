@@ -7,19 +7,16 @@ if isempty(result) == true
     result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )) - 1);
     disp('Using default value of: ');
     disp(result);
-    disp(' ');
-    
+        
 elseif ischar(result) == true
     result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )) - 1);
     disp('Invalid Entry! Using default value of: ');
     disp(result);
-    disp(' ');
-    
+        
 elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' )) - 1)
     result = str2num(getenv( 'NUMBER_OF_PROCESSORS' )) - 1;
     disp('Number of Parameterisations too low! Using a minimum value of:');
     disp(result);
-    disp(' ');
 else
     result = result;
 end
@@ -36,9 +33,10 @@ while  result == false
     x = input(prompt, 's');
     
     if isempty(x) == true
-        result = true;
+        result = false;
         disp('Using default value of: No');
         disp(' ');
+        break
         
     elseif x == 'N'
         result = false;
@@ -126,7 +124,6 @@ while  result == 20
         result = 20;
         disp('Using default value of: ');
         disp(result);
-        disp(' ');
         break
         
     elseif x < 21
@@ -134,12 +131,10 @@ while  result == 20
             result = x;
             break
         else
-            disp(' ');  
             disp('Invalid Entry! Please Enter a Valid Number');
         end
    
     else
-        disp(' ');  
         disp('Invalid Entry! Please Enter a Valid Number');
     end
 end
@@ -150,6 +145,40 @@ clear result;
 
 %Declaring Step Size
 Sx.StepSize = 0.1;
+%% Recent Infection Consideration
+result = false;
+
+while  result == false
+    prompt = 'Consider Recent Infections(Y/N)? - Press Enter/return key for default: '; 
+    x = input(prompt, 's');
+    
+    if isempty(x) == true
+        result = true;
+        disp('Using default value of: Yes');
+    elseif x == 'N'
+        result = false;
+        break
+    
+    elseif x == 'Y'
+        result = true;
+        break
+        
+    elseif x == 'y'
+        result = true;
+        break
+        
+    elseif x == 'n'
+        result = false;
+        break
+        
+    else
+        disp('Invalid Entry! Please Enter a Valid Character');
+    end
+end
+
+Sx.ConsiderRecentInfection = result;
+clear prompt;
+clear result;
 
 %% Load the patient data into a large matrix
 result = 0.5;
@@ -193,50 +222,16 @@ ParameterLocalStorageLocation = 'Parameters/';
 HIVFile = 'Imputation\Data\notifications2014imputationformatted.xls';
 SheetName='Dataset_1';
 
-disp(' ');
+pause(0.4);
+clc;
 %open file format, return separately the postcodes and other subsections of the data 
 [LineDataMatrix, LocationDataMatrix, YearOfDiagnosedDataEnd, BackProjectStartSingleYearAnalysis, CD4BackProjectionYearsWhole] = LoadNotificationFile(HIVFile, SheetName, Sx.SamplingFactor);
 
 disp(' ');
 disp('-Total Data File Load Time-');
 toc(LoadTime)
-disp(' ');
-%% Recent Infection Consideration
-result = false;
+disp('------------------------------------------------------------------');
 
-while  result == false
-    prompt = 'Consider Recent Infections(Y/N)? - Press Enter/return key for default: '; 
-    x = input(prompt, 's');
-    
-    if isempty(x) == true
-        result = true;
-        disp('Using default value of: Yes');
-        disp(' ');
-    elseif x == 'N'
-        result = false;
-        break
-    
-    elseif x == 'Y'
-        result = true;
-        break
-        
-    elseif x == 'y'
-        result = true;
-        break
-        
-    elseif x == 'n'
-        result = false;
-        break
-        
-    else
-        disp(' ');  
-        disp('Invalid Entry! Please Enter a Valid Character');
-    end
-end
-
-Sx.ConsiderRecentInfection = result;
-clear prompt;
-clear result;
 %% Program Settings - Geographic Considerations first two variables to be set as false if not required
 RunID='BackProject';
 PerformGeographicCalculations = false;                                        %do movement calculations and break up according to location
