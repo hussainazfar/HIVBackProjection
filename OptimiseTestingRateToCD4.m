@@ -86,10 +86,5 @@ function [Times, StartingCD4, OptimisedParameters]=OptimiseTestingRateToCD4(Real
     % Store results
     Times= ReturnValues(1, :);
     StartingCD4= ReturnValues(2, :);
-    
-%         
-%     b=hist(Data.CD4, 50:100:1450);
-%     plot(50:100:1450, b*NumberOfCD4Counts/10000, 'k.'); 
-
 
 end

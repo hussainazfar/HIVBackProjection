@@ -43,7 +43,7 @@ PreviouslyDiagnosedOverseasPatient = [];
 
 if (Sx.IncludePreviouslyDiagnosedOverseas == false)
     disp('------------------------------------------------------------------');
-    disp('Removing overseas diagnosed cases to be utilised later');
+    disp('Removing overseas diagnosed cases');
     OverseasDiagID = [];
     NumberInPatientCurrently = length(Patient);
     
@@ -54,7 +54,10 @@ if (Sx.IncludePreviouslyDiagnosedOverseas == false)
     end
     
     PreviouslyDiagnosedOverseasPatient = Patient(OverseasDiagID);
-    Patient(OverseasDiagID) = [];    
+    Patient(OverseasDiagID) = [];
+    
+    disp(' ');
+    disp([num2str(length(PreviouslyDiagnosedOverseasPatient)) ' overseas diagnosis detected out of ' num2str(length(PreviouslyDiagnosedOverseasPatient) + length(Patient)) ' records ']);
 end
 
 %% Remove records to adjust for duplicate diagnoses, assuming previously diagnosed overseas do not have duplicates
@@ -75,83 +78,44 @@ if Sx.DeduplicateDiagnoses == true
     disp('------------------------------------------------------------------');
 end
 
-%% Sort Patients into those who have an infection known to be in the last 12 months, and those who have not. 
-% if ConsiderRecentInfection==true
-% %     disp('Removing Recent cases to be utilised later');
-%     PatientSplitTimer=tic;
-%     RecentPatientID=[];
-%     [~, NumberInPatientCurrently]=size(Patient);
-%     for i=1:NumberInPatientCurrently
-%         if Patient(i).RecentInfection==1
-%             RecentPatientID=[RecentPatientID i];
-%         end
-%     end
-%     RecentPatient=Patient(RecentPatientID);
-%     Patient(RecentPatientID)=[];
-%     toc(PatientSplitTimer)
-%     
-%     %Determine the proportion of people in each year with evidence of recent infection
-%     NotRecentDiagnosisDates=zeros(size(Patient));
-%     PCount=0;
-%     for P=Patient
-%         PCount=PCount+1;
-%         NotRecentDiagnosisDates(PCount)=P.DateOfDiagnosisContinuous;%Note that in this system all records without recent diagnosis data have an entris of year zero. This means that you can fileter it out when trying to determine the total number recently infected below.
-%     end
-%     
-%     RecentDiagnosisDates=zeros(size(RecentPatient));
-%     PCount=0;
-%     for RP=RecentPatient
-%         PCount=PCount+1;
-%         RecentDiagnosisDates(PCount)=RP.DateOfDiagnosisContinuous;
-%     end
-%     
-%  end
-
-
-
 %% Determine the time between infection and diagnosis
-disp('Determining the time between infection and diagnosis');
-TicOptimisation=tic;
+matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);            %initialising parallel Matlab Sessions
+disp('------------------------------------------------------------------');
+disp('Determining and Optimising time between Infection and Diagnosis');
+disp(' ');
+disp('Loading Back Projection Parameters...');
 
+[Px] = LoadBackProjectionParameters(Sx.NoParameterisations, Sx.MaxYears, Sx.StepSize, BackProjectStartSingleYearAnalysis);
+Px.ConsiderRecentInfection = Sx.ConsiderRecentInfection;
 
-disp( 'Starting parallel Matlab...');
-matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);%this may not work in all processors
+disp('Back Projection Parameters Loaded Successfully!');
+disp(' ');
+disp('Running Optimisation Algorithm...');
 
-[Px]=LoadBackProjectionParameters(NoParameterisations);
-Px.ConsiderRecentInfection=ConsiderRecentInfection;
+OptimisationTimer = tic;
 
-% Sort individuals by year of diagnosis
-%BackProjectStartSingleYearAnalysis=2012;
+[~, NumberInPatientCurrently] = size(Patient);
+YearIndex = 0;
 
-[~, NumberInPatientCurrently]=size(Patient);
-YearIndex=0;
-
-rand_time = [];                     %%Only for testing purposes - Azfar
-
-for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
-    YearIndex=YearIndex+1;
-    test = tic                     %%Only for testing purposes - Azfar
-    disp(Year)
+for Year = BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
+    SimTimer = tic;
+    fprintf(1, '\nRunning Simulation Year %d: \n', Year);
+    YearIndex = YearIndex + 1;
+    
     % For indivudals diagnosed prior to 1985, process as a group (as we have insufficient data on these individuals anyway)
-    if Year==BackProjectStartSingleYearAnalysis
-        MinYear=0;%
-        MaxYear=Year+1;
+    if Year == BackProjectStartSingleYearAnalysis
+        MinYear = 0;%
+        MaxYear = Year+1;
     else
-        MinYear=Year;
-        MaxYear=Year+1;
+        MinYear = Year;
+        MaxYear = Year+1;
     end
-    
-    %This section is no longer used in the current methodology
-%     if Px.ConsiderRecentInfection
-%         RecentDataTotal=sum(MinYear<=RecentDiagnosisDates & RecentDiagnosisDates<MaxYear);
-%         NoRecentDataTotal=sum(MinYear<=NotRecentDiagnosisDates & NotRecentDiagnosisDates<MaxYear);
-%         Px.PropWithRecentDiagDataPresentThisYear=RecentDataTotal/(RecentDataTotal+NoRecentDataTotal);
-%     end
-    
+      
     CD4ForOptimisation=-1*ones(1, NumberInPatientCurrently);%to indicate empty fields
     % Select individuals that are in the year group
     PatientRef=-1*ones(1, NumberInPatientCurrently);
     CountRef=0;
+    
     for i=1:NumberInPatientCurrently
         % if the year of diagnosis matches
         if MinYear<=Patient(i).DateOfDiagnosisContinuous && Patient(i).DateOfDiagnosisContinuous<MaxYear
@@ -184,43 +148,14 @@ for Year=BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd-1
     CD4Comparison(YearIndex).RealTestingCD4=CD4ForOptimisation;
     CD4ComparisonLookup(YearIndex)=Year;
     %Store the appropriate probabilities
-    rand_time(YearIndex) = toc(test);                     %%Only for testing purposes - Azfar
+    fprintf(1, 'Time to run Simulation: %.2f seconds\n', toc(SimTimer));
 end
+disp(' ');
+disp('-Time Spent on Optimisation-');
+toc(OptimisationTimer)
+disp('------------------------------------------------------------------');
 matlabpool close;
-TimeSpentOptimising=toc(TicOptimisation);
-toc(TicOptimisation)
-
-
-
-
-
-
-
-    
-    
-% %% If consideration is given to recent infection data, recombine the non-Recent patients back into the patient variable
-% if ConsiderRecentInfection==true
-%     % assign infection distributions of those who are known to have been infected in the last 12 months
-% 
-%     %[~, NumberOfRecentInfections]=size(RecentPatient);
-% 
-%     for i=1:NumberInPatientCurrently
-%         
-%         if Patient(i).RecentInfection==1
-%             Patient(i).TimeFromInfectionToDiagnosis= rand(1,NoParameterisations);
-%             %Alternate distribution: People have testing rates of between once every 3 months and 1 year = (1-rand(1, NoParameterisations)*0.75).*rand(1, NoParameterisations)
-%         end
-%     end
-% 
-%     %recombine the recent and non-recent infections
-%     %Patient=[Patient RecentPatient];
-% end
-
-
-
-
-
-
+disp('------------------------------------------------------------------');
 
 %% Create dates for the infection based on time between infection and testing, together with testing date
 [~, NumberOfPatients]=size(Patient);
@@ -232,11 +167,8 @@ end
 %% If consideration is given to recent infection data, select data according to avaialable information
 % There are three items to consider when dealing with a
 
-
-
-
-if ConsiderRecentInfection==true
-    for SimCount=1:NoParameterisations
+if Sx.ConsiderRecentInfection==true
+    for SimCount=1:Sx.NoParameterisations
         for i=1:NumberInPatientCurrently
             % A clear western blot in close proximity to diagnosis indicates most likely a recent infection
             % Serconversion illness indicates a likely recent infection
@@ -272,221 +204,6 @@ if ConsiderRecentInfection==true
     end
 end
 
-
-
-
-
-
-
-
-
-
-
-%% This section is where all of the information is collected up to make a population wide calculation of the incidence
-% clear DistributionUndiagnosedInfectionsPrecise;
-% clear DistributionDiagnosedInfectionsPrecise;
-% clear DistributionDiagnosedInfections;
-% clear DistributionUndiagnosedInfections;
-% 
-% 
-% %Create a summing vector that contains the infection dates for the
-% %diagnoses (regardless of the date of diagnosis)
-% 
-% tic
-% DateMatrix=zeros(NoParameterisations, NumberOfPatients);
-% InfectionTimeMatrix=zeros(NoParameterisations, NumberOfPatients);
-% MSMCaseIndicator=zeros(1, NumberOfPatients);
-% 
-% 
-% 
-% NoPatientInRange=0;
-% TimeDistributionOfRecentDiagnoses=[];
-% CD4DistributionOfRecentDiagnoses=[];
-% for i=1:NumberOfPatients
-% 
-%         TimeDistributionOfRecentDiagnoses((i-1)*NoParameterisations+1:i*NoParameterisations)=Patient(i).TimeFromInfectionToDiagnosis;
-%         CD4DistributionOfRecentDiagnoses((i-1)*NoParameterisations+1:i*NoParameterisations)=Patient(i).CD4CountAtDiagnosis;
-%         DateMatrix(:, i)=Patient(i).InfectionDateDistribution;
-%         if Patient(i).DateOfDiagnosisContinuous>= RangeOfCD4Averages(1) && Patient(i).DateOfDiagnosisContinuous< RangeOfCD4Averages(2)
-%             NoPatientInRange=NoPatientInRange+1;
-%             InfectionTimeMatrix(:, NoPatientInRange)=Patient(i).TimeFromInfectionToDiagnosis;
-%             if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
-%                 MSMCaseIndicator(NoPatientInRange)=1;
-%             else
-%                 MSMCaseIndicator(NoPatientInRange)=0;
-%             end
-%         end
-%         
-% end
-% %remove all those elements that are not used
-% InfectionTimeMatrix(:, NoPatientInRange+1:NumberOfPatients)=[];
-% MSMCaseIndicator( NoPatientInRange+1:NumberOfPatients)=[];
-% timevalue=toc;
-% 
-% % find proportion that are MSM, proportion that are not MSM
-% % cout to allow a pre allocation
-% MSMCount=0;
-% NonMSMCount=0;
-% for i=1:NumberOfPatients
-%     if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
-%         MSMCount=MSMCount+1;
-%     else
-%         NonMSMCount=NonMSMCount+1;
-%     end
-% end
-% MSMDateMatrix=zeros(NoParameterisations, MSMCount);
-% NonMSMDateMatrix=zeros(NoParameterisations, NonMSMCount);
-% MSMCD4=zeros(1, MSMCount);
-% NonMSMCD4=zeros(1, NonMSMCount);
-% MSMDate=zeros(1, MSMCount);
-% NonMSMDate=zeros(1, NonMSMCount);
-% MSMInfectionTimeMatrix=zeros(NoParameterisations, MSMCount);
-% NonMSMInfectionTimeMatrix=zeros(NoParameterisations, NonMSMCount);
-% 
-% MSMCount=0;
-% NonMSMCount=0;
-% for i=1:NumberOfPatients
-%     if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
-%         MSMCount=MSMCount+1;
-%         MSMDateMatrix(:, MSMCount)=Patient(i).InfectionDateDistribution;
-%         MSMDate(MSMCount)=Patient(i).DateOfDiagnosisContinuous;
-%         MSMCD4(MSMCount)=Patient(i).CD4CountAtDiagnosis;
-%         MSMInfectionTimeMatrix(:,MSMCount)=Patient(i).TimeFromInfectionToDiagnosis;
-%     else
-%         NonMSMCount=NonMSMCount+1;
-%         NonMSMDateMatrix(:, NonMSMCount)=Patient(i).InfectionDateDistribution;
-%         NonMSMDate(NonMSMCount)=Patient(i).DateOfDiagnosisContinuous;
-%         NonMSMCD4(NonMSMCount)=Patient(i).CD4CountAtDiagnosis;
-%         NonMSMInfectionTimeMatrix(:,NonMSMCount)=Patient(i).TimeFromInfectionToDiagnosis;
-%     end
-% end
-% %plot(MSMDistributionForThisSimulationDiagnosedInfections')
-% %plot(NonMSMDistributionForThisSimulationDiagnosedInfections')
-% 
-% 
-% HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
-% 
-% for SimNumber=1:NoParameterisations
-%     disp(['Finding undiagnosed ' num2str(SimNumber) ' of ' num2str(NoParameterisations)]);
-%     
-%     ExpectedTimesVector=InfectionTimeMatrix(SimNumber, :);%(for this Sim)
-%     InfectionsByYearDiagnosed=hist(DateMatrix(SimNumber, :), HistYearSlots+0.5*StepSize);% 0.5*StepSize used to centralise the bar plots in the the hist function
-%     MSMInfectionsByYearDiagnosed=hist(MSMDateMatrix(SimNumber, :), HistYearSlots+0.5*StepSize);% 0.5*StepSize used to centralise the bar plots in the the hist function
-%     [~, TotalInTimeVector]=size(ExpectedTimesVector);
-%     
-%         %ProportionOfExpectedTimesVectorExpectedPerStep=StepSize/(RangeOfCD4Averages(2)-RangeOfCD4Averages(1));
-%         %TotalInStepResample=round(TotalInTimeVector*ProportionOfExpectedTimesVectorExpectedPerStep);%this parameter is not acually used in any meaningful way in this code
-%         
-%         % Find an estimate for the number of infections which are undiagnosed
-%         [~, LastPositionInArray]=size(HistYearSlots);
-%         YearIndex=0;
-%         for YearStep=HistYearSlots
-%             YearIndex=YearIndex+1;
-%             n=LastPositionInArray-YearIndex+1;
-%             if n>MaxYears/StepSize %i.e if year step is greater than 20 years
-%                 TotalUndiagnosedInfections(YearIndex)=0;
-%                 MSMTotalUndiagnosedInfections(YearIndex)=0;
-%             else
-%                 %if TotalInStepResample<0
-%                 %    DistributionForThisSimulationUndiagnosedInfectionsPrecise(YearIndex)=0;
-%                 %else
-%                     AdjustmentFactor=2*n/(2*n-1);
-%                     %Adjust for the fact that we are cutting across triangle in determining the future cases i.e.:
-%                     %|\
-%                     %|\|\
-%                     %|\|\|\
-%                     %2.5, 1.5, 0.5
-%                     TotalDiagnosedInBackprojectionEstimate=round(InfectionsByYearDiagnosed(YearIndex)*AdjustmentFactor);
-%                     replacement=true;
-%                     %create a really big vector to sample from. This should be about 50 times bigger than what's needed.
-%                     SampleIndex=randsample(TotalInTimeVector, TotalInTimeVector, replacement);
-%                     %RandomisedExpectedTimesVector=randsample(ExpectedTimesVector, TotalInTimeVector, replacement);
-%                     RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
-%                     MSMSampleVector=MSMCaseIndicator(SampleIndex);
-%                     
-%                     
-%                     NumberFoundDiagnosed=0;
-%                     NumberOfUnidagnosedInfectionsThisStep=0;
-%                     CountSamples=0;
-%                     MSMIncludedInforwardProjection=0;
-%                     
-%                     LowerBoundFound=false;
-%                     UpperBoundFound=false;
-%                     while (UpperBoundFound==false)%NumberFoundDiagnosed<TotalDiagnosedInBackprojectionEstimate+1
-% 
-%                         CountSamples=CountSamples+1;
-%                         
-%                         NewTimeToAdd=RandomisedExpectedTimesVector(CountSamples);
-%                         TimeToFind=(CD4BackProjectionYearsWhole(2)+1-YearStep);
-%                         % Determine if the infection would have occure in this time step
-%                         if NewTimeToAdd<TimeToFind
-%                             NumberFoundDiagnosed=NumberFoundDiagnosed+1;
-%                         else
-%                             NumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep+1;
-%                             MSMIncludedInforwardProjection=MSMIncludedInforwardProjection+MSMSampleVector(CountSamples);
-%                         end
-%                         % Determine 
-%                         if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate && LowerBoundFound==false)
-%                             LowerBoundFound=true;
-%                             LowerBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;
-%                             LowerBoundOfUndiagnosedMSM=MSMIncludedInforwardProjection;
-%                         end
-%                         if (NumberFoundDiagnosed==TotalDiagnosedInBackprojectionEstimate+1)
-%                             UpperBoundFound=true;
-%                             UpperBoundNumberOfUnidagnosedInfectionsThisStep=NumberOfUnidagnosedInfectionsThisStep;
-%                             UpperBoundOfUndiagnosedMSM=MSMIncludedInforwardProjection;
-%                         end
-%                     end
-%                     DiffInUndiagnosedEstimate=UpperBoundNumberOfUnidagnosedInfectionsThisStep-LowerBoundNumberOfUnidagnosedInfectionsThisStep;
-%                     UndiagnosedEstimateInThisStep=round(LowerBoundNumberOfUnidagnosedInfectionsThisStep+rand*DiffInUndiagnosedEstimate);
-%                     TotalUndiagnosedInfections(YearIndex)=UndiagnosedEstimateInThisStep;
-%                     if (DiffInUndiagnosedEstimate==0)%to avoid divide by zero error
-%                         MSMTotalUndiagnosedInfections(YearIndex)=LowerBoundNumberOfUnidagnosedInfectionsThisStep;
-%                     else
-%                         ProportionInUncertainZoneThatAreMSM=(UpperBoundOfUndiagnosedMSM-LowerBoundOfUndiagnosedMSM)/DiffInUndiagnosedEstimate;
-%                         UncertainZoneMSM=round((UpperBoundOfUndiagnosedMSM-LowerBoundOfUndiagnosedMSM)*ProportionInUncertainZoneThatAreMSM*rand);
-%                         MSMTotalUndiagnosedInfections(YearIndex)=LowerBoundNumberOfUnidagnosedInfectionsThisStep+UncertainZoneMSM;
-%                     end
-%                 %end
-%             end
-%         end
-% 
-%     %Create a matrix of all simulations
-%     DistributionUndiagnosedInfectionsPrecise(SimNumber, :)=TotalUndiagnosedInfections;
-%     MSMDistributionUndiagnosedInfectionsPrecise(SimNumber, :)=MSMTotalUndiagnosedInfections;
-%     DistributionDiagnosedInfectionsPrecise(SimNumber, :)=InfectionsByYearDiagnosed;
-%     MSMDistributionDiagnosedInfectionsPrecise(SimNumber, :)=MSMInfectionsByYearDiagnosed;
-%     
-%     %Sum up the results for the undiagnosed infections into year blocks
-%     YearIndex=0;
-%     StepIndex=0;
-%     DistributionForThisSimulationUndiagnosedInfections=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
-%     MSMDistributionForThisSimulationUndiagnosedInfections=zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
-%     for Year=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2)
-%         YearIndex=YearIndex+1;
-%         for TenSteps=1:10
-%             StepIndex=StepIndex+1;
-%             DistributionForThisSimulationUndiagnosedInfections(YearIndex)=DistributionForThisSimulationUndiagnosedInfections(YearIndex)+TotalUndiagnosedInfections(StepIndex);
-%             MSMDistributionForThisSimulationUndiagnosedInfections(YearIndex)=MSMDistributionForThisSimulationUndiagnosedInfections(YearIndex)+MSMTotalUndiagnosedInfections(StepIndex);
-%         end        
-%     end
-%     
-%     %State the histogram year centres
-%     YearCentres=(CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2))+0.5;
-%     %Find the infections that have already been diagnosed
-% 
-% 
-%     
-%     DistributionDiagnosedInfections(SimNumber, :)=hist(DateMatrix(SimNumber, :), YearCentres);
-%     DistributionUndiagnosedInfections(SimNumber, :)=DistributionForThisSimulationUndiagnosedInfections;
-%     MSMDistributionUndiagnosedInfections(SimNumber, :)=MSMDistributionForThisSimulationUndiagnosedInfections;
-%     
-%     MSMDistributionDiagnosedInfections(SimNumber, :)=hist(MSMDateMatrix(SimNumber, :), YearCentres);
-%     NonMSMDistributionDiagnosedInfections(SimNumber, :)=hist(NonMSMDateMatrix(SimNumber, :), YearCentres);
-%     
-%     PropMSMDistributionDiagnosedInfections(SimNumber, :)=MSMDistributionDiagnosedInfections(SimNumber, :)./DistributionDiagnosedInfections(SimNumber, :);
-% end
-
 %% Identifying MSM
 % Find all MSM
 MSMCaseIndicator=false(1, NumberOfPatients);
@@ -517,29 +234,9 @@ ForwardSimulate
 [MSMFineDiagnoses]=DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), StepSize, CD4BackProjectionYearsWhole(2)+1-StepSize);
 
 %% Find total undiagnosed at all points in time
-% HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
-% [~, NumberOfYearSlots]=size(HistYearSlots);
-% UndiagnosedMatrix=zeros(NoParameterisations, NumberOfYearSlots );
-% for i=1:NumberOfPatients
-%     if mod(i, 100)==0
-%         disp(['Finding when patient ' num2str(i) ' is undiagnosed']);
-%     end
-%     if Patient(i).PreviouslyDiagnosedOverseas==0%exclude those who were diagnosed overseas
-%         YearSlotCount=0;
-%         for YearStep=HistYearSlots
-%             YearSlotCount=YearSlotCount+1;
-%             UndiagnosedAddtionVector=Patient(i).InfectionDateDistribution<YearStep & YearStep<Patient(i).DateOfDiagnosisContinuous ;
-%             %Add this value to the matrix across the no. simulations dimension
-%             UndiagnosedMatrix(:, YearSlotCount)=UndiagnosedMatrix(:, YearSlotCount)+UndiagnosedAddtionVector';
-%         end
-%     end
-% end
 
 [UndiagnosedPatient]=UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), StepSize, (CD4BackProjectionYearsWhole(2)+1-StepSize));
 [MSMUndiagnosedPatient]=UndiagnosedByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), StepSize, (CD4BackProjectionYearsWhole(2)+1-StepSize));
-
-
-
 
 %Add the undiagnosed with time (who have been diagnosed) to the people we know will be diagnosed in the future
 TotalUndiagnosedByTime.Time=UndiagnosedPatient.Time ;
@@ -610,9 +307,9 @@ for Year=TimeSinceInfectionYearIndex
 end
 
 %% Plotting results
-%CreateFigure1
-CreateFigure2;
-CreateFigure3;
+CreateFigure1
+CreateFigure2
+CreateFigure3
 CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime');
 CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime');
 CreateFigure4(NonMSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 NonMSMTotalUndiagnosedByTime');
@@ -631,13 +328,13 @@ CreateFigure4(PropMSMUndiagnosed, PlotSettings.YearsToPlot, 'Appendix PropMSMTot
 
 PropMSM=DiagnosesByYear;
 PropMSM.Value=MSMDiagnosesByYear.N./DiagnosesByYear.N;
-plot(PropMSM.Time, PropMSM.Value);
+plot(PropMSM.Time, PropMSM.Value)
 mean(RecentMSMCaseIndicator)% a mean of the MSM appearance in the last 5 years of diagnoses
 
 % inspecting the proportion of people undiagnosed
 hold on;
-plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median);
-plot(PropMSMUndiagnosed.Time, median(MSMUndiagnosedSummed./UndiagnosedSummed, 1));
+plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median)
+plot(PropMSMUndiagnosed.Time, median(MSMUndiagnosedSummed./UndiagnosedSummed, 1))
 hold off;
 %comes out to a flat 70% which is not expected
 
@@ -649,7 +346,7 @@ hold off;
 % UndiagnosedCaseData
 % UndiagnosedSummed
 
-plot(median(MSMDistributionUndiagnosedInfections./DistributionUndiagnosedInfections, 1));
+plot(median(MSMDistributionUndiagnosedInfections./DistributionUndiagnosedInfections, 1))
 
 
 
@@ -663,12 +360,12 @@ MSMSampleDistribution=hist(RandomisedExpectedTimesVector(MSMSampleVector), DistC
 NonMSMSampleDistribution=hist(RandomisedExpectedTimesVector(~MSMSampleVector), DistComparisonYear);
 NormMSMSampleDistribution=MSMSampleDistribution/sum(MSMSampleDistribution);
 NormNonMSMSampleDistribution=NonMSMSampleDistribution/sum(NonMSMSampleDistribution);
-plot(DistComparisonYear+0.5, [NormMSMSampleDistribution; NormNonMSMSampleDistribution]);
-plot(DistComparisonYear+0.5, MSMSampleDistribution./(MSMSampleDistribution+NonMSMSampleDistribution));
+plot(DistComparisonYear+0.5, [NormMSMSampleDistribution; NormNonMSMSampleDistribution])
+plot(DistComparisonYear+0.5, MSMSampleDistribution./(MSMSampleDistribution+NonMSMSampleDistribution))
    
 tempMSM=false(1, 0);
 tempDate=[];
-for iSim=1:NoParameterisations
+for iSim=1:Sx.NoParameterisations
     iSim
     tempDate=[tempDate UndiagnosedCaseData(iSim).InfectionDate];
     tempMSM=[tempMSM UndiagnosedCaseData(iSim).MSM];
@@ -767,9 +464,6 @@ SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
 
 
 % save('PatientSaveFiles/SimulationState.mat');
-%% Calculating Total Simulation Time
-disp(' ');
-disp('-Total Simulation Time-');
 toc(TimeALL)
 
 % At the end of the simulation, it may be desirable to perform a mortlaity calculation

@@ -15,12 +15,12 @@ disp('Arranging Data File into Appropriate Matrices');
 disp(' ');
 LoadTime = tic;
 if SamplingFactor ~= 0.0
-    x = randsample(length(c)-1, ceil((1.0 - SamplingFactor) * length(c)-1));
+    x = randsample((length(c) - 1), ceil(SamplingFactor * (length(c) - 1)));
     x = sort(x, 'descend');    
     
     a(x, :) = [];                                                       %Reshape vector a to Compressed State with randomnly selected indexes from Notification File
-    b(x, :) = [];                                                       %Reshape vector b to Compressed State with randomnly selected indexes from Notification File
-    c(x, :) = [];                                                       %Reshape vector c to Compressed State with randomnly selected indexes from Notification File
+    b(x+1, :) = [];                                                       %Reshape vector b to Compressed State with randomnly selected indexes from Notification File
+    c(x+1, :) = [];                                                       %Reshape vector c to Compressed State with randomnly selected indexes from Notification File
         
 end
 clear x;

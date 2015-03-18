@@ -38,20 +38,12 @@ while  result == false
         disp(' ');
         break
         
-    elseif x == 'N'
+    elseif x == 'N' || 'n'
         result = false;
         break
     
-    elseif x == 'Y'
+    elseif x == 'Y' || 'y'
         result = true;
-        break
-        
-    elseif x == 'y'
-        result = true;
-        break
-        
-    elseif x == 'n'
-        result = false;
         break
         
     else
@@ -75,20 +67,13 @@ while  result == false
         result = true;
         disp('Using default value of: Yes');
         disp(' ');
-    elseif x == 'N'
+    
+    elseif x == 'N' || 'n'
         result = false;
         break
     
-    elseif x == 'Y'
+    elseif x == 'Y' || 'y'
         result = true;
-        break
-        
-    elseif x == 'y'
-        result = true;
-        break
-        
-    elseif x == 'n'
-        result = false;
         break
         
     else
@@ -155,20 +140,13 @@ while  result == false
     if isempty(x) == true
         result = true;
         disp('Using default value of: Yes');
-    elseif x == 'N'
+    
+    elseif x == 'N' || 'n'
         result = false;
         break
     
-    elseif x == 'Y'
+    elseif x == 'Y' || 'y'
         result = true;
-        break
-        
-    elseif x == 'y'
-        result = true;
-        break
-        
-    elseif x == 'n'
-        result = false;
         break
         
     else
@@ -185,8 +163,8 @@ result = 0.5;
 
 while  result == 0.5
     disp(' ');
-    disp('Sampling factor is data compression to improve simulation time, 0.0 is no compression 0.9 is 90% compression');
-    disp('Range: 0.0 - 0.9');
+    disp('Sampling factor is data compression to improve simulation time, 0.0 is no compression 0.75 is 75% compression');
+    disp('Options: 0.00, 0.25, 0.50, 0.75');
     prompt = 'Please Sampling Factor(Press Enter/Return for default): '; 
     x = input(prompt);
     
@@ -197,15 +175,10 @@ while  result == 0.5
         disp(' ');
         break
         
-    elseif x <= 0.9 
-        if x >= 0.0
-            result = x;
-            break
-        else
-            disp(' ');  
-            disp('Invalid Entry! Please Enter a Valid Number');
-        end
-   
+    elseif x == 0.75 || x == 0.50 || x == 0.25 || x == 0.00 
+        result = x;
+        break
+           
     else
         disp(' ');  
         disp('Invalid Entry! Please Enter a Valid Number');
@@ -238,7 +211,7 @@ Sx.PerformGeographicCalculations = false;                                       
 Sx.InitialisePCToSRThisSim = false;                                              %re-perform this function. Only relevant if geographic calculations take place
 Sx.UseGeneticAlgorithmOptimisation = true;
 
-RangeOfCD4Averages = [(YearOfDiagnosedDataEnd-5+1) (YearOfDiagnosedDataEnd+1)];       %YearOfDiagnosedDataEnd not inclusive
+RangeOfCD4Averages = [(YearOfDiagnosedDataEnd-5+1) (YearOfDiagnosedDataEnd+1)];              
 RangeOfCD4AveragesForForwardProjection = [(YearOfDiagnosedDataEnd-5+1) (YearOfDiagnosedDataEnd+1)];
 %% Optimisation Settings & Plot Settings
 Sx.HistogramCentres = 25:50:4975;

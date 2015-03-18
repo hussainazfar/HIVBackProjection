@@ -155,29 +155,6 @@ classdef PatientClass
             disp(median(obj.TimeFromInfectionToDiagnosis))
       end
       
-      %function obj = set.Alive(obj, Alive)
-%          if Alive~=0 &&  Alive~=1
-%             error('Incorrect alive status entered (not 1 or 0)')
-%          end
-%          obj.Alive = Alive;
-%          
-%       end 
-%       
-% 
-      %function obj = set.HIVStatus(obj, HIVStatus)
-%          if HIVStatus~=0 &&  HIVStatus~=1
-%             error('Incorrect HIV status entered (not 1 or 0)')
-%          end
-%          obj.HIVStatus = HIVStatus;
-%       end 
-%       
-% 
-      %function obj = set.AIDSStatus(obj, AIDSStatus)
-%          if AIDSStatus~=0 &&  AIDSStatus~=1
-%             error('Incorrect AIDS status entered (not 1 or 0)')
-%          end
-%          obj.AIDSStatus = AIDSStatus;
-%       end 
     end                                                                     %End of Methods
     
 end                                                                         %End of Class Definition

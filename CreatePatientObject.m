@@ -35,18 +35,5 @@ for x = 1:LineDataMatrix.NumberOfPatients
     
 end
 
-
-%% Assign people without birth year a year
-%this section is no longer necessary as imputation of date of birth occurs
-%in the SAS file imputation (which is much better at imputation than my
-%imputation method)
-% % disp('Assigning patients without a birth year a new birth year based on other diagnoses');
-% % DiagsByYear=CreateYearInitialiser(Patient);
-% % for i=1:NumberOfPatients
-% %     if Patient(i).YearBirth==0
-% %         Patient(i).YearBirth=CreateYear(Patient(i).YearOfDiagnosis, DiagsByYear);
-% %     end
-% end
-
 end
 
