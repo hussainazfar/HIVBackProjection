@@ -1,4 +1,4 @@
-function [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, RandomNumberStream)
+function [Times, StartingCD4, TestingParameter] = CreateIndividualTimeUntilDiag(RealTestingCD4, Px, RandomNumberStream)
 % function [Times, StartingCD4, TestingProbVec, IdealPopTimesStore, IdealPopTestingCD4Store ]=CreateIndividualTimeUntilDiag(RealTestingCD4, Px, RandomNumberStream)
 
 
@@ -10,35 +10,33 @@ function [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(Re
 % TestingProbVec - the values of the probability vector associated with this result
 
 
-[~, NumberOfPeople]=size(RealTestingCD4);
-Times=zeros(NumberOfPeople, Px.NoParameterisations);
-StartingCD4=zeros(NumberOfPeople, Px.NoParameterisations);
+[~, NumberOfPeople] = size(RealTestingCD4);
+Times = zeros(NumberOfPeople, Px.NoParameterisations);
+StartingCD4 = zeros(NumberOfPeople, Px.NoParameterisations);
 
 % For each specific vaiable combination
-parfor CurrentParamNumber=1:Px.NoParameterisations
-% for CurrentParamNumber=1:NumberOfTimeSamples
-    % Seed the random number generator
-    set(RandomNumberStream,'Substream',CurrentParamNumber);
+    parfor CurrentParamNumber = 1:Px.NoParameterisations
+        
+        % Seed the random number generator
+        set(RandomNumberStream,'Substream',CurrentParamNumber);
     
-    %Choose the current parameterision
-    Pxi=Px;
-    Pxi.CD4Decline=Px.CD4DeclineVec(CurrentParamNumber);
-    Pxi.SQRCD4Decline=Px.SQRCD4DeclineVec(CurrentParamNumber);
-    Pxi.FractionalDeclineToRebound=Px.FractionalDeclineToReboundVec(CurrentParamNumber);
-    Pxi.FirstInfectionDate=Pxi.FirstInfectionDateVec(CurrentParamNumber);
+        %Choose the current parameterision
+        Pxi = Px;
+        Pxi.CD4Decline = Px.CD4DeclineVec(CurrentParamNumber);
+        Pxi.SQRCD4Decline = Px.SQRCD4DeclineVec(CurrentParamNumber);
+        Pxi.FractionalDeclineToRebound = Px.FractionalDeclineToReboundVec(CurrentParamNumber);
+        Pxi.FirstInfectionDate = Pxi.FirstInfectionDateVec(CurrentParamNumber);
         
     
-    [TimesForThisSim, StartingCD4ForThisSim, OptimisedParameters]=OptimiseTestingRateToCD4(RealTestingCD4, Pxi );
+        [TimesForThisSim, StartingCD4ForThisSim, OptimisedParameters] = OptimiseTestingRateToCD4(RealTestingCD4, Pxi );
     
     
-    % Store results
-    Times(:, CurrentParamNumber)= TimesForThisSim;
-    StartingCD4(:, CurrentParamNumber)= StartingCD4ForThisSim;
-    TestingParameter(CurrentParamNumber).Result=OptimisedParameters;
+        % Store results
+        Times(:, CurrentParamNumber) = TimesForThisSim;
+        StartingCD4(:, CurrentParamNumber) = StartingCD4ForThisSim;
+        TestingParameter(CurrentParamNumber).Result = OptimisedParameters;
 
-end
-
-
+    end
 end
     
  

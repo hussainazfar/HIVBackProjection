@@ -97,6 +97,10 @@ OptimisationTimer = tic;
 [~, NumberInPatientCurrently] = size(Patient);
 YearIndex = 0;
 
+for x = 1:Sx.NoParameterisations
+    Sim(x).Patient = Patient;
+end
+
 for Year = BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
     SimTimer = tic;
     fprintf(1, '\nRunning Simulation Year %d: \n', Year);
@@ -111,45 +115,52 @@ for Year = BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
         MaxYear = Year+1;
     end
       
-    CD4ForOptimisation=-1*ones(1, NumberInPatientCurrently);%to indicate empty fields
+    CD4ForOptimisation = -1 * ones(1, NumberInPatientCurrently);            %to indicate empty fields
     % Select individuals that are in the year group
-    PatientRef=-1*ones(1, NumberInPatientCurrently);
+    PatientRef = -1 * ones(1, NumberInPatientCurrently);
     CountRef=0;
     
-    for i=1:NumberInPatientCurrently
+    for x = 1:NumberInPatientCurrently
         % if the year of diagnosis matches
-        if MinYear<=Patient(i).DateOfDiagnosisContinuous && Patient(i).DateOfDiagnosisContinuous<MaxYear
-            CountRef=CountRef+1;
+        if (MinYear <= Patient(x).DateOfDiagnosisContinuous) && (Patient(x).DateOfDiagnosisContinuous < MaxYear)
+            CountRef = CountRef + 1;
             % record patient ref
-            CD4ForOptimisation(CountRef)=Patient(i).CD4CountAtDiagnosis;
+            CD4ForOptimisation(CountRef) = Patient(x).CD4CountAtDiagnosis;
             % Extract CD4 at diagnosis
-            PatientRef(CountRef)=i;
+            PatientRef(CountRef) = x;
         end
     end
     % clear empty fields
-    CD4ForOptimisation(CD4ForOptimisation<0)=[];
-    PatientRef(PatientRef<0)=[];
+    CD4ForOptimisation(CD4ForOptimisation<0) = [];
+    PatientRef(PatientRef<0) = [];
     
     
     %Perform an optimisation
-    Px.CurrentYear=Year;
-    [Times, StartingCD4, TestingParameter]=CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, RandomNumberStream);
+    Px.CurrentYear = Year;
+    [Times, StartingCD4, TestingParameter] = CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, RandomNumberStream);
     
-    OptimisationResults(YearIndex).Year=Year;
-    OptimisationResults(YearIndex).TestingParameter=TestingParameter;
+    OptimisationResults(YearIndex).Year = Year;
+    OptimisationResults(YearIndex).TestingParameter = TestingParameter;
     
     %Place values back into the vector
-    CountRef=0;
-    for ref=PatientRef
-        CountRef=CountRef+1;
-        Patient(ref).TimeFromInfectionToDiagnosis=Times(CountRef, :);
+    CountRef = 0;
+    for ref = PatientRef
+        CountRef = CountRef + 1;
+        Patient(ref).TimeFromInfectionToDiagnosis = Times(CountRef, :);
     end
     
-    CD4Comparison(YearIndex).RealTestingCD4=CD4ForOptimisation;
-    CD4ComparisonLookup(YearIndex)=Year;
+    CD4Comparison(YearIndex).RealTestingCD4 = CD4ForOptimisation;
+    CD4ComparisonLookup(YearIndex) = Year;
     %Store the appropriate probabilities
     fprintf(1, 'Time to run Simulation: %.2f seconds\n', toc(SimTimer));
 end
+
+for x = 1:length(Patient)
+    for y = 1:Sx.NoParameterisations
+        Sim(y).Patient(x).TimeFromInfectionToDiagnosis = Patient(x).TimeFromInfectionToDiagnosis(y);  
+    end
+end
+
 disp(' ');
 disp('-Time Spent on Optimisation-');
 toc(OptimisationTimer)
@@ -158,46 +169,44 @@ matlabpool close;
 disp('------------------------------------------------------------------');
 
 %% Create dates for the infection based on time between infection and testing, together with testing date
-[~, NumberOfPatients]=size(Patient);
-for i=1:NumberOfPatients
-    Patient(i)=Patient(i).DetermineInfectionDateDistribution();
+[~, NumberOfPatients] = size(Patient);
+for x = 1:NumberOfPatients
+    Patient(x) = Patient(x).DetermineInfectionDateDistribution();
 end
     
-
 %% If consideration is given to recent infection data, select data according to avaialable information
-% There are three items to consider when dealing with a
 
-if Sx.ConsiderRecentInfection==true
-    for SimCount=1:Sx.NoParameterisations
-        for i=1:NumberInPatientCurrently
+if Sx.ConsiderRecentInfection == true
+    for SimCount = 1:Sx.NoParameterisations
+        for x = 1:NumberInPatientCurrently
             % A clear western blot in close proximity to diagnosis indicates most likely a recent infection
             % Serconversion illness indicates a likely recent infection
-            LatestFirstDateEstFromIllness=NaN;
-            LatestFirstDateEstFromWesternBlot=NaN;
+            LatestFirstDateEstFromIllness = NaN;
+            LatestFirstDateEstFromWesternBlot = NaN;
             % if the time of illness is more than 40 days after diagnosis,
             % it's likely not to be serconversion illness so we ignore
-            if (Patient(i).DateIll-Patient(i).DateOfDiagnosisContinuous)<40/365 % if NaN, do nothing
-                LatestFirstDateEstFromIllness=Patient(i).DateIll-40/365;
+            if (Patient(x).DateIll - Patient(x).DateOfDiagnosisContinuous) < (40 / 365) % if NaN, do nothing
+                LatestFirstDateEstFromIllness = Patient(x).DateIll - (40 / 365);
             end
             % if it is more than 40 days after diagnosis, there's probably an issue, so we ignore the western blot result
-            if (Patient(i).DateIndetWesternBlot-Patient(i).DateOfDiagnosisContinuous)<40/365 % if NaN, do nothing
-                LatestFirstDateEstFromWesternBlot=Patient(i).DateIndetWesternBlot-40/365;
+            if (Patient(x).DateIndetWesternBlot - Patient(x).DateOfDiagnosisContinuous) < (40/365) % if NaN, do nothing
+                LatestFirstDateEstFromWesternBlot = Patient(x).DateIndetWesternBlot - (40/365);
             end
             
             
-            if Patient(i).InfectionDateDistribution(SimCount)<Patient(i).DateLastNegative && Patient(i).DateLastNegative<Patient(i).DateOfDiagnosisContinuous % if NaN, do nothing
-                LatestFirstDateEstFromLastNegative=Patient(i).DateLastNegative;
+            if (Patient(x).InfectionDateDistribution(SimCount) < Patient(x).DateLastNegative) && (Patient(x).DateLastNegative < Patient(x).DateOfDiagnosisContinuous) % if NaN, do nothing
+                LatestFirstDateEstFromLastNegative = Patient(x).DateLastNegative;
             else
-                LatestFirstDateEstFromLastNegative=NaN;
+                LatestFirstDateEstFromLastNegative = NaN;
             end
             
             % Find the most recent of the above. Randomly chose between
             % LatestFirstDate and the date of diagnosis
             LatestFirstDate=max([LatestFirstDateEstFromWesternBlot, LatestFirstDateEstFromIllness, LatestFirstDateEstFromLastNegative]);
             if ~isnan(LatestFirstDate)
-                Patient(i).InfectionDateDistribution(SimCount)=LatestFirstDate+rand*(Patient(i).DateOfDiagnosisContinuous-LatestFirstDate);
+                Patient(x).InfectionDateDistribution(SimCount) = LatestFirstDate + rand*(Patient(x).DateOfDiagnosisContinuous - LatestFirstDate);
                 % re-establish the time between infection and diagnosis for the individual
-                Patient(i).TimeFromInfectionToDiagnosis=Patient(i).DateOfDiagnosisContinuous-Patient(i).InfectionDateDistribution;
+                Patient(x).TimeFromInfectionToDiagnosis = Patient(x).DateOfDiagnosisContinuous - Patient(x).InfectionDateDistribution;
             end
             %else do nothing
         end
@@ -206,37 +215,33 @@ end
 
 %% Identifying MSM
 % Find all MSM
-MSMCaseIndicator=false(1, NumberOfPatients);
-for i=1:NumberOfPatients
-    if (Patient(i).ExposureRoute<=4)% exposure coding of 1,2,3,4 are MSM of some variety
-        MSMCaseIndicator(i)=true;
+MSMCaseIndicator = false(1, NumberOfPatients);
+for x = 1:NumberOfPatients
+    if (Patient(x).ExposureRoute <= 4)                                      % exposure coding of 1,2,3,4 are MSM of some variety
+        MSMCaseIndicator(x) = true;
     else
-        MSMCaseIndicator(i)=false;
+        MSMCaseIndicator(x) = false;
     end
 end
 
-
 %% Forward simulate 
-ForwardSimulate
+ForwardSimulate;
 
 %% Create a diagnosis plot
-[FineDiagnoses]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), StepSize, CD4BackProjectionYearsWhole(2)+1-StepSize);
+[FineDiagnoses] = DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, CD4BackProjectionYearsWhole(2)+1-Sx.StepSize);
 
+[DiagnosesByYear] = DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
-[DiagnosesByYear]=DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
+[MSMDiagnosesByYear] = DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
-[MSMDiagnosesByYear]=DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
+[NonMSMDiagnosesByYear] = DiagnosesByTime(Patient(~MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
 
-[NonMSMDiagnosesByYear]=DiagnosesByTime(Patient(~MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
-
-
-
-[MSMFineDiagnoses]=DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), StepSize, CD4BackProjectionYearsWhole(2)+1-StepSize);
+[MSMFineDiagnoses] = DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), Sx.StepSize, CD4BackProjectionYearsWhole(2)+1-Sx.StepSize);
 
 %% Find total undiagnosed at all points in time
 
-[UndiagnosedPatient]=UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), StepSize, (CD4BackProjectionYearsWhole(2)+1-StepSize));
-[MSMUndiagnosedPatient]=UndiagnosedByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), StepSize, (CD4BackProjectionYearsWhole(2)+1-StepSize));
+[UndiagnosedPatient]=UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
+[MSMUndiagnosedPatient]=UndiagnosedByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
 
 %Add the undiagnosed with time (who have been diagnosed) to the people we know will be diagnosed in the future
 TotalUndiagnosedByTime.Time=UndiagnosedPatient.Time ;
@@ -257,22 +262,22 @@ for SimCout=1:NumSims
 end
 
 YearCount=0;
-StepsToAverageOver=round(1/StepSize);
+StepsToAverageOver=round(1/Sx.StepSize);
 YearlyEffectiveTestingRate=[];
 for YearStepCount=1:10:NumStepsInYearDimension
     YearCount=YearCount+1;
     YearlyEffectiveTestingRate(:, YearCount)=mean(EffectiveTestingRate(:, YearStepCount:YearStepCount+StepsToAverageOver-1), 2);
-    RaisedPower=round(1/StepSize);
+    RaisedPower=round(1/Sx.StepSize);
     YearlyEffectiveTestingRate(:, YearCount)=1-(1-YearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
 end
 
 YearCount=0;
-StepsToAverageOver=round(1/StepSize);
+StepsToAverageOver=round(1/Sx.StepSize);
 MSMYearlyEffectiveTestingRate=[];
 for YearStepCount=1:10:NumStepsInYearDimension
     YearCount=YearCount+1;
     MSMYearlyEffectiveTestingRate(:, YearCount)=mean(MSMEffectiveTestingRate(:, YearStepCount:YearStepCount+StepsToAverageOver-1), 2);
-    RaisedPower=round(1/StepSize);
+    RaisedPower=round(1/Sx.StepSize);
     MSMYearlyEffectiveTestingRate(:, YearCount)=1-(1-MSMYearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
 end
 
@@ -396,7 +401,7 @@ CreateResultUncertaintyAroundTime
 %OutputPlots %old plots output
 toc(TimeALL)
 
-YearValueVector=CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize);
+YearValueVector=CD4BackProjectionYearsWhole(1):Sx.StepSize:(CD4BackProjectionYearsWhole(2)+1-Sx.StepSize);
 
 
 %% Sensitivity analysis
@@ -440,7 +445,7 @@ AllPatients=[Patient PreviouslyDiagnosedOverseasPatient];
 % use http://www.mathworks.com.au/help/matlab/ref/save.html#inputarg_version
 % v7.3 to save files above 2GB
 YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);
-HistYearSlots=(CD4BackProjectionYearsWhole(1):StepSize:(CD4BackProjectionYearsWhole(2)+1-StepSize));
+HistYearSlots=(CD4BackProjectionYearsWhole(1):Sx.StepSize:(CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
 disp('In the following section, data is to be saved to put into a file for reuse later');
 BackProjectedResults.DistributionDiagnosedInfections=DistributionDiagnosedInfections;
 BackProjectedResults.DistributionUndiagnosedInfections=DistributionUndiagnosedInfections;
@@ -464,12 +469,9 @@ SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
 
 
 % save('PatientSaveFiles/SimulationState.mat');
+%% Calculating Total Simulation Time
+disp(' ');
+disp('------------------------------------------------------------------');
+disp('-Total Simulation Time-');
 toc(TimeALL)
-
-% At the end of the simulation, it may be desirable to perform a mortlaity calculation
-% To do this, change folder to the MoralityCalculations
-% Run CalculateAIDSAndMortality
-% Run CollateResultsForOutput
-% NOTE: care should be taken to ensure that all individuals (previously
-% diagnosed overseas or not) to get the correct figure for proportion of
-% people living with HIV 
+disp('------------------------------------------------------------------');

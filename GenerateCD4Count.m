@@ -168,11 +168,6 @@ while (sum(IndexTest)<SimulatedPopSize)
     TimeSinceRebound=TimeSinceRebound+StepSize;
 end
 
-
-
-
-
-
 % Add stochasticity to all TestingCD4
 % Hughes, M.D. et al "Within-Subject Variation in CD4..." 1994 JID
 % On the loge scale, the relationship between the within-subject SO and the underlying CD4 cell count of mu was given by (sigma = 0.930 - 0.110 loge(mu).
