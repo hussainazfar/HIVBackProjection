@@ -240,14 +240,14 @@ ForwardSimulate;
 
 %% Find total undiagnosed at all points in time
 
-[UndiagnosedPatient]=UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
-[MSMUndiagnosedPatient]=UndiagnosedByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
+[UndiagnosedPatient] = UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
+[MSMUndiagnosedPatient] = UndiagnosedByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
 
 %Add the undiagnosed with time (who have been diagnosed) to the people we know will be diagnosed in the future
-TotalUndiagnosedByTime.Time=UndiagnosedPatient.Time ;
-TotalUndiagnosedByTime.N=UndiagnosedSummed+UndiagnosedPatient.N ;
-MSMTotalUndiagnosedByTime.Time=MSMUndiagnosedPatient.Time ;
-MSMTotalUndiagnosedByTime.N=MSMUndiagnosedSummed+MSMUndiagnosedPatient.N ;
+TotalUndiagnosedByTime.Time = UndiagnosedPatient.Time ;
+TotalUndiagnosedByTime.N = UndiagnosedSummed+UndiagnosedPatient.N ;
+MSMTotalUndiagnosedByTime.Time = MSMUndiagnosedPatient.Time ;
+MSMTotalUndiagnosedByTime.N = MSMUndiagnosedSummed+MSMUndiagnosedPatient.N ;
 
 NonMSMTotalUndiagnosedByTime.Time=TotalUndiagnosedByTime.Time;
 NonMSMTotalUndiagnosedByTime.N=TotalUndiagnosedByTime.N-MSMTotalUndiagnosedByTime.N ;
