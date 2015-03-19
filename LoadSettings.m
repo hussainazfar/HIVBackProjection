@@ -164,12 +164,12 @@ result = 0.5;
 while  result == 0.5
     disp(' ');
     disp('Sampling factor is data compression to improve simulation time, please select how may records to process');
-    disp('Options: 5000, 10000, Default - Samples 50% of data');
+    disp('Options: 5000, 10000, Default - Samples 5000 from file');
     prompt = 'Please Enter Sampling Factor(Press Enter/Return for default): '; 
     x = input(prompt);
     
     if isempty(x) == true
-        result = 0.5;
+        result = 5000;
         disp('Using default value of: ');
         disp(result);
         disp(' ');
