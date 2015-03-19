@@ -240,59 +240,63 @@ ForwardSimulate;
 
 %% Find total undiagnosed at all points in time
 
+fprintf(1,'\nDetermining when Patients were Undiagnosed\n');
+UndiagnosedTimer = tic;
+    
+fprintf(1,'\nAnalyzing Undiagnosed Patients:\n');
 [UndiagnosedPatient] = UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
+
+fprintf(1,'\nAnalyzing Undiagnosed Patients(MSM Case):\n');
 [MSMUndiagnosedPatient] = UndiagnosedByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
 
 %Add the undiagnosed with time (who have been diagnosed) to the people we know will be diagnosed in the future
 TotalUndiagnosedByTime.Time = UndiagnosedPatient.Time ;
-TotalUndiagnosedByTime.N = UndiagnosedSummed+UndiagnosedPatient.N ;
+TotalUndiagnosedByTime.N = UndiagnosedSummed + UndiagnosedPatient.N ;
 MSMTotalUndiagnosedByTime.Time = MSMUndiagnosedPatient.Time ;
-MSMTotalUndiagnosedByTime.N = MSMUndiagnosedSummed+MSMUndiagnosedPatient.N ;
+MSMTotalUndiagnosedByTime.N = MSMUndiagnosedSummed + MSMUndiagnosedPatient.N ;
 
-NonMSMTotalUndiagnosedByTime.Time=TotalUndiagnosedByTime.Time;
-NonMSMTotalUndiagnosedByTime.N=TotalUndiagnosedByTime.N-MSMTotalUndiagnosedByTime.N ;
+NonMSMTotalUndiagnosedByTime.Time = TotalUndiagnosedByTime.Time;
+NonMSMTotalUndiagnosedByTime.N = TotalUndiagnosedByTime.N-MSMTotalUndiagnosedByTime.N ;
 
-
-
-
-[NumSims, NumStepsInYearDimension]=size(TotalUndiagnosedByTime.N);
-for SimCout=1:NumSims
-    EffectiveTestingRate(SimCout, :)=FineDiagnoses.N./TotalUndiagnosedByTime.N(SimCout, :);
-    MSMEffectiveTestingRate(SimCout, :)=MSMFineDiagnoses.N./MSMTotalUndiagnosedByTime.N(SimCout, :);
+[NumSims, NumStepsInYearDimension] = size(TotalUndiagnosedByTime.N);
+for SimCout = 1:NumSims
+    EffectiveTestingRate(SimCout, :) = FineDiagnoses.N ./ TotalUndiagnosedByTime.N(SimCout, :);
+    MSMEffectiveTestingRate(SimCout, :) = MSMFineDiagnoses.N ./ MSMTotalUndiagnosedByTime.N(SimCout, :);
 end
 
-YearCount=0;
-StepsToAverageOver=round(1/Sx.StepSize);
-YearlyEffectiveTestingRate=[];
-for YearStepCount=1:10:NumStepsInYearDimension
-    YearCount=YearCount+1;
-    YearlyEffectiveTestingRate(:, YearCount)=mean(EffectiveTestingRate(:, YearStepCount:YearStepCount+StepsToAverageOver-1), 2);
-    RaisedPower=round(1/Sx.StepSize);
-    YearlyEffectiveTestingRate(:, YearCount)=1-(1-YearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
+YearCount = 0;
+StepsToAverageOver = round(1/Sx.StepSize);
+YearlyEffectiveTestingRate = [];
+for YearStepCount = 1:10:NumStepsInYearDimension
+    YearCount = YearCount + 1;
+    YearlyEffectiveTestingRate(:, YearCount) = mean(EffectiveTestingRate(:, YearStepCount:YearStepCount+StepsToAverageOver-1), 2);
+    RaisedPower = round(1/Sx.StepSize);
+    YearlyEffectiveTestingRate(:, YearCount) = 1 - (1-YearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
 end
 
-YearCount=0;
-StepsToAverageOver=round(1/Sx.StepSize);
-MSMYearlyEffectiveTestingRate=[];
-for YearStepCount=1:10:NumStepsInYearDimension
-    YearCount=YearCount+1;
-    MSMYearlyEffectiveTestingRate(:, YearCount)=mean(MSMEffectiveTestingRate(:, YearStepCount:YearStepCount+StepsToAverageOver-1), 2);
-    RaisedPower=round(1/Sx.StepSize);
-    MSMYearlyEffectiveTestingRate(:, YearCount)=1-(1-MSMYearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
+YearCount = 0;
+StepsToAverageOver = round(1/Sx.StepSize);
+MSMYearlyEffectiveTestingRate = [];
+for YearStepCount = 1:10:NumStepsInYearDimension
+    YearCount = YearCount + 1;
+    MSMYearlyEffectiveTestingRate(:, YearCount) = mean(MSMEffectiveTestingRate(:, YearStepCount:YearStepCount+StepsToAverageOver-1), 2);
+    RaisedPower = round(1/Sx.StepSize);
+    MSMYearlyEffectiveTestingRate(:, YearCount) = 1 - (1-MSMYearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
 end
 
-
-
+ fprintf(1, '\n\n-Time to Determine Undiagnosed State of Patients-\n');
+ toc(UndiagnosedTimer)
+ disp('------------------------------------------------------------------');
 
 %% Determine the time until infection for the population with time
-[~, NumberOfPatients]=size(Patient);
+[~, NumberOfPatients] = size(Patient);
 %Set all year times to zero 
-YearIndex=0;
-TimeSinceInfection=[];
-TimeSinceInfectionYearIndex=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2);
-for Year=TimeSinceInfectionYearIndex
-    YearIndex=YearIndex+1;
-    TimeSinceInfection(YearIndex).v=-ones(1, NumberOfPatients*NumSims);
+YearIndex = 0;
+TimeSinceInfection = [];
+TimeSinceInfectionYearIndex = CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2);
+for Year = TimeSinceInfectionYearIndex
+    YearIndex = YearIndex+1;
+    TimeSinceInfection(YearIndex).v = -ones(1, NumberOfPatients*NumSims);
 end
 %For all of the years
 for i=1:NumberOfPatients

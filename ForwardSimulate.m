@@ -2,6 +2,9 @@
 % the purpose of this function is to simulate the undiagnosed individuals
 
 %% Step 1: Collect sampling data
+fprintf(1, '\nForward Projecting Patients Undiagnosed In Simulations\n');
+ForwardTimer = tic;
+
 DateMatrix = zeros(Sx.NoParameterisations, NumberOfPatients);
 
 InfectionTimeMatrix = zeros(Sx.NoParameterisations, NumberOfPatients);
@@ -58,8 +61,6 @@ DistributionForThisSimulationUndiagnosedInfections = zeros(1, (CD4BackProjection
 MSMDistributionForThisSimulationUndiagnosedInfections = zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
 
 CutOffYear = CD4BackProjectionYearsWhole(2)+1;
-fprintf(1, '\nForward Projecting Patients Undiagnosed In Simulations\n');
-ForwardTimer = tic;
 
 for SimNumber = 1:Sx.NoParameterisations
     fprintf(1, '\nForward Projection Progress: %.2f%%', (100 * SimNumber / Sx.NoParameterisations));
@@ -144,10 +145,7 @@ for SimNumber = 1:Sx.NoParameterisations
     MSMDistributionDiagnosedInfections(SimNumber, :) = hist(MSMDateMatrix(SimNumber, :), YearVector+0.5);
     PropMSMDistributionDiagnosedInfections(SimNumber, :) = MSMDistributionDiagnosedInfections(SimNumber, :)./DistributionDiagnosedInfections(SimNumber, :);
     
-end
-    fprintf(1, '\n\n-Time to Forward Project All Simulations-\n');
-    toc(ForwardTimer)
-    disp('------------------------------------------------------------------');
+end    
     
 NonMSMDistributionUndiagnosedInfections = DistributionUndiagnosedInfections - MSMDistributionUndiagnosedInfections;
 NonMSMDistributionDiagnosedInfections = DistributionDiagnosedInfections - MSMDistributionDiagnosedInfections;
@@ -200,4 +198,7 @@ for x = 1:NumberOfPatients
 end
 DiagnosisDistributionPrecise = hist(DiagnosisDateVec, HistYearSlots);
 
+fprintf(1, '\n\n-Time to Forward Project All Simulations-\n');
+toc(ForwardTimer)
+disp('------------------------------------------------------------------');
 
