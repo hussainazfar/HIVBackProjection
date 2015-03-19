@@ -102,6 +102,10 @@ for SimNumber = 1:Sx.NoParameterisations
                     NumberFoundDiagnosed = NumberFoundDiagnosed+1;
                 else % if the simulated individual has not been diagnosed by the cut off date
                     IncludeInForwardProjection(CountSamples) = true; 
+                    
+                    %Add index of person selected CopyPeopleArray[count]=SampleIndex
+                    
+                    
                     NumberOfUnidagnosedInfectionsThisStep = NumberOfUnidagnosedInfectionsThisStep+1;
                 end
                 
@@ -120,7 +124,15 @@ for SimNumber = 1:Sx.NoParameterisations
             %a random value between the two, and select up to those many
             %individuals
             DiffInUndiagnosedEstimate = UpperBoundNumberOfUnidagnosedInfectionsThisStep - LowerBoundNumberOfUnidagnosedInfectionsThisStep;
+            
+            %azfar: this is the total
             UndiagnosedEstimateInThisStep = round(LowerBoundNumberOfUnidagnosedInfectionsThisStep + rand*DiffInUndiagnosedEstimate);
+            
+            %Take the first UndiagnosedEstimateInThisStep indicies in CopyPeopleArray
+            
+            %Find out the date of diagnosis\
+            %adjust date of birth - age of date of birth should be the same
+            
             
             % Clear out IncludeInForwardProjection greater than UndiagnosedEstimateInThisStep
             NumericalIncludeInForwardProjection = 1:(10*TotalInTimeVector);

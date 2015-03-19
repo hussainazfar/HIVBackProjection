@@ -6,8 +6,9 @@
 % Ax.SquareRootAnnualDecline=median(Ax.SquareRootAnnualDeclineVec);
 % Ax.FractionalDeclineToRebound=median(Px.FractionalDeclineToReboundVec);
 % [TimeUntilDiagnosis, ~, TestingCD4]=GenerateTheoreticalPopulationCD4s(20*rand(1, PopulationSizeToSimulate), Ax);
-
-disp('Calculating the output for plot 1');
+disp('------------------------------------------------------------------');
+disp('Calculating the output for Figure 1');
+disp(' ');
 
 Pxi = Px;
 
@@ -95,7 +96,7 @@ box off;
 print('-dpng ','-r300','ResultsPlots/Figure 1 Trend of CD4 decay.png')
 
 %% Output paper sentences
-disp('Figure 1')
+%disp('Figure 1')
 disp(['The healthy CD4 count distribution had a median of ' num2str(exp(Px.MedianLogHealthyCD4), '%.0f') ' and standard deviation of ' num2str(Px.StdLogHealthyCD4, '%.3f')]);
 HealthyCD4VecTest = exp(normrnd(Px.MedianLogHealthyCD4, Px.StdLogHealthyCD4, [1 100000]));
 HealthyCD4LQR = prctile(HealthyCD4VecTest, 25);
@@ -197,18 +198,18 @@ set(gca, 'fontsize', 18)
 box off;
 print('-dpng ','-r300','ResultsPlots/Appendix uncertainty of median CD4 between simulations with time.png');
 
-clf;
-hold on;
-for x = 1:Sx.NoParameterisations
-    %plot(0.05:0.1:10.1, CurrentMedianStore(1:min([Sx.NoParameterisations, 10]), 1:101)')
-    plot(0.05:0.1:10.1, CurrentMedianStore(x, 1:101)','LineWidth',0.5)
-end
-xlabel('Time since infection (years)','fontsize', 22);
-ylabel({'Median CD4 count'},'fontsize', 22);
-set(gca,'XTick', 1:10);
-set(gca,'YTick', 0:100:800);
-xlim([0 11]);
-set(gca,'Color',[1.0 1.0 1.0]);
-set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
-set(gca, 'fontsize', 18)
-print('-dpng ','-r1200','ResultsPlots/Other Individual simulations of median CD4.png');
+%clf;
+%hold on;
+%for x = 1:Sx.NoParameterisations
+%    %plot(0.05:0.1:10.1, CurrentMedianStore(1:min([Sx.NoParameterisations, 10]), 1:101)')
+%    plot(0.05:0.1:10.1, CurrentMedianStore(x, 1:101)','LineWidth',0.5)
+%end
+%xlabel('Time since infection (years)','fontsize', 22);
+%ylabel({'Median CD4 count'},'fontsize', 22);
+%set(gca,'XTick', 1:10);
+%set(gca,'YTick', 0:100:800);
+%xlim([0 11]);
+%set(gca,'Color',[1.0 1.0 1.0]);
+%set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
+%set(gca, 'fontsize', 18)
+%print('-dpng ','-r1200','ResultsPlots/Other Individual simulations of median CD4.png');

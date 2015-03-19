@@ -164,8 +164,8 @@ end
 disp(' ');
 disp('-Time Spent on Optimisation-');
 toc(OptimisationTimer)
-disp('------------------------------------------------------------------');
-matlabpool close;
+%disp('------------------------------------------------------------------');
+%matlabpool close;
 disp('------------------------------------------------------------------');
 
 %% Create dates for the infection based on time between infection and testing, together with testing date
@@ -325,6 +325,7 @@ CreateFigure3;
 CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime');
 CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime');
 CreateFigure4(NonMSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 NonMSMTotalUndiagnosedByTime');
+
 h_legend=legend( {'Median', '95% uncertainty bound'},  'Location','SouthEast');
 legend('boxoff');
 print('-dpng ','-r300',['ResultsPlots/Figure 4 NonMSMTotalUndiagnosedByTime.png']) 
@@ -336,8 +337,6 @@ PropMSMUndiagnosed.UCI=prctile(PropMSMUndiagnosed.N, 97.5, 1);
 PropMSMUndiagnosed.LCI=prctile(PropMSMUndiagnosed.N, 2.5, 1);
 CreateFigure4(PropMSMUndiagnosed, PlotSettings.YearsToPlot, 'Appendix PropMSMTotalUndiagnosedByTime')
 
-
-
 PropMSM=DiagnosesByYear;
 PropMSM.Value=MSMDiagnosesByYear.N./DiagnosesByYear.N;
 plot(PropMSM.Time, PropMSM.Value)
@@ -348,22 +347,8 @@ hold on;
 plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median)
 plot(PropMSMUndiagnosed.Time, median(MSMUndiagnosedSummed./UndiagnosedSummed, 1))
 hold off;
-%comes out to a flat 70% which is not expected
-
-% Ok at 
-% RandomisedExpectedTimesVector
-% MSMSampleVector
-
-% Definitely something wrong by
-% UndiagnosedCaseData
-% UndiagnosedSummed
 
 plot(median(MSMDistributionUndiagnosedInfections./DistributionUndiagnosedInfections, 1))
-
-
-
-
-
 
 RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
 MSMSampleVector=RecentMSMCaseIndicator(SampleIndex);
@@ -378,7 +363,6 @@ plot(DistComparisonYear+0.5, MSMSampleDistribution./(MSMSampleDistribution+NonMS
 tempMSM=false(1, 0);
 tempDate=[];
 for iSim=1:Sx.NoParameterisations
-    iSim
     tempDate=[tempDate UndiagnosedCaseData(iSim).InfectionDate];
     tempMSM=[tempMSM UndiagnosedCaseData(iSim).MSM];
 end
@@ -406,11 +390,14 @@ CreateFigure5
 CreateOtherPlots
 CreateResultUncertaintyAroundTime
 %OutputPlots %old plots output
-toc(TimeALL)
-
 YearValueVector=CD4BackProjectionYearsWhole(1):Sx.StepSize:(CD4BackProjectionYearsWhole(2)+1-Sx.StepSize);
 
-
+%% Calculating Total Simulation Time
+disp(' ');
+disp('------------------------------------------------------------------');
+disp('-Total Simulation Time-');
+toc(TimeALL)
+disp('------------------------------------------------------------------');
 %% Sensitivity analysis
 SensitivityAnalysis
 
@@ -426,7 +413,6 @@ LCI=prctile(TotalUndiagnosedByTime.N(:, end), 2.5);
 UCI=prctile(TotalUndiagnosedByTime.N(:, end), 97.5);
 disp(['Final year of undiagnosed ' num2str(TotalUndiagnosedByTime.Median(end)) '(' num2str(LCI) '-' num2str(UCI) ') cases.']);
 
-
 SubsetUndiagnosed.N=TotalUndiagnosedByTime.N(:, IndexOfMax:end);
 SubsetUndiagnosed.Median=TotalUndiagnosedByTime.Median(IndexOfMax:end);
 SubsetUndiagnosed.Time=TotalUndiagnosedByTime.Time(IndexOfMax:end);
@@ -435,15 +421,6 @@ LCI=prctile(SubsetUndiagnosed.N(:, IndexOfMin), 2.5);
 UCI=prctile(SubsetUndiagnosed.N(:, IndexOfMin), 97.5);
 YearMinMedUndiagnosed=SubsetUndiagnosed.Time(IndexOfMin);
 disp(['Min since max occurred in ' num2str(YearMinMedUndiagnosed) ' with ' num2str(MinMedUndiagnosed) '(' num2str(LCI) '-' num2str(UCI) ') cases.']);
-
-
-
-
-
-
-
-
-
 
 %% Return diagnosed overseas to the population
 AllPatients=[Patient PreviouslyDiagnosedOverseasPatient];
@@ -476,9 +453,4 @@ SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
 
 
 % save('PatientSaveFiles/SimulationState.mat');
-%% Calculating Total Simulation Time
-disp(' ');
-disp('------------------------------------------------------------------');
-disp('-Total Simulation Time-');
-toc(TimeALL)
-disp('------------------------------------------------------------------');
+
