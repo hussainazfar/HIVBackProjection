@@ -4,19 +4,16 @@ prompt = 'Please Enter Number of Parameterisations(Press Enter/Return for defaul
 result = input(prompt);
 
 if isempty(result) == true
-    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);
-    disp('Using default value of: ');
-    disp(result);
+    result = 2 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )));
+    fprintf(1, 'Using default value of: %d\n', result);
         
 elseif ischar(result) == true
-    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);
-    disp('Invalid Entry! Using default value of: ');
-    disp(result);
+    result = 2 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )));
+    fprintf(1,'Invalid Entry! Using default value of: %d\n', result);
         
-elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1)
+elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' )))
     result = str2num(getenv( 'NUMBER_OF_PROCESSORS' ));
-    disp('Number of Parameterisations too low! Using a minimum value of:');
-    disp(result);
+    fprintf(1, 'Number of Parameterisations too low! Using a minimum value of: $d', result);
 else
     result = result;
 end
@@ -29,6 +26,7 @@ clear result;
 result = false;
 
 while  result == false
+    disp(' ');
     prompt = 'Analyse People Previously Diagnosed Overseas(Y/N)? - Press Enter/return key for default: '; 
     x = input(prompt, 's');
     
@@ -92,44 +90,6 @@ RandStream.setGlobalStream(RandomNumberStream);
 %Use the below code in any parfor loop to use appropriate substreams for the rand generator (i is the loop number)
 %set(stream,'Substream',i);
 
-%% Simulation settings
-%Max years is the maximum number of years a person can spend without being diagnosed with HIV. 
-%Although longer times are possible in real life, so few would occur that we can successfully 
-%ignore it in the name of simplicity and approximation
-result = 20;
-
-while  result == 20
-    disp('');
-    disp('Maximum Age is the maximum number of years a person  can spend without being diagnosed with HIV');
-    disp('Range: 1 - 20 Years');
-    prompt = 'Please Enter Maximum Age(Press Enter/Return for default): '; 
-    x = input(prompt);
-    
-    if isempty(x) == true
-        result = 20;
-        disp('Using default value of: ');
-        disp(result);
-        break
-        
-    elseif x < 21
-        if x > 0
-            result = x;
-            break
-        else
-            disp('Invalid Entry! Please Enter a Valid Number');
-        end
-   
-    else
-        disp('Invalid Entry! Please Enter a Valid Number');
-    end
-end
-
-Sx.MaxYears = result;
-clear prompt;
-clear result;
-
-%Declaring Step Size
-Sx.StepSize = 0.1;
 %% Recent Infection Consideration
 result = false;
 
@@ -157,22 +117,49 @@ end
 Sx.ConsiderRecentInfection = result;
 clear prompt;
 clear result;
-
+%% Input Date Settings
+result = 10;
+while result ~= 1 || result ~= 2
+    disp(' ');
+    disp('Please enter the date format in file:');
+    disp('1. dd/mm/yyyy  - Default Format');
+    disp('2. mm/dd/yyyy');
+    prompt = 'Please Enter Selection(Press Enter/Return for default): '; 
+    x = input(prompt);
+    
+    if isempty(x) == true
+        result = 'dd/mm/yyyy';
+        fprintf(1, 'Using default value of: %s\n', result);
+        break
+        
+    elseif x == 1
+        result = 'dd/mm/yyyy';
+        break
+        
+    elseif x == 2
+        result = 'mm/dd/yyyy';
+        break
+   
+    else
+        disp('Invalid Entry! Please Enter a Valid Number');
+    end
+end
+Sx.DateFormat = result;
+clear prompt;
+clear result;
 %% Load the patient data into a large matrix
 result = 0.5;
 
 while  result == 0.5
     disp(' ');
     disp('Sampling factor is data compression to improve simulation time, please select how may records to process');
-    disp('Options: 5000, 10000, Default - Samples 5000 from file');
+    disp('Options: 5000, 10000, Default(Samples 5000 from file)');
     prompt = 'Please Enter Sampling Factor(Press Enter/Return for default): '; 
     x = input(prompt);
     
     if isempty(x) == true
         result = 5000;
-        disp('Using default value of: ');
-        disp(result);
-        disp(' ');
+        fprintf(1,'Using default value of: %.2f', result);
         break
         
     elseif x == 0.75 || x == 0.50 || x == 0.25 || x == 0.00 
@@ -202,7 +189,7 @@ SheetName='Dataset_1';
 pause(0.5);
 clc;
 %open file format, return separately the postcodes and other subsections of the data 
-[LineDataMatrix, LocationDataMatrix, YearOfDiagnosedDataEnd, BackProjectStartSingleYearAnalysis, CD4BackProjectionYearsWhole] = LoadNotificationFile(HIVFile, SheetName, Sx.SamplingFactor);
+[LineDataMatrix, LocationDataMatrix, YearOfDiagnosedDataEnd, BackProjectStartSingleYearAnalysis, CD4BackProjectionYearsWhole] = LoadNotificationFile(HIVFile, SheetName, Sx.SamplingFactor, Sx.DateFormat);
 
 disp(' ');
 disp('-Total Data File Load Time-');
@@ -211,6 +198,9 @@ disp('------------------------------------------------------------------');
 
 %% Program Settings - Geographic Considerations first two variables to be set as false if not required
 RunID='BackProject';
+Sx.MaxYears = 20;                                                           %Max years is the maximum number of years a person can spend without being diagnosed with HIV. 
+Sx.StepSize = 0.1;                                                          %Declaring Step Size
+
 Sx.PerformGeographicCalculations = false;                                        %do movement calculations and break up according to location
 Sx.InitialisePCToSRThisSim = false;                                              %re-perform this function. Only relevant if geographic calculations take place
 Sx.UseGeneticAlgorithmOptimisation = true;

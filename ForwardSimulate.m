@@ -30,7 +30,7 @@ DiagnosedInfectionsByYear = zeros(Sx.NoParameterisations, YearSlots);
 for CurrentSim = 1:Sx.NoParameterisations
     YearIndex = 0;
     for Year = YearVector
-        YearIndex = YearIndex+1;
+        YearIndex = YearIndex + 1;
         DiagnosedInfectionsByYear(CurrentSim, YearIndex) = sum(Year <= DateMatrix(CurrentSim, :) & DateMatrix(CurrentSim, :)<Year+1);
     end
 end
@@ -70,7 +70,7 @@ for SimNumber = 1:Sx.NoParameterisations
 
             LowerBoundFound = false;
             UpperBoundFound = false;
-            while (UpperBoundFound == false)%NumberFoundDiagnosed<TotalDiagnosedInBackprojectionEstimate+1
+            while (UpperBoundFound == false)                                %NumberFoundDiagnosed<TotalDiagnosedInBackprojectionEstimate+1
                 CountSamples = CountSamples + 1;
 
                 % Determine if the infection represents one that is undiagnosed by the last data
@@ -78,10 +78,8 @@ for SimNumber = 1:Sx.NoParameterisations
                     NumberFoundDiagnosed = NumberFoundDiagnosed+1;
                 else % if the simulated individual has not been diagnosed by the cut off date
                     IncludeInForwardProjection(CountSamples) = true; 
-                    
                     %%%%%%%%%%%%%%%Add index of person selected
                     %%%%%%%%%%%%%%%CopyPeopleArray[count]=SampleIndex%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                    
                     NumberOfUnidagnosedInfectionsThisStep = NumberOfUnidagnosedInfectionsThisStep+1;
                 end
                 
