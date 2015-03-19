@@ -135,7 +135,7 @@ if sum(strcmp(VariableName, 'indigenous')) == 1
 end
 
 LineDataMatrix.CD4CountAtDiagnosis = cell2mat(c(:,strcmp(VariableName, 'cd4base')));
-LineDataMatrix.ExposureRoute = cell2mat(c(:,strcmp(VariableName, 'exp')));
+%LineDataMatrix.ExposureRoute = cell2mat(c(:,strcmp(VariableName, 'exp')));
 LineDataMatrix.RecentInfection = cell2mat(c(:,strcmp(VariableName, 'recent')));
 
 % Load and clean up previously diagnoses overseas
@@ -144,10 +144,6 @@ LineDataMatrix.PreviouslyDiagnosedOverseas(isnan(LineDataMatrix.PreviouslyDiagno
 
 
 for x = 1:NumberOfPatients %this needs to be done line by line because it is a string
-%     disp('set');
-%     size(VariableName)
-%     size(c)
-%     strcmp(VariableName, 'country_prev_diag')
     LineDataMatrix.CountryOfBirth(x)=c(x,strcmp(VariableName, 'country_prev_diag'));
 end
 

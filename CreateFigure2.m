@@ -1,7 +1,7 @@
 %% Create a plot of the expected distributions of time until diagnosis for different CD4 counts in Australia
 %disp('------------------------------------------------------------------');
 %matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);            %initialising parallel Matlab Sessions
-%disp('------------------------------------------------------------------');
+disp('------------------------------------------------------------------');
 disp('Calculating the output for Figure 2');
 disp(' ');
 SamplesPerSim = 10000;

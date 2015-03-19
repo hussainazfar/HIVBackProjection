@@ -1,7 +1,3 @@
-
-
-
-
 %% Output undiagnosed testing probabilities
     
     clf;%clear the current figure ready for plotting
@@ -100,49 +96,3 @@ disp(['Mean time between infection and diagnosis in the final year of data was '
 String1985Time=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
 disp([' This is a substantial reduction from 1985, where median time until diagnosis was estimated to be ' String1985Time ' years.']);
 disp(['Mean time between infection and diagnosis in 1985 was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);
-
-
-%% Looking at results in the final year
-MSMTimeUntilDiagIndexFinalYear=false(size(Patient));
-NonMSMTimeUntilDiagIndexFinalYear=false(size(Patient));
-
-for i=1:NumberOfPatients
-    if 2013<=Patient(i).DateOfDiagnosisContinuous && Patient(i).DateOfDiagnosisContinuous<2014
-        if Patient(i).ExposureRoute<=4
-            MSMTimeUntilDiagIndexFinalYear(i)=true;
-        else
-            NonMSMTimeUntilDiagIndexFinalYear(i)=true;
-        end
-    end
-end
-
-%%  MSM
-MSMTimeUntilDiagFinalYear=Patient(MSMTimeUntilDiagIndexFinalYear);
-[~, NumMSMDiagFinalYear]=size(MSMTimeUntilDiagFinalYear);
-MSMTimeUntilDiagnosisFinalYear=zeros(NoParameterisations, NumMSMDiagFinalYear);
-for i=1:NumMSMDiagFinalYear
-    MSMTimeUntilDiagnosisFinalYear(:, i)=MSMTimeUntilDiagFinalYear(i).TimeFromInfectionToDiagnosis;
-end
-
-MeanVectorMSMTime=mean(MSMTimeUntilDiagnosisFinalYear, 2);
-MeanMeanMSM=median(MeanVectorMSMTime, 1);
-MeanMeanMSMLLCI=prctile(MeanVectorMSMTime, 2.5, 1);
-MeanMeanMSMLUCI=prctile(MeanVectorMSMTime, 97.5, 1);
-disp('Median time to diagnosis in final year, -MSM (figure 5)');
-disp([num2str(MeanMeanMSM),' ',  num2str(MeanMeanMSMLLCI),'-', num2str(MeanMeanMSMLUCI)]);
-
-
-%% Non MSM
-NonMSMTimeUntilDiagFinalYear=Patient(NonMSMTimeUntilDiagIndexFinalYear);
-[~, NumNonMSMDiagFinalYear]=size(NonMSMTimeUntilDiagFinalYear);
-NonMSMTimeUntilDiagnosisFinalYear=zeros(NoParameterisations, NumNonMSMDiagFinalYear);
-for i=1:NumNonMSMDiagFinalYear
-    NonMSMTimeUntilDiagnosisFinalYear(:, i)=NonMSMTimeUntilDiagFinalYear(i).TimeFromInfectionToDiagnosis;
-end
-
-MeanVectorNonMSMTime=mean(NonMSMTimeUntilDiagnosisFinalYear, 2);
-MeanMeanNonMSM=median(MeanVectorNonMSMTime, 1);
-MeanMeanNonMSMLLCI=prctile(MeanVectorNonMSMTime, 2.5, 1);
-MeanMeanNonMSMLUCI=prctile(MeanVectorNonMSMTime, 97.5, 1);
-disp('Median time to diagnosis in final year, non-MSM (figure 5)');
-disp([num2str(MeanMeanNonMSM),' ',  num2str(MeanMeanNonMSMLLCI),'-', num2str(MeanMeanNonMSMLUCI)]);

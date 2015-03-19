@@ -12,32 +12,6 @@ disp('Loading saved basic patient class data');
 disp(' ');
 [Patient] = CreatePatientObject(LineDataMatrix);
 
-%% Adjust category 12 exposures for MSM
-% it is likely that many in this category will be MSM. Based on approximately 8% females, and assuming therefore 8% heterosexual males, 84% of people in this category may be MSM
-NoPatient = length(Patient);
-
-% Count Number of females in population
-TotalFemalesNotSpecified = 0;
-TotalNotSpecified = 0;
-
-for x = 1:NoPatient
-    if Patient(x).ExposureRoute == 12                                       %not specified
-        TotalNotSpecified = TotalNotSpecified + 1;
-        if Patient(x).Sex == 2
-            TotalFemalesNotSpecified = TotalFemalesNotSpecified + 1;
-        end
-    end
-end
-
-TotalMalesNotSpecified = TotalNotSpecified - TotalFemalesNotSpecified;
-ProbabilityMaleMSM = (TotalMalesNotSpecified - TotalFemalesNotSpecified) / TotalMalesNotSpecified;
-
-for x = 1:NoPatient
-    if Patient(x).ExposureRoute == 12 && Patient(x).Sex == 1                %not specified
-        Patient(x).ExposureRoute = 1;
-    end
-end
-
 %% Sort Patients into those who have a previous overseas diagnosis, and those who have not
 PreviouslyDiagnosedOverseasPatient = [];
 
@@ -79,7 +53,7 @@ if Sx.DeduplicateDiagnoses == true
 end
 
 %% Determine the time between infection and diagnosis
-matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);            %initialising parallel Matlab Sessions
+matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' )));            %initialising parallel Matlab Sessions
 disp('------------------------------------------------------------------');
 disp('Determining and Optimising time between Infection and Diagnosis');
 disp(' ');
@@ -213,17 +187,6 @@ if Sx.ConsiderRecentInfection == true
     end
 end
 
-%% Identifying MSM
-% Find all MSM
-MSMCaseIndicator = false(1, NumberOfPatients);
-for x = 1:NumberOfPatients
-    if (Patient(x).ExposureRoute <= 4)                                      % exposure coding of 1,2,3,4 are MSM of some variety
-        MSMCaseIndicator(x) = true;
-    else
-        MSMCaseIndicator(x) = false;
-    end
-end
-
 %% Forward simulate 
 ForwardSimulate;
 
@@ -231,12 +194,6 @@ ForwardSimulate;
 [FineDiagnoses] = DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, CD4BackProjectionYearsWhole(2)+1-Sx.StepSize);
 
 [DiagnosesByYear] = DiagnosesByTime(Patient, CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
-
-[MSMDiagnosesByYear] = DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
-
-[NonMSMDiagnosesByYear] = DiagnosesByTime(Patient(~MSMCaseIndicator), CD4BackProjectionYearsWhole(1), 1, CD4BackProjectionYearsWhole(2));
-
-[MSMFineDiagnoses] = DiagnosesByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), Sx.StepSize, CD4BackProjectionYearsWhole(2)+1-Sx.StepSize);
 
 %% Find total undiagnosed at all points in time
 
@@ -246,22 +203,13 @@ UndiagnosedTimer = tic;
 fprintf(1,'\nAnalyzing Undiagnosed Patients:\n');
 [UndiagnosedPatient] = UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
 
-fprintf(1,'\nAnalyzing Undiagnosed Patients(MSM Case):\n');
-[MSMUndiagnosedPatient] = UndiagnosedByTime(Patient(MSMCaseIndicator), CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
-
 %Add the undiagnosed with time (who have been diagnosed) to the people we know will be diagnosed in the future
 TotalUndiagnosedByTime.Time = UndiagnosedPatient.Time ;
 TotalUndiagnosedByTime.N = UndiagnosedSummed + UndiagnosedPatient.N ;
-MSMTotalUndiagnosedByTime.Time = MSMUndiagnosedPatient.Time ;
-MSMTotalUndiagnosedByTime.N = MSMUndiagnosedSummed + MSMUndiagnosedPatient.N ;
-
-NonMSMTotalUndiagnosedByTime.Time = TotalUndiagnosedByTime.Time;
-NonMSMTotalUndiagnosedByTime.N = TotalUndiagnosedByTime.N-MSMTotalUndiagnosedByTime.N ;
 
 [NumSims, NumStepsInYearDimension] = size(TotalUndiagnosedByTime.N);
 for SimCout = 1:NumSims
     EffectiveTestingRate(SimCout, :) = FineDiagnoses.N ./ TotalUndiagnosedByTime.N(SimCout, :);
-    MSMEffectiveTestingRate(SimCout, :) = MSMFineDiagnoses.N ./ MSMTotalUndiagnosedByTime.N(SimCout, :);
 end
 
 YearCount = 0;
@@ -276,13 +224,6 @@ end
 
 YearCount = 0;
 StepsToAverageOver = round(1/Sx.StepSize);
-MSMYearlyEffectiveTestingRate = [];
-for YearStepCount = 1:10:NumStepsInYearDimension
-    YearCount = YearCount + 1;
-    MSMYearlyEffectiveTestingRate(:, YearCount) = mean(MSMEffectiveTestingRate(:, YearStepCount:YearStepCount+StepsToAverageOver-1), 2);
-    RaisedPower = round(1/Sx.StepSize);
-    MSMYearlyEffectiveTestingRate(:, YearCount) = 1 - (1-MSMYearlyEffectiveTestingRate(:, YearCount)).^RaisedPower;%Do a probability transform (0.1 to 1 years)
-end
 
  fprintf(1, '\n\n-Time to Determine Undiagnosed State of Patients-\n');
  toc(UndiagnosedTimer)
@@ -323,73 +264,10 @@ CreateFigure1;
 CreateFigure2;
 CreateFigure3;
 CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime');
-CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime');
-CreateFigure4(NonMSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 NonMSMTotalUndiagnosedByTime');
+CreateFigure5;
 
-h_legend=legend( {'Median', '95% uncertainty bound'},  'Location','SouthEast');
-legend('boxoff');
-print('-dpng ','-r300',['ResultsPlots/Figure 4 NonMSMTotalUndiagnosedByTime.png']) 
-
-PropMSMUndiagnosed=MSMTotalUndiagnosedByTime;
-PropMSMUndiagnosed.N=MSMTotalUndiagnosedByTime.N./TotalUndiagnosedByTime.N;
-PropMSMUndiagnosed.Median=median(PropMSMUndiagnosed.N, 1);
-PropMSMUndiagnosed.UCI=prctile(PropMSMUndiagnosed.N, 97.5, 1);
-PropMSMUndiagnosed.LCI=prctile(PropMSMUndiagnosed.N, 2.5, 1);
-CreateFigure4(PropMSMUndiagnosed, PlotSettings.YearsToPlot, 'Appendix PropMSMTotalUndiagnosedByTime')
-
-PropMSM=DiagnosesByYear;
-PropMSM.Value=MSMDiagnosesByYear.N./DiagnosesByYear.N;
-plot(PropMSM.Time, PropMSM.Value)
-mean(RecentMSMCaseIndicator)% a mean of the MSM appearance in the last 5 years of diagnoses
-
-% inspecting the proportion of people undiagnosed
-hold on;
-plot(PropMSMUndiagnosed.Time, PropMSMUndiagnosed.Median)
-plot(PropMSMUndiagnosed.Time, median(MSMUndiagnosedSummed./UndiagnosedSummed, 1))
-hold off;
-
-plot(median(MSMDistributionUndiagnosedInfections./DistributionUndiagnosedInfections, 1))
-
-RandomisedExpectedTimesVector=ExpectedTimesVector(SampleIndex);
-MSMSampleVector=RecentMSMCaseIndicator(SampleIndex);
-DistComparisonYear=0.5:1:20;
-MSMSampleDistribution=hist(RandomisedExpectedTimesVector(MSMSampleVector), DistComparisonYear);
-NonMSMSampleDistribution=hist(RandomisedExpectedTimesVector(~MSMSampleVector), DistComparisonYear);
-NormMSMSampleDistribution=MSMSampleDistribution/sum(MSMSampleDistribution);
-NormNonMSMSampleDistribution=NonMSMSampleDistribution/sum(NonMSMSampleDistribution);
-plot(DistComparisonYear+0.5, [NormMSMSampleDistribution; NormNonMSMSampleDistribution])
-plot(DistComparisonYear+0.5, MSMSampleDistribution./(MSMSampleDistribution+NonMSMSampleDistribution))
-   
-tempMSM=false(1, 0);
-tempDate=[];
-for iSim=1:Sx.NoParameterisations
-    tempDate=[tempDate UndiagnosedCaseData(iSim).InfectionDate];
-    tempMSM=[tempMSM UndiagnosedCaseData(iSim).MSM];
-end
-
-MSMDateDistribution=hist(tempDate(tempMSM), PropMSM.Time+0.5);
-DateDistribution=hist(tempDate, PropMSM.Time+0.5);
-plot(PropMSM.Time, [MSMDateDistribution; DateDistribution])
-plot(PropMSM.Time, MSMDateDistribution./DateDistribution)
-
-MSMDateDistribution=hist(UndiagnosedCaseData(SimNumber).InfectionDate(UndiagnosedCaseData(SimNumber).MSM), PropMSM.Time+0.5);
-DateDistribution=hist(UndiagnosedCaseData(SimNumber).InfectionDate(), PropMSM.Time+0.5);
-plot(PropMSM.Time, [MSMDateDistribution; DateDistribution])
-plot(PropMSM.Time, MSMDateDistribution./DateDistribution)
-            
-
-DistComparisonYear=0.5:1:20;
-MSMSampleDistribution=hist(reshape(InfectionTimeMatrix(:, RecentMSMCaseIndicator), 1, []), DistComparisonYear);
-NonMSMSampleDistribution=hist(reshape(InfectionTimeMatrix(:, ~RecentMSMCaseIndicator), 1, []), DistComparisonYear);
-MSMSampleDistribution=MSMSampleDistribution/sum(MSMSampleDistribution);
-NonMSMSampleDistribution=NonMSMSampleDistribution/sum(NonMSMSampleDistribution);
-plot(DistComparisonYear+0.5, [MSMSampleDistribution; NonMSMSampleDistribution])
-
-
-CreateFigure5
 CreateOtherPlots
 CreateResultUncertaintyAroundTime
-%OutputPlots %old plots output
 YearValueVector=CD4BackProjectionYearsWhole(1):Sx.StepSize:(CD4BackProjectionYearsWhole(2)+1-Sx.StepSize);
 
 %% Calculating Total Simulation Time
@@ -402,6 +280,7 @@ disp('------------------------------------------------------------------');
 SensitivityAnalysis
 
 %% Paper sentences
+disp('------------------------------------------------------------------');
 TotalUndiagnosedByTime.Median=median(TotalUndiagnosedByTime.N, 1);
 [MaxMedUndiagnosed, IndexOfMax]= max(TotalUndiagnosedByTime.Median);
 YearMaxMedUndiagnosed=TotalUndiagnosedByTime.Time(IndexOfMax);
