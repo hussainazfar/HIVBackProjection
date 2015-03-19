@@ -14,30 +14,49 @@ disp(' ');
 disp('Arranging Data File into Appropriate Matrices');
 disp(' ');
 LoadTime = tic;
-if SamplingFactor ~= 0.0
-    x = randsample((length(c) - 1), ceil(SamplingFactor * (length(c) - 1)));
-    x = sort(x, 'descend');    
-    
-    a(x, :) = [];                                                       %Reshape vector a to Compressed State with randomnly selected indexes from Notification File
-    b(x+1, :) = [];                                                       %Reshape vector b to Compressed State with randomnly selected indexes from Notification File
-    c(x+1, :) = [];                                                       %Reshape vector c to Compressed State with randomnly selected indexes from Notification File
-        
-end
-clear x;
 
 %The first row is the column headers
 VariableName = c(1, :);
 LineDataMatrix.VariableNames = VariableName;
 
 %Determine the number of people in the data file
+NumberOfPatients = length(c);
+
+%Cut the header data from the rest of the data
+c = c(2:NumberOfPatients, :);
+b = b(2:NumberOfPatients, :);
+
+if SamplingFactor == 0.25 || SamplingFactor == 0.50 || SamplingFactor == 0.75
+    y = randsample(length(c), ceil(SamplingFactor * length(c)));
+    y = sort(y, 'descend');    
+    
+    a(y, :) = [];                                                           %Reshape vector a to Compressed State with randomnly selected indexes from Notification File
+    b(y, :) = [];                                                         %Reshape vector b to Compressed State with randomnly selected indexes from Notification File
+    c(y, :) = [];                                                         %Reshape vector c to Compressed State with randomnly selected indexes from Notification File
+    
+elseif SamplingFactor == 5000 || SamplingFactor == 10000
+    w = randsample(length(c), SamplingFactor);
+    w = sort(w, 'descend');
+      
+    for d = w
+        x = a(d, :);
+        y = b(d, :);
+        z = c(d, :);
+    end
+        a = x;
+        b = y;
+        c = z;
+else
+    %Do Nothing
+end
+
+
+%Determine the number of people in the data file
 [NumberOfPatients, ~] = size(c);
-NumberOfPatients = NumberOfPatients - 1;
+NumberOfPatients = NumberOfPatients;
 LineDataMatrix.NumberOfPatients = NumberOfPatients;
 LocationDataMatrix.NumberOfPatients = NumberOfPatients;
 
-%Cut the header data from the rest of the data
-c = c(2:NumberOfPatients+1, :);
-b = b(2:NumberOfPatients+1, :);
 %% Finding Data Start Date and Data End Date
 if sum(strcmp(VariableName, 'datehivdec')) == 1                             %Copy all data in column datehivdec to variable x
     x = cell2mat(c(:,strcmp(VariableName, 'datehivdec')));

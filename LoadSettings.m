@@ -4,17 +4,17 @@ prompt = 'Please Enter Number of Parameterisations(Press Enter/Return for defaul
 result = input(prompt);
 
 if isempty(result) == true
-    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )) - 1);
+    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )));
     disp('Using default value of: ');
     disp(result);
         
 elseif ischar(result) == true
-    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )) - 1);
+    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )));
     disp('Invalid Entry! Using default value of: ');
     disp(result);
         
-elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' )) - 1)
-    result = str2num(getenv( 'NUMBER_OF_PROCESSORS' )) - 1;
+elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' )))
+    result = str2num(getenv( 'NUMBER_OF_PROCESSORS' ));
     disp('Number of Parameterisations too low! Using a minimum value of:');
     disp(result);
 else
@@ -163,9 +163,9 @@ result = 0.5;
 
 while  result == 0.5
     disp(' ');
-    disp('Sampling factor is data compression to improve simulation time, 0.0 is no compression 0.75 is 75% compression');
-    disp('Options: 0.00, 0.25, 0.50, 0.75');
-    prompt = 'Please Sampling Factor(Press Enter/Return for default): '; 
+    disp('Sampling factor is data compression to improve simulation time, please select how may records to process');
+    disp('Options: 5000, 10000, Default - Samples 50% of data');
+    prompt = 'Please Enter Sampling Factor(Press Enter/Return for default): '; 
     x = input(prompt);
     
     if isempty(x) == true
@@ -178,7 +178,11 @@ while  result == 0.5
     elseif x == 0.75 || x == 0.50 || x == 0.25 || x == 0.00 
         result = x;
         break
-           
+        
+    elseif x == 5000 || x == 10000 
+        result = x;
+        break       
+        
     else
         disp(' ');  
         disp('Invalid Entry! Please Enter a Valid Number');
