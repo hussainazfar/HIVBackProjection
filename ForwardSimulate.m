@@ -8,7 +8,6 @@ ForwardTimer = tic;
 DateMatrix = zeros(Sx.NoParameterisations, NumberOfPatients);
 
 InfectionTimeMatrix = zeros(Sx.NoParameterisations, NumberOfPatients);
-%RecentMSMCaseIndicator = false(1, NumberOfPatients);
 
 NoPatientInRange = 0;
 
@@ -79,7 +78,10 @@ for SimNumber = 1:Sx.NoParameterisations
                     NumberFoundDiagnosed = NumberFoundDiagnosed+1;
                 else % if the simulated individual has not been diagnosed by the cut off date
                     IncludeInForwardProjection(CountSamples) = true; 
-                    %Add index of person selected CopyPeopleArray[count]=SampleIndex
+                    
+                    %%%%%%%%%%%%%%%Add index of person selected
+                    %%%%%%%%%%%%%%%CopyPeopleArray[count]=SampleIndex%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    
                     NumberOfUnidagnosedInfectionsThisStep = NumberOfUnidagnosedInfectionsThisStep+1;
                 end
                 
@@ -99,13 +101,15 @@ for SimNumber = 1:Sx.NoParameterisations
             %individuals
             DiffInUndiagnosedEstimate = UpperBoundNumberOfUnidagnosedInfectionsThisStep - LowerBoundNumberOfUnidagnosedInfectionsThisStep;
             
-            %azfar: this is the total
+            %%%%%%%%%%%%%%%%%%azfar: this is the total%%%%%%%%%%%%%
             UndiagnosedEstimateInThisStep = round(LowerBoundNumberOfUnidagnosedInfectionsThisStep + rand*DiffInUndiagnosedEstimate);
             
-            %Take the first UndiagnosedEstimateInThisStep indicies in CopyPeopleArray
+            %%%%%%%%%%%%%%Take the first UndiagnosedEstimateInThisStep
+            %%%%%%%%%%%%%%indicies in CopyPeopleArray%%%%%%%%%%%%%
             
-            %Find out the date of diagnosis\
-            %adjust date of birth - age of date of birth should be the same
+            %%%%%%%%%%%%Find out the date of diagnosis\
+            %%%%%%%%%%%%%adjust date of birth - age of date of birth should be the
+            %same%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             
             % Clear out IncludeInForwardProjection greater than UndiagnosedEstimateInThisStep

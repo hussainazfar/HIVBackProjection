@@ -79,7 +79,7 @@ function [Times, StartingCD4, OptimisedParameters] = OptimiseTestingRateToCD4(Re
     end
     
     [~, NumberOfSamples] = size(Data.CD4);
-    ClosestN = Pxi.SimulatedPopSize / 100;                                  %find the closest 100 values
+    ClosestN = 100;                                  %find the closest 100 values
     
     % Choose time values of CD4 counts close to the ones input
     [ReturnValues] = ChooseRandomNearbyValues(RealTestingCD4, Data.CD4, [Data.Time; Data.InitialCD4], ClosestN);

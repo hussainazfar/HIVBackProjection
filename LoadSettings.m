@@ -4,16 +4,16 @@ prompt = 'Please Enter Number of Parameterisations(Press Enter/Return for defaul
 result = input(prompt);
 
 if isempty(result) == true
-    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )));
+    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);
     disp('Using default value of: ');
     disp(result);
         
 elseif ischar(result) == true
-    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' )));
+    result = 3 * (str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);
     disp('Invalid Entry! Using default value of: ');
     disp(result);
         
-elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' )))
+elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1)
     result = str2num(getenv( 'NUMBER_OF_PROCESSORS' ));
     disp('Number of Parameterisations too low! Using a minimum value of:');
     disp(result);
