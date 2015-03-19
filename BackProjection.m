@@ -290,35 +290,38 @@ end
 
 %% Determine the time until infection for the population with time
 [~, NumberOfPatients] = size(Patient);
+
 %Set all year times to zero 
 YearIndex = 0;
 TimeSinceInfection = [];
 TimeSinceInfectionYearIndex = CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2);
+
 for Year = TimeSinceInfectionYearIndex
-    YearIndex = YearIndex+1;
+    YearIndex = YearIndex + 1;
     TimeSinceInfection(YearIndex).v = -ones(1, NumberOfPatients*NumSims);
 end
+
 %For all of the years
-for i=1:NumberOfPatients
-    YearIndex=0;
-    for Year=CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2)
-        YearIndex=YearIndex+1;
-        if Patient(i).DateOfDiagnosisContinuous>= Year && Patient(i).DateOfDiagnosisContinuous< Year+1
-            TimeSinceInfection(YearIndex).v((i-1)*NumSims+1:i*NumSims)=Patient(i).TimeFromInfectionToDiagnosis;
+for x = 1:NumberOfPatients
+    YearIndex = 0;
+    for Year = CD4BackProjectionYearsWhole(1):CD4BackProjectionYearsWhole(2)
+        YearIndex = YearIndex+1;
+        if Patient(x).DateOfDiagnosisContinuous >= Year && Patient(x).DateOfDiagnosisContinuous < Year+1
+            TimeSinceInfection(YearIndex).v((x-1)*NumSims+1:x*NumSims) = Patient(x).TimeFromInfectionToDiagnosis;
         end
     end
 end
-YearIndex=0;
-for Year=TimeSinceInfectionYearIndex
-    YearIndex=YearIndex+1;
+YearIndex = 0;
+for Year = TimeSinceInfectionYearIndex
+    YearIndex = YearIndex + 1;
     %Remove all of the unfilled values as above
-    TimeSinceInfection(YearIndex).v(TimeSinceInfection(YearIndex).v<0)=[];
+    TimeSinceInfection(YearIndex).v(TimeSinceInfection(YearIndex).v<0) = [];
 end
 
 %% Plotting results
-CreateFigure1
-CreateFigure2
-CreateFigure3
+CreateFigure1;
+CreateFigure2;
+CreateFigure3;
 CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime');
 CreateFigure4(MSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 MSMTotalUndiagnosedByTime');
 CreateFigure4(NonMSMTotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 NonMSMTotalUndiagnosedByTime');
