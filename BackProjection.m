@@ -53,7 +53,7 @@ if Sx.DeduplicateDiagnoses == true
 end
 
 %% Determine the time between infection and diagnosis
-matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' )));            %initialising parallel Matlab Sessions
+matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);            %initialising parallel Matlab Sessions
 disp('------------------------------------------------------------------');
 disp('Determining and Optimising time between Infection and Diagnosis');
 disp(' ');
