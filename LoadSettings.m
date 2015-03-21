@@ -1,6 +1,6 @@
 %% This Script Loads all of the settings for simulation
 %% The Number of Parameterisations used to generate uncertainity, Take input from user ideal value is 200
-prompt = 'Please Enter Number of Parameterisations(Press Enter/Return for default): ';
+prompt = 'Please Enter Number of Simulations to run: ';
 result = input(prompt);
 
 if isempty(result) == true
@@ -13,7 +13,7 @@ elseif ischar(result) == true
         
 elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' )))
     result = str2num(getenv( 'NUMBER_OF_PROCESSORS' ));
-    fprintf(1, 'Number of Parameterisations too low! Using a minimum value of: $d', result);
+    %fprintf(1, 'Number of Parameterisations too low! Using a minimum value of: %d', result);
 else
     result = result;
 end
@@ -22,43 +22,12 @@ Sx.NoParameterisations = result;
 clear prompt;
 clear result;
 
-%% Request User whether to include Overseas Diagnosis or not
-result = false;
-
-while  result == false
-    disp(' ');
-    prompt = 'Analyse People Previously Diagnosed Overseas(Y/N)? - Press Enter/return key for default: '; 
-    x = input(prompt, 's');
-    
-    if isempty(x) == true
-        result = false;
-        disp('Using default value of: No');
-        disp(' ');
-        break
-        
-    elseif x == 'N' || 'n'
-        result = false;
-        break
-    
-    elseif x == 'Y' || 'y'
-        result = true;
-        break
-        
-    else
-        disp(' ');  
-        disp('Invalid Entry! Please Enter a Valid Character');
-    end
-end
-
-Sx.IncludePreviouslyDiagnosedOverseas = result;
-clear prompt;
-clear result;
-
 %% Request User whether to Depulicate Records or Not
 result = false;
 
 while  result == false
-    prompt = 'Deduplicate Records(Y/N)? - Press Enter/return key for default: '; 
+    disp(' ');
+    prompt = 'Are you expecting Duplication in Data(Y/N)? '; 
     x = input(prompt, 's');
     
     if isempty(x) == true
@@ -94,7 +63,7 @@ RandStream.setGlobalStream(RandomNumberStream);
 result = false;
 
 while  result == false
-    prompt = 'Consider Recent Infections(Y/N)? - Press Enter/return key for default: '; 
+    prompt = 'Consider Recent Infections(Y/N)? '; 
     x = input(prompt, 's');
     
     if isempty(x) == true
@@ -152,24 +121,44 @@ result = 0.5;
 
 while  result == 0.5
     disp(' ');
-    disp('Sampling factor is data compression to improve simulation time, please select how may records to process');
-    disp('Options: 5000, 10000, Default(Samples 5000 from file)');
-    prompt = 'Please Enter Sampling Factor(Press Enter/Return for default): '; 
+    disp('Sampling factor is data compression to improve simulation time, please indicate how may records to process');
+    disp('1. 5000 - Take a Random Sample of 5000 Records');
+    disp('2. 10000 - Take a Random Sample of 10000 Records');
+    disp('3. Use 100% of Data File');
+    disp('4. Use 75% of Data File');
+    disp('5. Use 50% of Data File');
+    disp('6. Use 25% of Data File');
+    prompt = 'Please Enter Sampling Factor: '; 
     x = input(prompt);
     
     if isempty(x) == true
+        result = 0.75;
+        disp('Using default value of: 25%');
+        break
+             
+    elseif x == 1 
         result = 5000;
-        fprintf(1,'Using default value of: %.2f', result);
         break
         
-    elseif x == 0.75 || x == 0.50 || x == 0.25 || x == 0.00 
-        result = x;
+    elseif x == 2
+        result = 10000;
         break
         
-    elseif x == 5000 || x == 10000 
-        result = x;
-        break       
+    elseif x == 3
+        result = 1;
+        break
         
+    elseif x == 4
+        result = 0.25;
+        break
+        
+    elseif x == 5
+        result = 0.50;
+        break
+        
+    elseif x == 6
+        result = 0.75;
+        break
     else
         disp(' ');  
         disp('Invalid Entry! Please Enter a Valid Number');
@@ -183,7 +172,7 @@ clear result;
 LoadTime = tic;
 ParameterLocalStorageLocation = 'Parameters/';
 
-HIVFile = 'Imputation\Data\notifications2014imputationformatted.xls';
+HIVFile = 'Imputation\Data\Data.xls';
 SheetName='Dataset_1';
 
 pause(0.5);

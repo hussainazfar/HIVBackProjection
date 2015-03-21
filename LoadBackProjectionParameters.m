@@ -8,8 +8,8 @@ Px.MaxYears = MaxYears;
 Px.StepSize = StepSize;
 
 %% Creating Simulation Start Time
-Px.UpperFirstInfectionDate = BackProjectStartSingleYearAnalysis;            %used to filter possible back projected times
-Px.LowerFirstInfectionDate = BackProjectStartSingleYearAnalysis - 5;        %used to filter possible back projected times
+Px.UpperFirstInfectionDate = 1980;                                          %used to filter possible back projected times
+Px.LowerFirstInfectionDate = 1975;                                          %used to filter possible back projected times - should be less than the first diagnosed HIV case in data
 
 Px.FirstInfectionDateVec = Px.LowerFirstInfectionDate + (Px.UpperFirstInfectionDate - Px.LowerFirstInfectionDate) * rand(1, Px.NoParameterisations);
 

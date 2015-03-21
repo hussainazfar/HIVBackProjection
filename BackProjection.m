@@ -12,28 +12,6 @@ disp('Loading saved basic patient class data');
 disp(' ');
 [Patient] = CreatePatientObject(LineDataMatrix);
 
-%% Sort Patients into those who have a previous overseas diagnosis, and those who have not
-PreviouslyDiagnosedOverseasPatient = [];
-
-if (Sx.IncludePreviouslyDiagnosedOverseas == false)
-    disp('------------------------------------------------------------------');
-    disp('Removing overseas diagnosed cases');
-    OverseasDiagID = [];
-    NumberInPatientCurrently = length(Patient);
-    
-    for x = 1:NumberInPatientCurrently
-        if Patient(x).PreviouslyDiagnosedOverseas == 1
-            OverseasDiagID = [OverseasDiagID x];
-        end 
-    end
-    
-    PreviouslyDiagnosedOverseasPatient = Patient(OverseasDiagID);
-    Patient(OverseasDiagID) = [];
-    
-    disp(' ');
-    disp([num2str(length(PreviouslyDiagnosedOverseasPatient)) ' overseas diagnosis detected out of ' num2str(length(PreviouslyDiagnosedOverseasPatient) + length(Patient)) ' records ']);
-end
-
 %% Remove records to adjust for duplicate diagnoses, assuming previously diagnosed overseas do not have duplicates
 if Sx.DeduplicateDiagnoses == true
     disp(' ');
@@ -44,7 +22,7 @@ if Sx.DeduplicateDiagnoses == true
     [Patient, DuplicatePatient] = RemoveDuplicates(Patient);
     
     disp(' ');
-    disp([num2str(length(DuplicatePatient)) ' duplicates detected out of ' num2str(length(DuplicatePatient) + length(Patient)) ' records ']);
+    disp([num2str(length(DuplicatePatient)) ' duplicates expected out of ' num2str(length(DuplicatePatient) + length(Patient)) ' records ']);
     disp(' ');
     
     disp('-Time to Remove Duplicate Copies-');
@@ -147,6 +125,12 @@ disp('------------------------------------------------------------------');
 for x = 1:NumberOfPatients
     Patient(x) = Patient(x).DetermineInfectionDateDistribution();
 end
+
+for x = 1:Sx.NoParameterisations
+    for y = 1:NumberOfPatients
+        Sim(x).Patient(y) = Patient(x).DetermineInfectionDateDistribution();
+    end    
+end
     
 %% If consideration is given to recent infection data, select data according to avaialable information
 
@@ -201,11 +185,25 @@ fprintf(1,'\nDetermining when Patients were Undiagnosed\n');
 UndiagnosedTimer = tic;
     
 fprintf(1,'\nAnalyzing Undiagnosed Patients:\n');
-[UndiagnosedPatient] = UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
+
+[UndiagnosedPatient] = UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize)); %only of those diagnosed at end of last year of data
+
+% UndiagnosedByTime this functino now returns ALL undiagnosed
+
+% UndiagnosedPatient in graphs should be only those undiagnosed at time who
+% have been diagnosed prior to the end of data (should not include forwaard
+% simulated individuals
+
+% suggested changes
+% [TotalUndiagnosedByTime] = UndiagnosedByTime(Patient, CD4BackProjectionYearsWhole(1), Sx.StepSize, (CD4BackProjectionYearsWhole(2)+1-Sx.StepSize)); %only of those diagnosed at end of last year of data
+
+% make a new function, very similar to UndiagnosedByTime, that takes
+% another parameter, data cut off time. 
+% if Patient(i).DateOfDiagnsosis<DataCutOff -> add to the data
 
 %Add the undiagnosed with time (who have been diagnosed) to the people we know will be diagnosed in the future
 TotalUndiagnosedByTime.Time = UndiagnosedPatient.Time ;
-TotalUndiagnosedByTime.N = UndiagnosedSummed + UndiagnosedPatient.N ;
+TotalUndiagnosedByTime.N = UndiagnosedSummed + UndiagnosedPatient.N ;     %%%%%%%%%%%%%%%%%%%%need to get rid of UndiagnosedSummed%%%%%%%%%%%%%%%%%%
 
 [NumSims, NumStepsInYearDimension] = size(TotalUndiagnosedByTime.N);
 for SimCout = 1:NumSims

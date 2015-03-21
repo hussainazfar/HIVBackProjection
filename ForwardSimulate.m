@@ -39,9 +39,11 @@ end
 DistributionForThisSimulationUndiagnosedInfections = zeros(1, (CD4BackProjectionYearsWhole(2)-CD4BackProjectionYearsWhole(1)+1));
 
 CutOffYear = CD4BackProjectionYearsWhole(2)+1;
+ForwardProjection.PatientIndex = [];                                        %create a structure storing for patient indexes selected for forward simulation
 
 for SimNumber = 1:Sx.NoParameterisations
     fprintf(1, '\nForward Projection Progress: %.2f%%', (100 * SimNumber / Sx.NoParameterisations));
+    PatientIndex = [];
     ExpectedTimesVector = InfectionTimeMatrix(SimNumber, :);                %(for this Sim)
     [~, TotalInTimeVector] = size(ExpectedTimesVector);
     UndiagnosedCaseData(SimNumber).InfectionDate = [];
@@ -78,9 +80,10 @@ for SimNumber = 1:Sx.NoParameterisations
                     NumberFoundDiagnosed = NumberFoundDiagnosed+1;
                 else % if the simulated individual has not been diagnosed by the cut off date
                     IncludeInForwardProjection(CountSamples) = true; 
-                    %%%%%%%%%%%%%%%Add index of person selected
-                    %%%%%%%%%%%%%%%CopyPeopleArray[count]=SampleIndex%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                    NumberOfUnidagnosedInfectionsThisStep = NumberOfUnidagnosedInfectionsThisStep+1;
+                    NumberOfUnidagnosedInfectionsThisStep = NumberOfUnidagnosedInfectionsThisStep + 1;                   
+                    %----------------------------------------------------------------------------%
+                    PatientIndex(NumberOfUnidagnosedInfectionsThisStep) = SampleIndex; %Add index of person selected CopyPeopleArray[count]=SampleIndex
+                    %----------------------------------------------------------------------------%
                 end
                 
                 % Determine whether the simulation has reached the expected number of people
@@ -94,21 +97,18 @@ for SimNumber = 1:Sx.NoParameterisations
                 end
             end
             
-            %work out the difference in the upper and lower estimate, find
-            %a random value between the two, and select up to those many
+            %work out the difference in the upper and lower estimate, find a random value between the two, and select up to those many
             %individuals
+            %----------------------------------------------------------------------------%
+            %Total Number of Undiagnosed Patients
             DiffInUndiagnosedEstimate = UpperBoundNumberOfUnidagnosedInfectionsThisStep - LowerBoundNumberOfUnidagnosedInfectionsThisStep;
-            
-            %%%%%%%%%%%%%%%%%%azfar: this is the total%%%%%%%%%%%%%
+            %Select a few samples from the estimate
             UndiagnosedEstimateInThisStep = round(LowerBoundNumberOfUnidagnosedInfectionsThisStep + rand*DiffInUndiagnosedEstimate);
+            %Take the first UndiagnosedEstimateInThisStep indices from PatientIndex
+            PatientIndex = PatientIndex(1:UndiagnosedEstimateInThisStep);
+            %Find out the date of diagnosis adjust date of birth - age of date of birth should be the same
             
-            %%%%%%%%%%%%%%Take the first UndiagnosedEstimateInThisStep
-            %%%%%%%%%%%%%%indicies in CopyPeopleArray%%%%%%%%%%%%%
-            
-            %%%%%%%%%%%%Find out the date of diagnosis\
-            %%%%%%%%%%%%%adjust date of birth - age of date of birth should be the
-            %same%%%%%%%%%%%%%%%%%%%%%%%%%%
-            
+            %----------------------------------------------------------------------------%
             
             % Clear out IncludeInForwardProjection greater than UndiagnosedEstimateInThisStep
             NumericalIncludeInForwardProjection = 1:(10*TotalInTimeVector);
