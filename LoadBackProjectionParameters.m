@@ -1,15 +1,15 @@
-function [ Px ] = LoadBackProjectionParameters( NoParameterisations, MaxYears, StepSize, BackProjectStartSingleYearAnalysis )
+function [ Px ] = LoadBackProjectionParameters( Sx )
 %Back Projection Parameters are all calculated in this fuction for
 %Optimisation
 %   Values this function returns as part of structure Px are:
 %% Simulation Settings
-Px.NoParameterisations = NoParameterisations;
-Px.MaxYears = MaxYears;
-Px.StepSize = StepSize;
+Px.NoParameterisations = Sx.NoParameterisations;
+Px.MaxYears = Sx.MaxYears;
+Px.StepSize = Sx.StepSize;
 
 %% Creating Simulation Start Time
-Px.UpperFirstInfectionDate = 1980;                                          %used to filter possible back projected times
-Px.LowerFirstInfectionDate = 1975;                                          %used to filter possible back projected times - should be less than the first diagnosed HIV case in data
+Px.UpperFirstInfectionDate = Sx.UpperFirstInfectionDate;                                          %used to filter possible back projected times
+Px.LowerFirstInfectionDate = Sx.LowerFirstInfectionDate;                                          %used to filter possible back projected times - should be less than the first diagnosed HIV case in data
 
 Px.FirstInfectionDateVec = Px.LowerFirstInfectionDate + (Px.UpperFirstInfectionDate - Px.LowerFirstInfectionDate) * rand(1, Px.NoParameterisations);
 

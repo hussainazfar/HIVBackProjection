@@ -12,24 +12,6 @@ disp('Loading saved basic patient class data');
 disp(' ');
 [Patient] = CreatePatientObject(LineDataMatrix);
 
-%% Remove records to adjust for duplicate diagnoses, assuming previously diagnosed overseas do not have duplicates
-if Sx.DeduplicateDiagnoses == true
-    disp(' ');
-    disp('------------------------------------------------------------------');
-    disp('Analyzing and removing Duplication in Data ');
-    DuplicateTimer = tic;
-    
-    [Patient, DuplicatePatient] = RemoveDuplicates(Patient);
-    
-    disp(' ');
-    disp([num2str(length(DuplicatePatient)) ' duplicates expected out of ' num2str(length(DuplicatePatient) + length(Patient)) ' records ']);
-    disp(' ');
-    
-    disp('-Time to Remove Duplicate Copies-');
-    toc(DuplicateTimer)
-    disp('------------------------------------------------------------------');
-end
-
 %% Determine the time between infection and diagnosis
 matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);            %initialising parallel Matlab Sessions
 disp('------------------------------------------------------------------');
@@ -37,7 +19,7 @@ disp('Determining and Optimising time between Infection and Diagnosis');
 disp(' ');
 disp('Loading Back Projection Parameters...');
 
-[Px] = LoadBackProjectionParameters(Sx.NoParameterisations, Sx.MaxYears, Sx.StepSize, BackProjectStartSingleYearAnalysis);
+[Px] = LoadBackProjectionParameters(Sx);
 Px.ConsiderRecentInfection = Sx.ConsiderRecentInfection;
 
 disp('Back Projection Parameters Loaded Successfully!');
