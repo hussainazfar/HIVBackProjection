@@ -184,7 +184,7 @@ if (Sx.UpperFirstInfectionDate >= min(LineDataMatrix.YearOfDiagnosis(:)))
     Sx.UpperFirstInfectionDate = min(LineDataMatrix.YearOfDiagnosis(:)) - 1;
 end
 if (Sx.LowerFirstInfectionDate >= Sx.UpperFirstInfectionDate)
-    Sx.LowerFirstInfectionDate = Sx.UpperFirstInfectionDate - 5;
+    Sx.LowerFirstInfectionDate = Sx.UpperFirstInfectionDate - 20;
 end
 
 %% Determine the number of people in the data file

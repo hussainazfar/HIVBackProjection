@@ -94,14 +94,16 @@ set(gca, 'fontsize', 18)
 box off;
 
 print('-dpng ','-r300','ResultsPlots/Figure 1 Trend of CD4 decay.png')
+close all;
 
 %% Output paper sentences
-%disp('Figure 1')
-disp(['The healthy CD4 count distribution had a median of ' num2str(exp(Px.MedianLogHealthyCD4), '%.0f') ' and standard deviation of ' num2str(Px.StdLogHealthyCD4, '%.3f')]);
+str1 = sprintf('The healthy CD4 count distribution had a median of %.0f and standard deviation of %.3f\n', exp(Px.MedianLogHealthyCD4), Px.StdLogHealthyCD4);
+%disp(['The healthy CD4 count distribution had a median of ' num2str(exp(Px.MedianLogHealthyCD4), '%.0f') ' and standard deviation of ' num2str(Px.StdLogHealthyCD4, '%.3f')]);
 HealthyCD4VecTest = exp(normrnd(Px.MedianLogHealthyCD4, Px.StdLogHealthyCD4, [1 100000]));
 HealthyCD4LQR = prctile(HealthyCD4VecTest, 25);
 HealthyCD4UQR = prctile(HealthyCD4VecTest, 75);
-disp(['The healthy CD4 count distribution had an interquartile range of (' num2str(HealthyCD4LQR, '%.0f') '-' num2str(HealthyCD4UQR, '%.0f') ')' ]);
+str2 = sprintf('The healthy CD4 count distribution had an interquartile range of (%.0f - %.0f)\n', HealthyCD4LQR, HealthyCD4UQR);
+%disp(['The healthy CD4 count distribution had an interquartile range of (' num2str(HealthyCD4LQR, '%.0f') '-' num2str(HealthyCD4UQR, '%.0f') ')' ]);
 
 %% Create uncertainty in time between infection and diagnosis
 
@@ -175,41 +177,6 @@ LCIMedian200 = prctile(Median200, 2.5);
 UCIMedian200 = prctile(Median200, 97.5);
 
 
-disp(['The time it takes for the median CD4 count to reach 500 is '  num2str(MedianMedian500) '(' num2str(LCIMedian500) '-' num2str(UCIMedian500) ') years.'])
-disp(['The time it takes for the median CD4 count to reach 350 is '  num2str(MedianMedian350) '(' num2str(LCIMedian350) '-' num2str(UCIMedian350) ') years.'])
-disp(['The time it takes for the median CD4 count to reach 200 is '  num2str(MedianMedian200) '(' num2str(LCIMedian200) '-' num2str(UCIMedian200) ') years.'])
-
-MedianCD4WithTime = CurrentMedianStore(:, 10:10:100);                       %select yearly data
-MedianCD4WithTimeMedian = median(MedianCD4WithTime,1);
-MedianCD4WithTimeMedianLCI = prctile(MedianCD4WithTime, 2.5,1);
-MedianCD4WithTimeMedianUCI = prctile(MedianCD4WithTime, 97.5,1);
-TimeForPlot = 1:10;
-
-clf;
-CreateUncertaintyPlot(TimeForPlot, MedianCD4WithTimeMedian', MedianCD4WithTimeMedianUCI', MedianCD4WithTimeMedianLCI', 'r');
-xlabel('Time since infection (years)','fontsize', 22);
-ylabel({'Median CD4 count', '(95% uncertainty bound of the median)'},'fontsize', 22);
-set(gca,'XTick', 1:10);
-set(gca,'YTick', 0:100:800);
-xlim([0 11]);
-set(gca,'Color',[1.0 1.0 1.0]);
-set(gcf,'Color',[1.0 1.0 1.0]);                                             %makes the grey border white
-set(gca, 'fontsize', 18)
-box off;
-print('-dpng ','-r300','ResultsPlots/Appendix uncertainty of median CD4 between simulations with time.png');
-
-%clf;
-%hold on;
-%for x = 1:Sx.NoParameterisations
-%    %plot(0.05:0.1:10.1, CurrentMedianStore(1:min([Sx.NoParameterisations, 10]), 1:101)')
-%    plot(0.05:0.1:10.1, CurrentMedianStore(x, 1:101)','LineWidth',0.5)
-%end
-%xlabel('Time since infection (years)','fontsize', 22);
-%ylabel({'Median CD4 count'},'fontsize', 22);
-%set(gca,'XTick', 1:10);
-%set(gca,'YTick', 0:100:800);
-%xlim([0 11]);
-%set(gca,'Color',[1.0 1.0 1.0]);
-%set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
-%set(gca, 'fontsize', 18)
-%print('-dpng ','-r1200','ResultsPlots/Other Individual simulations of median CD4.png');
+str3 = sprintf('The time it takes for the median CD4 count to reach 500 is %.1f (%.1f - %.1f) years\n', MedianMedian500, LCIMedian500, UCIMedian500);
+str4 = sprintf('The time it takes for the median CD4 count to reach 350 is %.1f (%.1f - %.1f) years\n', MedianMedian350, LCIMedian350, UCIMedian350);
+str5 = sprintf('The time it takes for the median CD4 count to reach 200 is %.1f (%.1f - %.1f) years\n', MedianMedian200, LCIMedian200, UCIMedian200);
