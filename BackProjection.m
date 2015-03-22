@@ -10,9 +10,11 @@ LoadSettings;
 %Place data from LineDataMatrix into PatientData
 disp('Loading saved basic patient class data');
 disp(' ');
-[Patient] = CreatePatientObject(LineDataMatrix);
+[ Patient ] = CreatePatientObject(LineDataMatrix);
 
 %% Determine the time between infection and diagnosis
+disp(' ');
+disp('------------------------------------------------------------------');
 matlabpool('open', str2num(getenv( 'NUMBER_OF_PROCESSORS' ))-1);            %initialising parallel Matlab Sessions
 disp('------------------------------------------------------------------');
 disp('Determining and Optimising time between Infection and Diagnosis');

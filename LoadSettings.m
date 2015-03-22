@@ -207,9 +207,15 @@ while  result == 1970
     
     prompt = 'Please enter Upper Value of First Possible Infection (e.g. 1975): '; 
     x = input(prompt);
+    if isempty(x)
+        x = 1980;
+    end
     
     prompt = 'Please enter Lower Value of First Possible Infection, should be less than Upper Range (e.g. 1970): '; 
     y = input(prompt);
+    if isempty(y)
+        y = 1975;
+    end
     
     result = 1971;
     

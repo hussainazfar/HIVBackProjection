@@ -82,7 +82,7 @@ for SimNumber = 1:Sx.NoParameterisations
                     IncludeInForwardProjection(CountSamples) = true; 
                     NumberOfUnidagnosedInfectionsThisStep = NumberOfUnidagnosedInfectionsThisStep + 1;                   
                     %----------------------------------------------------------------------------%
-                    PatientIndex(NumberOfUnidagnosedInfectionsThisStep) = SampleIndex; %Add index of person selected CopyPeopleArray[count]=SampleIndex
+                    %PatientIndex(NumberOfUnidagnosedInfectionsThisStep) = SampleIndex; %Add index of person selected CopyPeopleArray[count]=SampleIndex
                     %----------------------------------------------------------------------------%
                 end
                 
@@ -105,7 +105,7 @@ for SimNumber = 1:Sx.NoParameterisations
             %Select a few samples from the estimate
             UndiagnosedEstimateInThisStep = round(LowerBoundNumberOfUnidagnosedInfectionsThisStep + rand*DiffInUndiagnosedEstimate);
             %Take the first UndiagnosedEstimateInThisStep indices from PatientIndex
-            PatientIndex = PatientIndex(1:UndiagnosedEstimateInThisStep);
+            %PatientIndex = PatientIndex(1:UndiagnosedEstimateInThisStep);
             %Find out the date of diagnosis adjust date of birth - age of date of birth should be the same
             
             %----------------------------------------------------------------------------%

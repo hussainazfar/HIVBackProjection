@@ -6,6 +6,7 @@ function [ Px ] = LoadBackProjectionParameters( Sx )
 Px.NoParameterisations = Sx.NoParameterisations;
 Px.MaxYears = Sx.MaxYears;
 Px.StepSize = Sx.StepSize;
+Px.SamplingFactor = Sx.SamplingFactor;
 
 %% Creating Simulation Start Time
 Px.UpperFirstInfectionDate = Sx.UpperFirstInfectionDate;                                          %used to filter possible back projected times
@@ -109,7 +110,7 @@ v = (Px.BaselineCD4Stdev)^2;
 mu = log((m^2)/sqrt(v+m^2));
 sigma = sqrt(log(v/(m^2)+1));
 
-Px.BaselineCD4MedianVec = lognrnd(mu, sigma, 1, NoParameterisations);
+Px.BaselineCD4MedianVec = lognrnd(mu, sigma, 1, Px.NoParameterisations);
 
 Px.FractionalDeclineToReboundVec = Px.BaselineCD4MedianVec / MedianHealthyCD4;
 %% Assessing the literature on decline rates
@@ -144,7 +145,7 @@ v = (Px.SDCD4Decline)^2;
 mu = log((m^2) / sqrt(v + m^2));
 sigma = sqrt(log(v / (m^2) + 1));
 
-Px.CD4DeclineVec = lognrnd(mu, sigma, 1, NoParameterisations);
+Px.CD4DeclineVec = lognrnd(mu, sigma, 1, Px.NoParameterisations);
     % In this section, the decline must not be less than 10% of the average decline across simulations
     % Although this is very unlikely (given the above parameters) it needs to
     % be assumed that it is possible that declines of 10% could occur because
@@ -158,7 +159,7 @@ if NumberRemaining < 1
 end
 
 %Resample to produce the required number of samples
-ResampledDecline = randsample(Px.CD4DeclineVec, NoParameterisations - NumberRemaining,'true'); % with replacement
+ResampledDecline = randsample(Px.CD4DeclineVec, Px.NoParameterisations - NumberRemaining,'true'); % with replacement
 Px.CD4DeclineVec = [Px.CD4DeclineVec ResampledDecline];
 
 %% Square root decline model
@@ -182,7 +183,7 @@ v = (Px.SquareRootAnnualDeclineStdev)^2;
 mu = log((m^2) / sqrt(v + m^2));
 sigma = sqrt(log(v / (m^2) + 1));
 
-Px.SQRCD4DeclineVec = lognrnd(mu, sigma, 1, NoParameterisations);
+Px.SQRCD4DeclineVec = lognrnd(mu, sigma, 1, Px.NoParameterisations);
 
 Px.SQRCD4DeclineVec(Px.SQRCD4DeclineVec<0.1*Px.MeanSquareRootAnnualDecline)=[]; %dispose of declines that are less than 10% of the estimate due to explicit filtering in GenerateCD4Count
 NumberRemaining = length(Px.SQRCD4DeclineVec);
@@ -192,7 +193,7 @@ if NumberRemaining < 1
 end
 
 %Resample to produce the required number of samples
-ResampledSQRDecline = randsample(Px.SQRCD4DeclineVec, NoParameterisations - NumberRemaining, 'true'); % with replacement
+ResampledSQRDecline = randsample(Px.SQRCD4DeclineVec, Px.NoParameterisations - NumberRemaining, 'true'); % with replacement
 Px.SQRCD4DeclineVec = [Px.SQRCD4DeclineVec ResampledSQRDecline];
 
 %% Individual vaiablility in decline
