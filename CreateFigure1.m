@@ -52,7 +52,6 @@ InitialCD4Vector = exp(LogInitialCD4Vector);
     UQRVec = [prctile(InitialCD4Vector, 25) UQRVec];
     LQRVec = [prctile(InitialCD4Vector, 75) LQRVec];
 
-clf;%clear the current figure ready for plotting
 subplot(1, 5, [2 3 4 5])
 
 hold on;
@@ -93,10 +92,9 @@ set(gcf,'Color',[1.0 1.0 1.0]);%makes the grey border white
 set(gca, 'fontsize', 18)
 box off;
 
-print('-dpng ','-r300','ResultsPlots/Figure 1 Trend of CD4 decay.png')
-close all;
+print('-dpng ','-r300','ResultsPlots/Figure 1.png')
 
-%% Output paper sentences
+%% Output paper sentences (File Name: Trend of CD4 decay
 str1 = sprintf('The healthy CD4 count distribution had a median of %.0f and standard deviation of %.3f\n', exp(Px.MedianLogHealthyCD4), Px.StdLogHealthyCD4);
 %disp(['The healthy CD4 count distribution had a median of ' num2str(exp(Px.MedianLogHealthyCD4), '%.0f') ' and standard deviation of ' num2str(Px.StdLogHealthyCD4, '%.3f')]);
 HealthyCD4VecTest = exp(normrnd(Px.MedianLogHealthyCD4, Px.StdLogHealthyCD4, [1 100000]));
@@ -114,8 +112,7 @@ Median200 = [];
 CurrentMedianStore = zeros(Sx.NoParameterisations, 200);
 UncertaintyTimer = tic;
 for CurrentParamNumber = 1:Sx.NoParameterisations
-    disp(['Figure 1 appendices sim' num2str(CurrentParamNumber)]);
-    if (CurrentParamNumber>1)
+    if (CurrentParamNumber > 1)
         UncertaintyTimerCurrentTime = toc(UncertaintyTimer);
         UncertaintySimsComplete = CurrentParamNumber - 1;
         TimePerSim = UncertaintyTimerCurrentTime / UncertaintySimsComplete;
@@ -180,3 +177,7 @@ UCIMedian200 = prctile(Median200, 97.5);
 str3 = sprintf('The time it takes for the median CD4 count to reach 500 is %.1f (%.1f - %.1f) years\n', MedianMedian500, LCIMedian500, UCIMedian500);
 str4 = sprintf('The time it takes for the median CD4 count to reach 350 is %.1f (%.1f - %.1f) years\n', MedianMedian350, LCIMedian350, UCIMedian350);
 str5 = sprintf('The time it takes for the median CD4 count to reach 200 is %.1f (%.1f - %.1f) years\n', MedianMedian200, LCIMedian200, UCIMedian200);
+
+fileID = fopen('Results/Figure 1 Observations.txt','w');
+fprintf(fileID, 'Figure 1 depicts the trend of CD4 Decay:-\r\n\r\n%s\r\n%s\r\n%s\r\n%s\r\n%s\r\n',str1, str2, str3, str4, str5);
+fclose(fileID);

@@ -42,11 +42,13 @@ LineStyleHolder{1} = '-';
 LineStyleHolder{2} = '-';
 LineStyleHolder{3} = '-';
 
-clf;                                                                        %clear the current figure ready for plotting
+figure
 hold on;
 
 %% Select the data that has observations closse to the 200, 350 and 500
 Count = 0;
+fileID = fopen('Results/Figure 2 Observations.txt','w');
+fprintf(fileID, 'Figure 2 depicts Time since Infection Distributions by CD4 Count:-\r\n\r\n');
 for iCD4 = PlotSettings.ListOfCD4sToPlot
     Count = Count+1;
     Index = (CD4DistributionToSample<iCD4+10)&(CD4DistributionToSample>iCD4-10);
@@ -54,13 +56,16 @@ for iCD4 = PlotSettings.ListOfCD4sToPlot
     MedianTimeUntilDiagnosisAtCD4 = median(TimeDitributionToSample(Index));
     LQRTimeUntilDiagnosisAtCD4 = prctile(TimeDitributionToSample(Index), 25);
     UQRTimeUntilDiagnosisAtCD4 = prctile(TimeDitributionToSample(Index), 75);
-    disp(['The median estimated time between infection and diagnosis was ' num2str(MedianTimeUntilDiagnosisAtCD4, '%.1f') ' (IQR: ' num2str(LQRTimeUntilDiagnosisAtCD4, '%.1f') '-' num2str(UQRTimeUntilDiagnosisAtCD4, '%.1f') ') years for diagnoses with CD4 counts of ' num2str(iCD4) 'cells/microL at diagnosis.']);
+    
+    str = sprintf('The median estimated time between infection and diagnosis was %.1f (IQR: %.1f - %.1f) years for diagnoses with CD4 counts of %.0f cells/microL at diagnosis.', MedianTimeUntilDiagnosisAtCD4, LQRTimeUntilDiagnosisAtCD4, UQRTimeUntilDiagnosisAtCD4, iCD4);
+    fprintf(fileID, '%s\r\n', str);
     
     Output = hist(TimeDitributionToSample(Index), CD4TimeHistPlotSpacing);
     Output = Output/sum(Output)/Sx.StepSize;%Normalise, divide by Sx.StepSize to make it look better
     PlotHandle{Count} = plot(CD4TimeHistPlotSpacing, Output, 'Color' , ColourHolder{Count},'LineWidth',2);
 end
 
+fclose(fileID);
 %% Format the graph
 xlabel('Time between infection and diagnosis (years)','fontsize', 22);
 ylabel('Annual probability','fontsize', 22);
@@ -82,7 +87,7 @@ set(h_title, 'fontsize', 16)
 
 legend('boxon')
 
-print('-dpng ','-r300','ResultsPlots/Figure 2 Time since infection distributions by CD4.png')
+print('-dpng ','-r300','ResultsPlots/Figure 2.png')
 hold off;
 
 disp('------------------------------------------------------------------');

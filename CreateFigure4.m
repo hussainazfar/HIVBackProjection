@@ -3,13 +3,12 @@ function CreateFigure4(TotalUndiagnosedByTime, YearsToPlot, FileName)
 disp('Calculating the output for Figure 4');
 disp(' ');
 
-clf;
-
 %find the median and the 95% confidence interval
 UCI=prctile(TotalUndiagnosedByTime.N, 97.5, 1);
 LCI=prctile(TotalUndiagnosedByTime.N, 2.5, 1);
 Median=median(TotalUndiagnosedByTime.N, 1);
 
+figure
 hold on;
 h95=plot(TotalUndiagnosedByTime.Time, UCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '--');
 plot(TotalUndiagnosedByTime.Time, LCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '--');

@@ -9,7 +9,7 @@ UCI=prctile(DistributionDiagnosedInfections, 97.5, 1);
 LCI=prctile(DistributionDiagnosedInfections, 2.5, 1);
 Median=median(DistributionDiagnosedInfections, 1);
 
-clf;%clear the current figure ready for plotting
+figure
 hold on
 DiagnosesHandle=plot(DiagnosesByYear.Time, DiagnosesByYear.N, 'Color' , [0.3 0.3 0.3], 'LineStyle', '.' ,'MarkerSize',20);
 
@@ -34,11 +34,14 @@ set(h_legend,'FontSize',16);
 
 legend('boxoff')
 
-print('-dpng ','-r300','ResultsPlots/Figure 3a Backprojected Infections and Diagnoses.png')
+print('-dpng ','-r300','ResultsPlots/Figure 3.png')
 
 [~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));
 InfectionsString=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-disp(['the number of infections that are placed in 2013 is ' InfectionsString]);
+fileID = fopen('Results/Figure 3 Observations.txt','w');
+fprintf(fileID, 'Figure 3 Depicts Backprojected Infections and Diagnoses:-\r\n\r\n');
+fprintf(fileID, 'The number of infections that are placed in 2013: %s\r\n', InfectionsString);
+fclose(fileID);
 
 %% Figure 3b
 
@@ -50,7 +53,7 @@ UCI=prctile(DistributionTotal, 97.5, 1);
 LCI=prctile(DistributionTotal, 2.5, 1);
 Median=median(DistributionTotal, 1);
 
-clf;%clear the current figure ready for plotting
+figure
 hold on
 DiagnosesHandle=plot(DiagnosesByYear.Time, DiagnosesByYear.N, 'Color' , [0.3 0.3 0.3], 'LineStyle', '.' ,'MarkerSize',20);
 
@@ -78,23 +81,26 @@ set(h_legend,'FontSize',16);
 
 legend('boxoff')
 
-print('-dpng ','-r300','ResultsPlots/Figure 3b Diagnoses and Total Infections.png')
+print('-dpng ','-r300','ResultsPlots/Figure 4.png')
 
 %% Create paper sentences
+fileID = fopen('Results/Figure 4 Observations.txt','w');
+fprintf(fileID, 'Figure 4 Depicts Diagnoses and Total Expected Infectionsin that year:-\r\n\r\n');
+fprintf(fileID, 'The number of infections that are placed in 2013: %s\r\n', InfectionsString);
 [~, YearIndex]=min(abs(YearVectorLabel-1984));
 Infections1984=[num2str(round(Median(YearIndex)), '%i') ' [' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ']'];
 [~, YearIndex]=min(abs(YearVectorLabel-1987));
 Diagnoses1987=num2str(round(DiagnosesByYear.N(YearIndex)), '%i');
-disp(['The peak estimated infections (' Infections1984 ') that occurred in 1984 is somewhat lower than the peak diagnoses (' Diagnoses1987 ') in 1987 as there was a back-log of infections that occurred earlier which needed to be cleared.']);
+fprintf(fileID, 'The peak estimated infections (%s) that occurred in 1984 is somewhat lower than the peak diagnoses (%s) in 1987 as there was a back-log of infections that occurred earlier which needed to be cleared\r\n', Infections1984, Diagnoses1987);
 
 [~, YearIndex]=min(abs(YearVectorLabel-1997));
 Infections1997=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-disp(['Following this peak, infections reached a low of ' Infections1997 ' in 1997.']);
+fprintf(fileID, 'Following this peak, infections reached a low of %s in 1997\r\n', Infections1997);
 
 
 [~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));
 InfectionsString=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
 DiagnosesString=num2str(round(DiagnosesByYear.N(YearIndex)), '%i');
-disp(['There were ' InfectionsString ' infections in the final year of data, with ' DiagnosesString ' diagnoses in the final year of data, ... ']);
-
+fprintf(fileID, 'There were %s infections in the final year of data, with %s diagnoses in the final year of data\r\n', InfectionsString, DiagnosesString);
+fclose(fileID);
 disp('------------------------------------------------------------------');

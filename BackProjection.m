@@ -33,9 +33,9 @@ OptimisationTimer = tic;
 [~, NumberInPatientCurrently] = size(Patient);
 YearIndex = 0;
 
-for x = 1:Sx.NoParameterisations
-    Sim(x).Patient = Patient;
-end
+%for x = 1:Sx.NoParameterisations
+%    Sim(x).Patient = Patient;
+%end
 
 for Year = BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
     SimTimer = tic;
@@ -91,11 +91,11 @@ for Year = BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
     fprintf(1, 'Time to run Simulation: %.2f seconds\n', toc(SimTimer));
 end
 
-for x = 1:length(Patient)
-    for y = 1:Sx.NoParameterisations
-        Sim(y).Patient(x).TimeFromInfectionToDiagnosis = Patient(x).TimeFromInfectionToDiagnosis(y);  
-    end
-end
+%for x = 1:length(Patient)
+%    for y = 1:Sx.NoParameterisations
+%        Sim(y).Patient(x).TimeFromInfectionToDiagnosis = Patient(x).TimeFromInfectionToDiagnosis(y);  
+%    end
+%end
 
 disp(' ');
 disp('-Time Spent on Optimisation-');
@@ -245,12 +245,8 @@ end
 CreateFigure1;
 CreateFigure2;
 CreateFigure3;
-CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 4 TotalUndiagnosedByTime');
+CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 5');
 CreateFigure5;
-
-%CreateOtherPlots;
-%CreateResultUncertaintyAroundTime;
-%YearValueVector=CD4BackProjectionYearsWhole(1):Sx.StepSize:(CD4BackProjectionYearsWhole(2)+1-Sx.StepSize);
 
 %% Calculating Total Simulation Time
 disp(' ');
@@ -258,60 +254,25 @@ disp('------------------------------------------------------------------');
 disp('-Total Simulation Time-');
 toc(TimeALL)
 disp('------------------------------------------------------------------');
-%% Sensitivity analysis
-%SensitivityAnalysis
-
-%%% Paper sentences
-%disp('------------------------------------------------------------------');
-%TotalUndiagnosedByTime.Median=median(TotalUndiagnosedByTime.N, 1);
-%[MaxMedUndiagnosed, IndexOfMax]= max(TotalUndiagnosedByTime.Median);
-%YearMaxMedUndiagnosed=TotalUndiagnosedByTime.Time(IndexOfMax);
-%LCI=prctile(TotalUndiagnosedByTime.N(:, IndexOfMax), 2.5);
-%UCI=prctile(TotalUndiagnosedByTime.N(:, IndexOfMax), 97.5);
-%disp(['The model estimates that the number of people living with undiagnosed HIV peaked in ' num2str(YearMaxMedUndiagnosed) ' at ' num2str(MaxMedUndiagnosed) '(' num2str(LCI) '-' num2str(UCI) ') cases.']);
-
-%LCI=prctile(TotalUndiagnosedByTime.N(:, end), 2.5);
-%UCI=prctile(TotalUndiagnosedByTime.N(:, end), 97.5);
-%disp(['Final year of undiagnosed ' num2str(TotalUndiagnosedByTime.Median(end)) '(' num2str(LCI) '-' num2str(UCI) ') cases.']);
-%
-%SubsetUndiagnosed.N=TotalUndiagnosedByTime.N(:, IndexOfMax:end);
-%SubsetUndiagnosed.Median=TotalUndiagnosedByTime.Median(IndexOfMax:end);
-%SubsetUndiagnosed.Time=TotalUndiagnosedByTime.Time(IndexOfMax:end);
-%[MinMedUndiagnosed, IndexOfMin]= min(SubsetUndiagnosed.Median);
-%LCI=prctile(SubsetUndiagnosed.N(:, IndexOfMin), 2.5);
-%UCI=prctile(SubsetUndiagnosed.N(:, IndexOfMin), 97.5);
-%YearMinMedUndiagnosed=SubsetUndiagnosed.Time(IndexOfMin);
-%disp(['Min since max occurred in ' num2str(YearMinMedUndiagnosed) ' with ' num2str(MinMedUndiagnosed) '(' num2str(LCI) '-' num2str(UCI) ') cases.']);
-
-%% Return diagnosed overseas to the population
-%AllPatients=[Patient PreviouslyDiagnosedOverseasPatient];
 
 %% Saving results 
-% use http://www.mathworks.com.au/help/matlab/ref/save.html#inputarg_version
-% v7.3 to save files above 2GB
 %YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2)-1);
 %HistYearSlots=(CD4BackProjectionYearsWhole(1):Sx.StepSize:(CD4BackProjectionYearsWhole(2)+1-Sx.StepSize));
 %disp('In the following section, data is to be saved to put into a file for reuse later');
-%BackProjectedResults.DistributionDiagnosedInfections=DistributionDiagnosedInfections;
-%BackProjectedResults.DistributionUndiagnosedInfections=DistributionUndiagnosedInfections;
-%BackProjectedResults.DistributionUndiagnosedInfectionsPrecise=DistributionUndiagnosedInfectionsPrecise;
-%BackProjectedResults.DistributionDiagnosedInfectionsPrecise=DistributionDiagnosedInfectionsPrecise;
-% BackProjectedResults.MeanDeclineSelected=MeanDeclineSelected; 
-% BackProjectedResults.AsymptomaticPSelected=AsymptomaticPSelected;
-% BackProjectedResults.SymptomaticPSelected=SymptomaticPSelected;
-% BackProjectedResults.CurvatureSelected=CurvatureSelected;
-%BackProjectedResults.YearVectorLabel=YearVectorLabel;
-%BackProjectedResults.YearVectorLabelPrecise=HistYearSlots;
-%BackProjectedResults.CD4BackProjectionYearsWhole=CD4BackProjectionYearsWhole;
-%BackProjectedResults.TotalUndiagnosedByTime=TotalUndiagnosedByTime;
 
-%BackProjectedResults.OptimisationResults=OptimisationResults;
+%BackProjectedResults.DistributionDiagnosedInfections = DistributionDiagnosedInfections;
+%BackProjectedResults.DistributionUndiagnosedInfections = DistributionUndiagnosedInfections;
+%BackProjectedResults.DistributionUndiagnosedInfectionsPrecise = DistributionUndiagnosedInfectionsPrecise;
+%BackProjectedResults.DistributionDiagnosedInfectionsPrecise = DistributionDiagnosedInfectionsPrecise;
+%BackProjectedResults.YearVectorLabel = YearVectorLabel;
+%BackProjectedResults.YearVectorLabelPrecise = HistYearSlots;
+%BackProjectedResults.CD4BackProjectionYearsWhole = CD4BackProjectionYearsWhole;
+%BackProjectedResults.TotalUndiagnosedByTime = TotalUndiagnosedByTime;
+%BackProjectedResults.OptimisationResults = OptimisationResults;
 
-%save('PatientSaveFiles/BackProjectedResults.mat', 'BackProjectedResults');
+%save('Results/BackProjectedResults.mat', 'BackProjectedResults');
 %disp('Saving individual patient records, this may take a while');
-%Identifier=1;
-%SavePatientClass(AllPatients, 'PatientSaveFiles',  Identifier);
-
-
-% save('PatientSaveFiles/SimulationState.mat');
+%Identifier = 1;
+%SavePatientClass(Patient, 'Results',  Identifier);
+%save('Results/SimulationState.mat');
 

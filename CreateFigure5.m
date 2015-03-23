@@ -1,6 +1,5 @@
 %% Output undiagnosed testing probabilities
     
-    clf;%clear the current figure ready for plotting
     YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));
     
     %find the mean and the 95% confidence interval
@@ -8,6 +7,7 @@
     LCI=prctile(YearlyEffectiveTestingRate, 2.5, 1);
     Median=median(YearlyEffectiveTestingRate, 1);
     
+    figure
     hold on;
     hquart=plot(YearVectorLabel, UCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '--');
     plot(YearVectorLabel, LCI, 'Color' , [0.5 0.5 0.5],'LineWidth',2, 'LineStyle', '--');
@@ -25,18 +25,21 @@
     h_legend=legend([hmed hquart], {'Median', '95% uncertainty bound'},  'Location','SouthEast');
     set(h_legend,'FontSize',16);
     legend('boxoff');
-    print('-dpng ','-r300','ResultsPlots/Figure 5a ProbabilityOfTestingByYear.png')
+    print('-dpng ','-r300','ResultsPlots/Figure 6.png')
 
 %% Output paper sentence
-disp('Figure 5a')
+%disp('Figure 5a')
 [~, YearIndex]=min(abs(YearVectorLabel-1999));
 String1999TestingProbability=[num2str(Median(YearIndex), '%.2f') ' [' num2str(LCI(YearIndex), '%.2f'), '-', num2str(UCI(YearIndex), '%.2f'), ']'];
 [~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));
 StringFinalTestingProbability=[num2str(Median(YearIndex), '%.2f') ' (' num2str(LCI(YearIndex), '%.2f'), '-', num2str(UCI(YearIndex), '%.2f'), ')'];
 
+fileID = fopen('Results/Figure 6 Observations.txt','w');
+fprintf(fileID, 'Figure 6 depicts Probability Of Testing By Year:-\r\n\r\n');
+fprintf(fileID, 'The model estimates that the annual testing probabilty fell to the lowest point (p=%s) in 1999, the year which coincides with the lowest number of diagnoses.\r\n', String1999TestingProbability);
+fprintf(fileID, 'Testing probailities are calculated to have increased since then, with the annual testing probability in the final year of data at p=%s\r\n', StringFinalTestingProbability);
+fclose(fileID);
 
-disp(['The model estimates that the annual testing probabilty fell to the lowest point (p=' String1999TestingProbability ') in 1999, the year which coincides with the lowest number of diagnoses. ' ...
-    'Testing probailities are calculated to have increased since then, with the annual testing probability in the final year of data at p=' StringFinalTestingProbability '. ']);
 
 
 %% Output time until diagnosis by year
@@ -59,12 +62,11 @@ for Year=TimeSinceInfectionYearIndex
 
 end
 
-clf;%clear the current figure ready for plotting
     YearVectorLabel=CD4BackProjectionYearsWhole(1):(CD4BackProjectionYearsWhole(2));  
 
     PlotIndex=TimeSinceInfectionYearIndex>StartYearForTimeUntilDiagnosisPlot-0.5;
     
-    
+    figure
     hold on;
     hquart=plot(YearVectorLabel(PlotIndex), TimeSinceInfectionLQR(PlotIndex), 'Color' , [0.5 0.5 0.5],'LineWidth',2);
     plot(YearVectorLabel(PlotIndex), TimeSinceInfectionUQR(PlotIndex), 'Color' , [0.5 0.5 0.5],'LineWidth',2);
@@ -83,16 +85,19 @@ clf;%clear the current figure ready for plotting
     h_legend=legend([hmed hquart], {'Median', 'Quartiles'},  'Location','NorthEast');
     set(h_legend,'FontSize',16);
     legend('boxoff');
-    print('-dpng ','-r300','ResultsPlots/Figure 5b MedianAndIQROfTimeUntilDiagnosisByYear.png')
+    print('-dpng ','-r300','ResultsPlots/Figure 7.png')
     
 %% Output paper sentence
-disp('Figure 5b')
+%disp('Figure 5b')
+fileID = fopen('Results/Figure 7 Observations.txt','w');
+fprintf(fileID, 'Figure 7 depicts Median And IQR Of Time Until Diagnosis By Year:-\r\n\r\n');
 [~, YearIndex]=min(abs(YearVectorLabel-CD4BackProjectionYearsWhole(2)));
 StringFinalYearTime=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
-disp([' The median time between infection and diagnosis for people diagnosed in the last year of data was estimated at ' StringFinalYearTime ' years.']);
-disp(['Mean time between infection and diagnosis in the final year of data was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);
+fprintf(fileID, 'The median time between infection and diagnosis for people diagnosed in the last year of data was estimated at %s years.\r\n', StringFinalYearTime);
+fprintf(fileID, 'Mean time between infection and diagnosis in the final year of data was %d years.', TimeSinceInfectionMean(YearIndex));
 
 [~, YearIndex]=min(abs(YearVectorLabel-1985));
 String1985Time=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
-disp([' This is a substantial reduction from 1985, where median time until diagnosis was estimated to be ' String1985Time ' years.']);
-disp(['Mean time between infection and diagnosis in 1985 was ' num2str(TimeSinceInfectionMean(YearIndex)) ' years']);
+fprintf(fileID, ' This is a substantial reduction from 1985, where median time until diagnosis was estimated to be %s years.\r\n', String1985Time);
+fprintf(fileID, 'Mean time between infection and diagnosis in 1985 was %d years', TimeSinceInfectionMean(YearIndex));
+fclose(fileID);
