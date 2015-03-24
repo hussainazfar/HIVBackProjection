@@ -336,6 +336,7 @@ while  result == 0
             Sx.DistributionSDCD4Decline = 6.0885;
         else
             Sx.DistributionSDCD4Decline = y;
+        end
         
         prompt = 'Please Indicate the Mean Square Root Annual Decline Rate: ';
         y = input(prompt);
@@ -344,6 +345,7 @@ while  result == 0
             Sx.DistributionMeanSquareRootAnnualDecline = 1.6;
         else
             Sx.DistributionMeanSquareRootAnnualDecline = y;
+        end
         
         prompt = 'Please Indicate the Mean Square Root Annual Decline Standard Deviation: ';
         y = input(prompt);
@@ -352,6 +354,7 @@ while  result == 0
             Sx.SquareRootAnnualDeclineStdev = 0.1020;
         else
             Sx.SquareRootAnnualDeclineStdev = y;
+        end
         
         if (Sx.DistributionMean > 0 && Sx.DistributionMean <= 6.792 && Sx.DistributionFractionalDeclineToTrough < exp(Sx.DistributionMean) && Sx.DistributionBaselineCD4Median > Sx.DistributionFractionalDeclineToTrough && Sx.DistributionBaselineCD4Median < exp(Sx.DistributionMean))
             result = x;     
