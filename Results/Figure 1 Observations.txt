@@ -1,0 +1,12 @@
+Figure 1 depicts the trend of CD4 Decay:-
+
+The healthy CD4 count distribution had a median of 700 and standard deviation of 0.338
+
+The healthy CD4 count distribution had an interquartile range of (557 - 877)
+
+The time it takes for the median CD4 count to reach 500 is 0.0 (0.0 - 0.0) years
+
+The time it takes for the median CD4 count to reach 350 is 3.0 (2.2 - 3.7) years
+
+The time it takes for the median CD4 count to reach 200 is 5.7 (4.7 - 6.6) years
+

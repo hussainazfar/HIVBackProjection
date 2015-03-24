@@ -16,7 +16,7 @@ elseif result < (str2num(getenv( 'NUMBER_OF_PROCESSORS' )))
     result = str2num(getenv( 'NUMBER_OF_PROCESSORS' ));
     %fprintf(1, 'Number of Parameterisations too low! Using a minimum value of: %d', result);
 else
-    result = result;
+    result = round(result);
 end
 
 Sx.NoParameterisations = result;
@@ -228,6 +228,145 @@ end
 
 Sx.UpperFirstInfectionDate = x;
 Sx.LowerFirstInfectionDate = y;
+clear prompt;
+clear result;
+
+%% Manually set Distribution to be used for Back Projection Settings
+result = 0;
+
+while  result == 0
+    disp(' ');
+    disp('------------------------------------------------------------------');
+    disp('The Backprojection Settings use the Median CD4 Counts for Healthy Individuals to estimate HIV Infections');
+    disp('1. Default Settings - This Program Uses Results from multiple studies to calculate Median CD4 Counts');
+    disp('2. Manually Define Log-Normal Distribution');
+    prompt = 'Please Enter Selection: '; 
+    x = input(prompt);
+    
+    if isempty(x) == true
+        result = 1;
+        disp('Using default settings');
+        break
+             
+    elseif x == 1 
+        result = x;
+        break
+        
+    elseif x == 2
+        disp(' ');
+        prompt = 'Please Enter Mean Value for Log-Normal Distribution(max is 6.792): ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.DistributionMean = 6.792;
+        else
+            Sx.DistributionMean = y;
+        end
+        
+        prompt = 'Please Enter Standard Deviation for Log-Normal Distribution: ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.DistributionSD = 0.3381;
+        else
+            Sx.DistributionSD = y;
+        end
+        
+        clc;
+        
+        disp('     (1)');
+        disp('     |\');
+        disp('     | \        (3)');
+        disp('     |  \       __ ');
+        disp('     |   \     /  \');
+        disp(' CD4 |    \   /    \  ');
+        disp('     |     \_/      \(4)   ');
+        disp('     |      (2)      \      ');
+        disp('     |                \             ');
+        disp('     |                 \               ');
+        disp('     |____________________________ time');
+        
+        
+        fprintf(1, '\n\nRefer to the figure above (Please Press Enter/Return Key if you are unsure about any value to load a default value from Database:\n');
+        disp('This section refers to area marked as (2)');
+        prompt = 'Please Enter Trough Value(i.e. the fall in CD4 count immediately after Infection): ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.DistributionFractionalDeclineToTrough = 418;
+        else
+            Sx.DistributionFractionalDeclineToTrough = y;
+        end
+            
+        disp(' ');
+        disp('This section refers to area marked as (3)');      
+        prompt = 'Baseline CD4 Count Mean(i.e. after rebound): ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.DistributionBaselineCD4Median = 636;
+        else
+            Sx.DistributionBaselineCD4Median = y;
+        end
+        
+        prompt = 'Baseline CD4 Standard Deviation(i.e. after rebound): ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.DistributionBaselineCD4Stdev = 25.5102;
+        else
+            Sx.DistributionBaselineCD4Stdev = y;
+        end
+        
+        disp(' ');
+        disp('This section refers to area marked as (4)');
+        prompt = 'Please Indicate the CD4 Decline Rate: ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.DistributionMeanCD4Decline = 60.3646;
+        else
+            Sx.DistributionMeanCD4Decline = y;
+        end
+        
+        prompt = 'Please Indicate the CD4 Decline Standard Deviation: ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.DistributionSDCD4Decline = 6.0885;
+        else
+            Sx.DistributionSDCD4Decline = y;
+        
+        prompt = 'Please Indicate the Mean Square Root Annual Decline Rate: ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.DistributionMeanSquareRootAnnualDecline = 1.6;
+        else
+            Sx.DistributionMeanSquareRootAnnualDecline = y;
+        
+        prompt = 'Please Indicate the Mean Square Root Annual Decline Standard Deviation: ';
+        y = input(prompt);
+        
+        if isempty(y)
+            Sx.SquareRootAnnualDeclineStdev = 0.1020;
+        else
+            Sx.SquareRootAnnualDeclineStdev = y;
+        
+        if (Sx.DistributionMean > 0 && Sx.DistributionMean <= 6.792 && Sx.DistributionFractionalDeclineToTrough < exp(Sx.DistributionMean) && Sx.DistributionBaselineCD4Median > Sx.DistributionFractionalDeclineToTrough && Sx.DistributionBaselineCD4Median < exp(Sx.DistributionMean))
+            result = x;     
+        else
+            disp('Invalid Entry, Please enter correct data!');
+            result = 0;
+        end
+       
+    else
+        disp(' ');  
+        disp('Invalid Entry! Please Enter a Valid Number');
+    end
+end
+
+Sx.Distribution = result;
 clear prompt;
 clear result;
 

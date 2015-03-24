@@ -52,7 +52,7 @@ mu = log(meanCD4Healthyvec.^2./sqrt(varianceCD4Healthy + meanCD4Healthyvec.^2));
 sigma = sqrt(log(varianceCD4Healthy./(meanCD4Healthyvec.^2) + 1)); 
 
 BootStrappedCD4s=[];
-
+    
 for x = 1:length(mu)                                                        %Create numbers at random which would fall into the distribution
     SamplesToAdd = lognrnd(mu(x),sigma(x), 1, nCD4Healthy(x));
     BootStrappedCD4s = [BootStrappedCD4s SamplesToAdd];
@@ -60,12 +60,27 @@ end
 
 MedianHealthyCD4 = median(BootStrappedCD4s);
 
+if (Sx.Distribution == 2)
+    MedianHealthyCD4 = exp(Sx.DistributionMean);
+end
+
 LogBootStrappedCD4s = log(BootStrappedCD4s);
+
 MedianLogBootStrappedCD4s = median(LogBootStrappedCD4s);
+
+if (Sx.Distribution == 2)
+    MedianLogBootStrappedCD4s = Sx.DistributionMean;
+end
+
 StdLogBootStrappedCD4s = std(LogBootStrappedCD4s);
+
+if (Sx.Distribution == 2)
+    StdLogBootStrappedCD4s = Sx.DistributionSD;
+end
 
 Px.MedianLogHealthyCD4 = MedianLogBootStrappedCD4s;
 Px.StdLogHealthyCD4 = StdLogBootStrappedCD4s;
+
 
 %% determine the initial fall and rebound of individuals 
 %(1) MedianHealthyCD4
@@ -88,7 +103,11 @@ Px.StdLogHealthyCD4 = StdLogBootStrappedCD4s;
 % The text says nadir 17 days after symptoms of 418, followed by 756 at day 40. I'm going to suggest that the first 1/10th of a year of testing CD4 to be set at a percentage decline of initial CD4, 418/950=44%, followed by a rebound to 756/950=79.5%. This adds in a couple of weeks for the infection to take hold. 
 % median CD4 count at 12 months was 470
 
-Px.FractionalDeclineToTrough = 418/MedianHealthyCD4; %
+Px.FractionalDeclineToTrough = 418/MedianHealthyCD4;
+if (Sx.Distribution == 2)
+    Px.FractionalDeclineToTrough = Sx.DistributionFractionalDeclineToTrough/MedianHealthyCD4;
+end
+
 Px.TimeUntilTrough = 17/365.25;
 Px.TimeUntilRebound = 40/365.25;
 
@@ -99,10 +118,17 @@ Px.TimeUntilRebound = 40/365.25;
 % CD4 intercept (median, confidence intervals) to be 636 (586 - 686)
 
 Px.BaselineCD4Median = 636;
+if (Sx.Distribution == 2)
+    Px.BaselineCD4Median = Sx.DistributionBaselineCD4Median;
+end
+
 Px.BaselineCD4LCI = 586;
 Px.BaselineCD4UCI = 686;
 
 Px.BaselineCD4Stdev = ((Px.BaselineCD4UCI - Px.BaselineCD4LCI) / 2) / 1.96;
+if (Sx.Distribution == 2)
+    Px.BaselineCD4Stdev = Sx.DistributionBaselineCD4Stdev;
+end
 
 % Create the distribution average CD4 count declines
 m = Px.BaselineCD4Median;
@@ -131,7 +157,14 @@ for x = 1:length(N_CD4Decline)
 end
 
 Px.MeanCD4Decline = mean(StudyCD4WeightedVector);
+if (Sx.Distribution == 2)
+    Px.MeanCD4Decline = Sx.DistributionMeanCD4Decline;
+end
+
 Px.SDCD4Decline = std(StudyCD4WeightedVector);                              %The systematic variation in the study's results
+if (Sx.Distribution == 2)
+    Px.SDCD4Decline = Sx.DistributionSDCD4Decline;
+end
 
 % Determine individual variablity in linear decline
 IndividualDeclineIQR = 35; 
@@ -175,7 +208,14 @@ Px.CD4DeclineVec = [Px.CD4DeclineVec ResampledDecline];
 % 0.8–2.6), Keller 2010 : 1.67 (Canada)
 
 Px.MeanSquareRootAnnualDecline = 1.6;
+if (Sx.Distribution == 2)
+    Px.MeanSquareRootAnnualDecline = Sx.DistributionMeanSquareRootAnnualDecline;
+end
+
 Px.SquareRootAnnualDeclineStdev = ((1.8 - 1.4) / 2) / 1.96;
+if (Sx.Distribution == 2)
+    Px.SquareRootAnnualDeclineStdev = Sx.SquareRootAnnualDeclineStdev;
+end
 
 % Create the distribution average CD4 count declines
 m = Px.MeanSquareRootAnnualDecline;
