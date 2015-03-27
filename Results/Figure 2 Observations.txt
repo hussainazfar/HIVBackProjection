@@ -1,5 +1,0 @@
-Figure 2 depicts Time since Infection Distributions by CD4 Count:-
-
-The median estimated time between infection and diagnosis was 2.7 (IQR: 1.4 - 4.4) years for diagnoses with CD4 counts of 200 cells/microL at diagnosis.
-The median estimated time between infection and diagnosis was 1.5 (IQR: 0.6 - 2.9) years for diagnoses with CD4 counts of 350 cells/microL at diagnosis.
-The median estimated time between infection and diagnosis was 1.2 (IQR: 0.5 - 2.3) years for diagnoses with CD4 counts of 500 cells/microL at diagnosis.

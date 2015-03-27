@@ -59,7 +59,7 @@ catch
 end
 
 %% Optimisation parameters
-[NumberOfDimensions, ~] = size(ParameterBounds);
+NumberOfDimensions = length(ParameterBounds);
 
 BaselineSamplesPerRound = 4^NumberOfDimensions;% this is the baseline value of this 
 try
@@ -102,6 +102,7 @@ MeanDistanceBetweenPoints = zeros(1, NumberOfDimensions);
 ErrorVector = zeros(1, SamplesPerRound);
 
 RoundCount = 0;
+
 while (RoundCount<NumberOfRounds)  && (TimeOut==false || toc(OptimisationTimer) < MaxTime) % && (the standard deviation hasn't changed all that much)
 	RoundCount = RoundCount + 1;
     if DisplayTimer == true

@@ -62,7 +62,6 @@ NumberDiagnosedThisStep=sum(DiagnosedThisStepSubIndex);
 %Calculate the time
 RandomDistanceAlongThisStep=rand(1, NumberDiagnosedThisStep);
 TimeAtDiagnosis=Pxi.TimeUntilTrough+(Pxi.TimeUntilRebound-Pxi.TimeUntilTrough)*RandomDistanceAlongThisStep;
-
 Data.Time(DiagnosedThisStepIndexInTheMainArray)=TimeAtDiagnosis;
 Data.CD4(DiagnosedThisStepIndexInTheMainArray)=InitialCD4Vector(DiagnosedThisStepIndexInTheMainArray).*((1-RandomDistanceAlongThisStep)*Pxi.FractionalDeclineToTrough+RandomDistanceAlongThisStep*Pxi.FractionalDeclineToRebound);
 IndexTest(DiagnosedThisStepIndexInTheMainArray)=true;

@@ -1,4 +1,0 @@
-Figure 6 depicts Probability Of Testing By Year:-
-
-The model estimates that the annual testing probabilty fell to the lowest point (p=0.33 [0.30-0.38]) in 1999, the year which coincides with the lowest number of diagnoses.
-Testing probailities are calculated to have increased since then, with the annual testing probability in the final year of data at p=0.41 (0.33-0.54)

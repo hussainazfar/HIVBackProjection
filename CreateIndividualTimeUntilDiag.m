@@ -10,7 +10,7 @@ function [Times, StartingCD4, TestingParameter] = CreateIndividualTimeUntilDiag(
 % TestingProbVec - the values of the probability vector associated with this result
 
 
-[~, NumberOfPeople] = size(RealTestingCD4);
+NumberOfPeople = length(RealTestingCD4);
 Times = zeros(NumberOfPeople, Px.NoParameterisations);
 StartingCD4 = zeros(NumberOfPeople, Px.NoParameterisations);
 

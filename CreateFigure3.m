@@ -91,11 +91,11 @@ fprintf(fileID, 'The number of infections that are placed in 2013: %s\r\n', Infe
 Infections1984=[num2str(round(Median(YearIndex)), '%i') ' [' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ']'];
 [~, YearIndex]=min(abs(YearVectorLabel-1987));
 Diagnoses1987=num2str(round(DiagnosesByYear.N(YearIndex)), '%i');
-fprintf(fileID, 'The peak estimated infections (%s) that occurred in 1984 is somewhat lower than the peak diagnoses (%s) in 1987 as there was a back-log of infections that occurred earlier which needed to be cleared\r\n', Infections1984, Diagnoses1987);
+%fprintf(fileID, 'The peak estimated infections (%s) that occurred in 1984 is somewhat lower than the peak diagnoses (%s) in 1987 as there was a back-log of infections that occurred earlier which needed to be cleared\r\n', Infections1984, Diagnoses1987);
 
 [~, YearIndex]=min(abs(YearVectorLabel-1997));
 Infections1997=[num2str(round(Median(YearIndex)), '%i') ' (' num2str(round(LCI(YearIndex)), '%i'), '-', num2str(round(UCI(YearIndex)), '%i'), ')'];
-fprintf(fileID, 'Following this peak, infections reached a low of %s in 1997\r\n', Infections1997);
+%fprintf(fileID, 'Following this peak, infections reached a low of %s in 1997\r\n', Infections1997);
 
 
 [~, YearIndex]=min(abs(YearVectorLabel-YearOfDiagnosedDataEnd));

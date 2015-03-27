@@ -59,36 +59,36 @@ Sx.ConsiderRecentInfection = result;
 clear prompt;
 clear result;
 %% Input Date Settings
-result = 10;
-while result ~= 1 || result ~= 2
-    disp(' ');
-    disp('------------------------------------------------------------------');
-    disp('Please enter the date format in file:');
-    disp('1. dd/mm/yyyy  - Default Format');
-    disp('2. mm/dd/yyyy');
-    prompt = 'Please Enter Selection(Press Enter/Return for default): '; 
-    x = input(prompt);
-    
-    if isempty(x) == true
-        result = 'dd/mm/yyyy';
-        fprintf(1, 'Using default value of: %s\n', result);
-        break
-        
-    elseif x == 1
-        result = 'dd/mm/yyyy';
-        break
-        
-    elseif x == 2
-        result = 'mm/dd/yyyy';
-        break
-   
-    else
-        disp('Invalid Entry! Please Enter a Valid Number');
-    end
-end
-Sx.DateFormat = result;
-clear prompt;
-clear result;
+%result = 10;
+%while result ~= 1 || result ~= 2
+%    disp(' ');
+%    disp('------------------------------------------------------------------');
+%    disp('Please enter the date format in file:');
+%    disp('1. dd/mm/yyyy  - Default Format');
+%    disp('2. mm/dd/yyyy');
+%    prompt = 'Please Enter Selection(Press Enter/Return for default): '; 
+%    x = input(prompt);
+%    
+%    if isempty(x) == true
+%        result = 'dd/mm/yyyy';
+%        fprintf(1, 'Using default value of: %s\n', result);
+%        break
+%        
+%    elseif x == 1
+%        result = 'dd/mm/yyyy';
+%        break
+%        
+%    elseif x == 2
+%        result = 'mm/dd/yyyy';
+%        break
+%   
+%    else
+%        disp('Invalid Entry! Please Enter a Valid Number');
+%    end
+%end
+%Sx.DateFormat = result;
+%clear prompt;
+%clear result;
 %% Load the patient data into a large matrix
 result = 0.5;
 

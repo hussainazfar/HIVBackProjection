@@ -118,7 +118,7 @@ for CurrentParamNumber = 1:Sx.NoParameterisations
         TimePerSim = UncertaintyTimerCurrentTime / UncertaintySimsComplete;
         UncertaintySimsRemaining = Sx.NoParameterisations - UncertaintySimsComplete;
         UncertaintyTimeRemaining = (TimePerSim * UncertaintySimsRemaining)/3600;
-        disp(['Hours remaining: ' num2str(UncertaintyTimeRemaining)]);
+        disp(['Minutes remaining: ' num2str(60*UncertaintyTimeRemaining)]);
     end
     
     Pxi = Px;

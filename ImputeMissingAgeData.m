@@ -1,6 +1,5 @@
 function [ Age ] = ImputeMissingAgeData( Year, Age )
-    % A rough boot strap methodology to replace missing data using nearest (100) neighbours
-        
+    % A rough boot strap methodology to replace missing data using nearest (100) neighbours 
     %Extract individuals with all data
     ExtractIndex =~ isnan(Age);
     SampleYear = Year(ExtractIndex);

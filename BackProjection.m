@@ -30,12 +30,8 @@ disp('Running Optimisation Algorithm...');
 
 OptimisationTimer = tic;
 
-[~, NumberInPatientCurrently] = size(Patient);
+NumberInPatientCurrently = length(Patient);
 YearIndex = 0;
-
-%for x = 1:Sx.NoParameterisations
-%    Sim(x).Patient = Patient;
-%end
 
 for Year = BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
     SimTimer = tic;
@@ -73,6 +69,7 @@ for Year = BackProjectStartSingleYearAnalysis:YearOfDiagnosedDataEnd
     
     %Perform an optimisation
     Px.CurrentYear = Year;
+    
     [Times, StartingCD4, TestingParameter] = CreateIndividualTimeUntilDiag(CD4ForOptimisation, Px, RandomNumberStream);
     
     OptimisationResults(YearIndex).Year = Year;
@@ -105,15 +102,9 @@ toc(OptimisationTimer)
 disp('------------------------------------------------------------------');
 
 %% Create dates for the infection based on time between infection and testing, together with testing date
-[~, NumberOfPatients] = size(Patient);
+NumberOfPatients = length(Patient);
 for x = 1:NumberOfPatients
     Patient(x) = Patient(x).DetermineInfectionDateDistribution();
-end
-
-for x = 1:Sx.NoParameterisations
-    for y = 1:NumberOfPatients
-        Sim(x).Patient(y) = Patient(x).DetermineInfectionDateDistribution();
-    end    
 end
     
 %% If consideration is given to recent infection data, select data according to avaialable information
@@ -247,6 +238,8 @@ CreateFigure2;
 CreateFigure3;
 CreateFigure4(TotalUndiagnosedByTime, PlotSettings.YearsToPlot, 'Figure 5');
 CreateFigure5;
+%% Writing Diagnosis Data to a file
+SaveDiagnosistoFile( TotalUndiagnosedByTime,  DiagnosedInfectionsByYear, Sx.StepSize);
 
 %% Calculating Total Simulation Time
 disp(' ');

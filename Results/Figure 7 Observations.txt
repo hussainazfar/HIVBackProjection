@@ -1,5 +1,0 @@
-Figure 7 depicts Median And IQR Of Time Until Diagnosis By Year:-
-
-The median time between infection and diagnosis for people diagnosed in the last year of data was estimated at 0.8 (IQR: 0.2-2.5) years.
-Mean time between infection and diagnosis in the final year of data was 1.680938e+00 years. This is a substantial reduction from 1985, where median time until diagnosis was estimated to be 3.3 (IQR: 1.4-5.7) years.
-Mean time between infection and diagnosis in 1985 was 3.674876e+00 years

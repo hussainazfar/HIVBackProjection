@@ -36,8 +36,8 @@ StringFinalTestingProbability=[num2str(Median(YearIndex), '%.2f') ' (' num2str(L
 
 fileID = fopen('Results/Figure 6 Observations.txt','w');
 fprintf(fileID, 'Figure 6 depicts Probability Of Testing By Year:-\r\n\r\n');
-fprintf(fileID, 'The model estimates that the annual testing probabilty fell to the lowest point (p=%s) in 1999, the year which coincides with the lowest number of diagnoses.\r\n', String1999TestingProbability);
-fprintf(fileID, 'Testing probailities are calculated to have increased since then, with the annual testing probability in the final year of data at p=%s\r\n', StringFinalTestingProbability);
+%fprintf(fileID, 'The model estimates that the annual testing probabilty fell to the lowest point (p=%s) in 1999, the year which coincides with the lowest number of diagnoses.\r\n', String1999TestingProbability);
+fprintf(fileID, 'Testing probailities are calculated to have an annual testing probability in the final year of data at p=%s\r\n', StringFinalTestingProbability);
 fclose(fileID);
 
 
@@ -96,8 +96,8 @@ StringFinalYearTime=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR
 fprintf(fileID, 'The median time between infection and diagnosis for people diagnosed in the last year of data was estimated at %s years.\r\n', StringFinalYearTime);
 fprintf(fileID, 'Mean time between infection and diagnosis in the final year of data was %d years.', TimeSinceInfectionMean(YearIndex));
 
-[~, YearIndex]=min(abs(YearVectorLabel-1985));
-String1985Time=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
-fprintf(fileID, ' This is a substantial reduction from 1985, where median time until diagnosis was estimated to be %s years.\r\n', String1985Time);
-fprintf(fileID, 'Mean time between infection and diagnosis in 1985 was %d years', TimeSinceInfectionMean(YearIndex));
+%[~, YearIndex]=min(abs(YearVectorLabel-1985));
+%String1985Time=[num2str(TimeSinceInfectionMedian(YearIndex), '%.1f') ' (IQR: ' num2str(TimeSinceInfectionLQR(YearIndex), '%.1f'), '-', num2str(TimeSinceInfectionUQR(YearIndex), '%.1f'), ')'];
+%fprintf(fileID, ' This is a substantial reduction from 1985, where median time until diagnosis was estimated to be %s years.\r\n', String1985Time);
+%fprintf(fileID, 'Mean time between infection and diagnosis in 1985 was %d years', TimeSinceInfectionMean(YearIndex));
 fclose(fileID);

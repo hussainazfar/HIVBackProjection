@@ -21,7 +21,7 @@ function [Times, StartingCD4, OptimisedParameters] = OptimiseTestingRateToCD4(Re
         
 
     ExpectedOutput = hist(RealTestingCD4, 50:100:1450);
-    [~, NumberOfCD4Counts] = size(RealTestingCD4);
+    NumberOfCD4Counts = length(RealTestingCD4);
     FunctionPointer = @GenerateCD4Count;
     % [CD4CountHistogram, Data]=GenerateCD4Count(TestingRateParameters, FunctionInput);
     % TestingRateParameters(1)= AnnualTestingRate

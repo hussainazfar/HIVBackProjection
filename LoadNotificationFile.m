@@ -33,17 +33,21 @@ LineDataMatrix.DateLastNegative = NaN(1, NumberOfPatients);
 LineDataMatrix.DateIll = NaN(1, NumberOfPatients);
 LineDataMatrix.DateIndetWesternBlot = NaN(1, NumberOfPatients);
 LineDataMatrix.DateOfDiagnosis = NaN(1, NumberOfPatients);
+LineDataMatrix.Sex = NaN(1, NumberOfPatients);
+LineDataMatrix.Age = NaN(1, NumberOfPatients);
+LineDataMatrix.CD4CountAtDiagnosis = NaN(1, NumberOfPatients);
+LineDataMatrix.Exp = NaN(1, NumberOfPatients);
 
 %Determine time of diagnosis
 y = find(strcmp(VariableName, 'Date_of_HIV_diagnosis'));
-if strcmp(Sx.DateFormat, 'mm/dd/yyyy') == 1
-    S1 = c(:, y);
-    D = datenum(S1, 'mm/dd/yyyy');
-    S2 = datestr(D, 'dd/mm/yyyy');
-    LineDataMatrix.DateOfDiagnosis = S2;
-else
+%if strcmp(Sx.DateFormat, 'dd/mm/yyyy') == 1
+%    S1 = c(:, y);
+%    D = datenum(S1, 'dd/mm/yyyy');
+%    S2 = datestr(D, 'dd/mm/yyyy');
+%    LineDataMatrix.DateOfDiagnosis = S2;
+%else
     LineDataMatrix.DateOfDiagnosis = c(:, y);
-end 
+%end 
 
 LineDataMatrix.YearOfDiagnosis = year(datenum(LineDataMatrix.DateOfDiagnosis, 'dd/mm/yyyy'));
 LineDataMatrix.DateOfDiagnosisContinuous = LineDataMatrix.YearOfDiagnosis + (datenum(LineDataMatrix.DateOfDiagnosis, 'dd/mm/yyyy') - datenum(LineDataMatrix.YearOfDiagnosis, 1,1)) ./ yeardays(LineDataMatrix.YearOfDiagnosis);
@@ -51,13 +55,13 @@ LineDataMatrix.DateOfDiagnosisContinuous = LineDataMatrix.YearOfDiagnosis + (dat
 %Determine Last Negative HIV Test
 y = find(strcmp(VariableName, 'Date_last_tested_HIV_negative'));
 for x = 1:NumberOfPatients
-    DateText = c(x, y);
-        if strcmp(DateText, '')
+    DateText = c(x, y); 
+        if (strcmp(DateText, '') == 1) || (sum(isnan(cell2mat(DateText))) > 0)
             % do nothing
-        elseif strcmp(Sx.DateFormat, 'mm/dd/yyyy')
-            Year = year(datenum(DateText, 'mm/dd/yyyy'));
-            DaysSinceYear = datenum(DateText, 'mm/dd/yyyy')-datenum(Year, 1,1);
-            LineDataMatrix.DateLastNegative(x) = Year + DaysSinceYear ./ yeardays(Year);
+%        elseif strcmp(Sx.DateFormat, 'dd/mm/yyyy')
+%            Year = year(datenum(DateText, 'dd/mm/yyyy'));
+%            DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+%            LineDataMatrix.DateLastNegative(x) = Year + DaysSinceYear ./ yeardays(Year);
         else
             Year = year(datenum(DateText, 'dd/mm/yyyy'));
             DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
@@ -69,12 +73,12 @@ end
 y = find(strcmp(VariableName, 'Seroconversion_illness_at_HIV_diagnosis'));
 for x = 1:NumberOfPatients
     DateText = c(x, y);
-        if strcmp(DateText, '')
+        if (strcmp(DateText, '') == 1) || (sum(isnan(cell2mat(DateText))) > 0)
             % do nothing
-        elseif strcmp(Sx.DateFormat, 'mm/dd/yyyy')
-            Year = year(datenum(DateText, 'mm/dd/yyyy'));
-            DaysSinceYear = datenum(DateText, 'mm/dd/yyyy')-datenum(Year, 1,1);
-            LineDataMatrix.DateIll(x) = Year + DaysSinceYear ./ yeardays(Year);
+%        elseif strcmp(Sx.DateFormat, 'dd/mm/yyyy')
+%            Year = year(datenum(DateText, 'dd/mm/yyyy'));
+%            DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+%            LineDataMatrix.DateIll(x) = Year + DaysSinceYear ./ yeardays(Year);
         else
             Year = year(datenum(DateText, 'dd/mm/yyyy'));
             DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
@@ -86,12 +90,12 @@ end
 y = find(strcmp(VariableName, 'Indeterminate_western_blot_at_HIV_diagnosis'));
 for x = 1:NumberOfPatients
     DateText = c(x, y);
-        if strcmp(DateText, '')
+        if (strcmp(DateText, '') == 1) || (sum(isnan(cell2mat(DateText))) > 0)
             % do nothing
-        elseif strcmp(Sx.DateFormat, 'mm/dd/yyyy')
-            Year = year(datenum(DateText, 'mm/dd/yyyy'));
-            DaysSinceYear = datenum(DateText, 'mm/dd/yyyy')-datenum(Year, 1,1);
-            LineDataMatrix.DateIndetWesternBlot(x) = Year + DaysSinceYear ./ yeardays(Year);
+%        elseif strcmp(Sx.DateFormat, 'dd/mm/yyyy')
+%            Year = year(datenum(DateText, 'dd/mm/yyyy'));
+%            DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+%            LineDataMatrix.DateIndetWesternBlot(x) = Year + DaysSinceYear ./ yeardays(Year);
         else
             Year = year(datenum(DateText, 'dd/mm/yyyy'));
             DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
@@ -99,20 +103,81 @@ for x = 1:NumberOfPatients
         end 
 end
 
-%Load all Numerical arrays
-LineDataMatrix.Sex = cell2mat(c(:,strcmp(VariableName, 'Sex')));
-LineDataMatrix.Age = cell2mat(c(:,strcmp(VariableName, 'Age_at_diagnosis')));
-LineDataMatrix.CD4CountAtDiagnosis = cell2mat(c(:,strcmp(VariableName, 'CD4_count')));
-LineDataMatrix.Exp = cell2mat(c(:,strcmp(VariableName, 'Sub_population')));
+%Load Numerical Array Sex
+y = find(strcmp(VariableName, 'Sex'));
+for x = 1:NumberOfPatients
+    DateText = c(x, y);
+        if (strcmp(DateText, '') == 1) || (sum(isnan(cell2mat(DateText))) > 0)
+            % do nothing
+%        elseif strcmp(Sx.DateFormat, 'dd/mm/yyyy')
+%            Year = year(datenum(DateText, 'dd/mm/yyyy'));
+%            DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+%            LineDataMatrix.DateIndetWesternBlot(x) = Year + DaysSinceYear ./ yeardays(Year);
+        else
+            LineDataMatrix.Sex(x) = cell2mat(DateText);
+        end 
+end
+
+%Load Numerical Array Age
+y = find(strcmp(VariableName, 'Age_at_diagnosis'));
+for x = 1:NumberOfPatients
+    DateText = c(x, y);
+        if (strcmp(DateText, '') == 1) || (sum(isnan(cell2mat(DateText))) > 0)
+            % do nothing
+%        elseif strcmp(Sx.DateFormat, 'dd/mm/yyyy')
+%            Year = year(datenum(DateText, 'dd/mm/yyyy'));
+%            DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+%            LineDataMatrix.DateIndetWesternBlot(x) = Year + DaysSinceYear ./ yeardays(Year);
+        else
+            LineDataMatrix.Age(x) = cell2mat(DateText);
+        end 
+end
+
+% Load Numerical Array CD4 Count
+y = find(strcmp(VariableName, 'CD4_count'));
+for x = 1:NumberOfPatients
+    DateText = c(x, y);
+        if (strcmp(DateText, '') == 1) || (sum(isnan(cell2mat(DateText))) > 0)
+            % do nothing
+%        elseif strcmp(Sx.DateFormat, 'dd/mm/yyyy')
+%            Year = year(datenum(DateText, 'dd/mm/yyyy'));
+%            DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+%            LineDataMatrix.DateIndetWesternBlot(x) = Year + DaysSinceYear ./ yeardays(Year);
+        else
+            LineDataMatrix.CD4CountAtDiagnosis(x) = cell2mat(DateText);
+        end 
+end
+
+%Load Numerical Array Sub-Population
+y = find(strcmp(VariableName, 'Sub_population'));
+for x = 1:NumberOfPatients
+    DateText = c(x, y);
+        if (strcmp(DateText, '') == 1) || (sum(isnan(cell2mat(DateText))) > 0)
+            % do nothing
+%        elseif strcmp(Sx.DateFormat, 'dd/mm/yyyy')
+%            Year = year(datenum(DateText, 'dd/mm/yyyy'));
+%            DaysSinceYear = datenum(DateText, 'dd/mm/yyyy')-datenum(Year, 1,1);
+%            LineDataMatrix.DateIndetWesternBlot(x) = Year + DaysSinceYear ./ yeardays(Year);
+        else
+            LineDataMatrix.Exp(x) = cell2mat(DateText);
+        end 
+end
+
 %% Impute Missing fields
-[ LineDataMatrix.Age ] = ImputeMissingAgeData( LineDataMatrix.DateOfDiagnosisContinuous, LineDataMatrix.Age );
-[ LineDataMatrix.CD4CountAtDiagnosis ] = ImputeMissingCD4Data( LineDataMatrix.DateOfDiagnosisContinuous, LineDataMatrix.Age, LineDataMatrix.CD4CountAtDiagnosis );
+if sum(isnan(LineDataMatrix.Age)) < (0.75*NumberOfPatients)
+    [ LineDataMatrix.Age ] = ImputeMissingAgeData( LineDataMatrix.DateOfDiagnosisContinuous, LineDataMatrix.Age );
+    [ LineDataMatrix.CD4CountAtDiagnosis ] = ImputeMissingCD4Data( LineDataMatrix.DateOfDiagnosisContinuous, LineDataMatrix.Age, LineDataMatrix.CD4CountAtDiagnosis );
+else
+    disp('The number of Patients with available Age data is too low! Imputing CD4 Count based on Date of HIV Diagnosis...');
+    [ LineDataMatrix.CD4CountAtDiagnosis ] = ImputeAbsentCD4Data( LineDataMatrix.CD4CountAtDiagnosis);
+end
 
 %% Check to see if Exposure Code Filter is used
 if Sx.ExpCode > 0
     Sx.ExpCodeTest = LineDataMatrix.Exp;
     x = find(Sx.ExpCodeTest == Sx.ExpCode);
     if isempty(x) == 1
+        disp(' ');
         disp('No Exposure Code Found as Entered! Using all available Data');
         disp(' ');
     else
@@ -177,8 +242,43 @@ end
 
 %% Finding Data Start Date and Data End Date
 YearOfDiagnosedDataEnd = max(LineDataMatrix.YearOfDiagnosis(:));                    %For data that doesn't go beyond last detected HIV case in data file
-BackProjectStartSingleYearAnalysis = 4 + min(LineDataMatrix.YearOfDiagnosis(:));    %For data that doesn't go behind first detected HIV case in data file
-CD4BackProjectionYearsWhole = [BackProjectStartSingleYearAnalysis-19 YearOfDiagnosedDataEnd];
+CD4BackProjectionYearsWhole = [min(LineDataMatrix.YearOfDiagnosis(:))-19 YearOfDiagnosedDataEnd];
+
+Temp_Matrix = unique(LineDataMatrix.YearOfDiagnosis);                       %read in and record unique Years that exist
+
+x = zeros(1,length(Temp_Matrix));                                           %This array will contain count of data against each year recorded in Data File
+
+%parse Year of Diagnosis, count and record how many records exist in Year y
+for y = 1:length(Temp_Matrix)                                               
+    x(y) = length(find(LineDataMatrix.YearOfDiagnosis == Temp_Matrix(y)));
+end
+
+%parse Year of Diagnosis, and check if there are discontinuities, e.g.
+%1997, 1999 have a gap, remove all such gaps until array is continuous,
+%adjust values in corresponding coutn vector as well
+z = 1;
+for y = 1:(length(Temp_Matrix)-1)
+    if (Temp_Matrix(z) == Temp_Matrix(z+1) - 1)
+        z = z + 1;
+    else
+        Temp_Matrix = Temp_Matrix(2:length(Temp_Matrix));
+        z = 1;
+    end
+end
+y = 1 + length(x) - length(Temp_Matrix);
+x = x(y:length(x));
+
+
+%readjust te arrays so that beginning year has a minimum of 10 CD4 values
+y = find(x < 10);
+
+if sum(y) > 0
+    x = x((1+max(y)):length(x));
+    y = 1 + length(Temp_Matrix) - length(x);
+    Temp_Matrix = Temp_Matrix(y:length(Temp_Matrix));
+end
+
+BackProjectStartSingleYearAnalysis = min(Temp_Matrix);    %For data that doesn't go behind first detected HIV case in data file
 
 if (Sx.UpperFirstInfectionDate >= min(LineDataMatrix.YearOfDiagnosis(:)))
     Sx.UpperFirstInfectionDate = min(LineDataMatrix.YearOfDiagnosis(:)) - 1;
