@@ -40,11 +40,15 @@ for y = 1:SimulatedPopSize
     end
 end
 
-mu=Data.CD4;
-logmu=log(mu+1);%plus 10 to avoid the problems associated with log zero. Note that for people with a CD4 of zero, this should be within range when selecting "nearest neighbours"
+for x = 1:SimulatedPopSize
+    Data.CD4(x) = PatientCD4(x).MeasuredCD4Count;
+end
+
+mu = Data.CD4;
+logmu = log(mu+1);%plus 10 to avoid the problems associated with log zero. Note that for people with a CD4 of zero, this should be within range when selecting "nearest neighbours"
 sigma = 0.930 - 0.110*logmu;
-LogSamples=normrnd(logmu,sigma);
-Data.CD4=exp(LogSamples);
+LogSamples = normrnd(logmu,sigma);
+Data.CD4 = exp(LogSamples);
 
 % Return results
 CD4CountHistogram=hist(Data.CD4, 50:100:1450);
