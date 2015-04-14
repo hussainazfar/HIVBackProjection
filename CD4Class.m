@@ -22,7 +22,6 @@ classdef CD4Class
             obj.MeasuredCD4Count = NaN;
             obj.IndexTest = false;
             obj.Time = 0;
-            obj.CD4 = 0;
         end
     end
     

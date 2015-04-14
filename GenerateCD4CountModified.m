@@ -9,7 +9,7 @@ MaxYears = Pxi.MaxYears;
 %Start with the number of observations
 SimulatedPopSize = Pxi.SimulatedPopSize;
 
-NumIndex = 1:SimulatedPopSize;
+%NumIndex = 1:SimulatedPopSize;
 
 %Initialize object PatientCD4 of class CD4Class
 PatientCD4(1:Pxi.SimulatedPopSize) = CD4Class;
@@ -20,36 +20,34 @@ for x = 1:SimulatedPopSize
 end
 
 %% For all people, find the time after which the person was defined as diagnosed
-for x = 0:StepSize:MaxYears
-    for y = 1:SimulatedPopSize
-        if (PatientCD4(y).IndexTest == false)
-            %Testing to see if Patient is Diagnosed During Rapid Decline
-            MeanCD4Count = PatientCD4(y).StartingCD4Count * (1 + Pxi.FractionalDeclineToTrough) / 2;
-            Duration = Pxi.TimeUntilTrough;
-            PatientCD4(y).IndexTest = DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
-            
-            %Calculate the time
-            if (PatientCD4(y).IndexTest == true)
-                RandomDistanceAlongThisStep = rand();
-                TimeAtDiagnosis = Pxi.TimeUntilTrough * RandomDistanceAlongThisStep;
-                PatientCD4(y).Time = TimeAtDiagnosis;
-                PatientCD4(y).CD4 = PatientCD4(y).StartingCD4Count .* ((1-RandomDistanceAlongThisStep) * 1 + RandomDistanceAlongThisStep * Pxi.FractionalDeclineToTrough);
-            elseif (PatientCD4(y).IndexTest == false)
-                MeanCD4Count = PatientCD4(y).StartingCD4Count * (Pxi.FractionalDeclineToRebound + Pxi.FractionalDeclineToTrough) / 2;
-                Duration = Pxi.TimeUntilRebound - Pxi.TimeUntilTrough;
-                PatientCD4(y).IndexTest = DiagnosedDuringStep(TestingParameters, MeanCD4Count, Duration);
-                
-                %Calculate the time
-                RandomDistanceAlongThisStep = rand();
-                TimeAtDiagnosis = Pxi.TimeUntilTrough + (Pxi.TimeUntilRebound - Pxi.TimeUntilTrough) * RandomDistanceAlongThisStep;
-                PatientCD4(y).Time = TimeAtDiagnosis;
-                PatientCD4(y).CD4 = PatientCD4(y).StartingCD4Count .* ((1 - RandomDistanceAlongThisStep) * Pxi.FractionalDeclineToTrough + RandomDistanceAlongThisStep * Pxi.FractionalDeclineToRebound);
-            end
-        elseif (PatientCD4(y).IndexTest == true)
-            continue
-        end        
+for y = 1:SimulatedPopSize
+    %Testing to see if Patient is Diagnosed During Rapid Decline
+    [ PatientCD4(y) ] = TestRapidDecline(PatientCD4(y), Pxi, TestingParameters);
+     
+    if (PatientCD4(y).IndexTest == false)
+        %Testing to see if Patient is Diagnosed During Rapid Rebound
+        [ PatientCD4(y) ] = TestRapidRebound(PatientCD4(y), Pxi, TestingParameters);
+    else
+        continue
+    end
+    
+    if (Patient(y).IndexTest == false)
+        %Testing to see when patient was diagnosed and CD4 Count at
+        %Diagnosis
+        [ PatientCD4(y) ] = TestSQRDecline(PatientCD4(y), Pxi, TestingParameters);
+    else
+        continue
     end
 end
+
+mu=Data.CD4;
+logmu=log(mu+1);%plus 10 to avoid the problems associated with log zero. Note that for people with a CD4 of zero, this should be within range when selecting "nearest neighbours"
+sigma = 0.930 - 0.110*logmu;
+LogSamples=normrnd(logmu,sigma);
+Data.CD4=exp(LogSamples);
+
+% Return results
+CD4CountHistogram=hist(Data.CD4, 50:100:1450);
 
 end
 
