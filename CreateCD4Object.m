@@ -9,6 +9,5 @@ InitialCD4Vector = exp(LogInitialCD4Vector);
 for x = 1:Pxi.SimulatedPopSize
     PatientCD4(x).StartingCD4Count = InitialCD4Vector(x);
 end
-
 end
 

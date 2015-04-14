@@ -1,17 +1,19 @@
-function [ PatientCD4 ] = TestRapidDecline( PatientCD4, Pxi, TestingParameters )
+function [ IndexTest, AverageCD4Count, Time, MeasuredCD4Count ] = TestRapidDecline( StartingCD4Count, Pxi, TestingParameters )
 %This function tests whether Patient was diagnosed during Rapid Decline
 %Phase
 
-PatientCD4.AverageCD4Count = PatientCD4.StartingCD4Count * (1 + Pxi.FractionalDeclineToTrough) / 2;
+AverageCD4Count = StartingCD4Count * (1 + Pxi.FractionalDeclineToTrough) / 2;
 Duration = Pxi.TimeUntilTrough;
-PatientCD4.IndexTest = DiagnosedDuringStep(TestingParameters, PatientCD4.AverageCD4Count, Duration);
+IndexTest = DiagnosedDuringStep(TestingParameters, AverageCD4Count, Duration);
 
-    if (PatientCD4.IndexTest == true)
+    if (IndexTest == true)
         %Calculate the time
         RandomDistanceAlongThisStep = rand();
-        TimeAtDiagnosis = Pxi.TimeUntilTrough * RandomDistanceAlongThisStep;
-        PatientCD4.Time = TimeAtDiagnosis;
-        PatientCD4.MeasuredCD4Count = PatientCD4.StartingCD4Count .* ((1-RandomDistanceAlongThisStep) * 1 + RandomDistanceAlongThisStep * Pxi.FractionalDeclineToTrough);
+        Time = Pxi.TimeUntilTrough * RandomDistanceAlongThisStep;
+        MeasuredCD4Count = StartingCD4Count .* ((1-RandomDistanceAlongThisStep) * 1 + RandomDistanceAlongThisStep * Pxi.FractionalDeclineToTrough);
+    else
+        Time = 0;
+        MeasuredCD4Count = 0;
     end
 
 end

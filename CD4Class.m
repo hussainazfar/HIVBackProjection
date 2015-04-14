@@ -11,15 +11,14 @@ classdef CD4Class
 		MeasuredCD4Count;
         IndexTest;
         Time;
-        CD4;
     end
     
     methods
         %Constructor for any object of this class
-        function obj = CD4Class()
-            obj.StartingCD4Count = NaN;
-            obj.AverageCD4Count = NaN;
-            obj.MeasuredCD4Count = NaN;
+        function obj = CD4Class(obj)
+            obj.StartingCD4Count = 0;
+            obj.AverageCD4Count = 0;
+            obj.MeasuredCD4Count = 0;
             obj.IndexTest = false;
             obj.Time = 0;
         end

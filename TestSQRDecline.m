@@ -1,7 +1,7 @@
-function [ PatientCD4 ] = TestSQRDecline( PatientCD4, Pxi, TestingParameters )
+function [ IndexTest, AverageCD4Count, Time, MeasuredCD4Count ] = TestSQRDecline( StartingCD4Count, Pxi, TestingParameters, StepSize, MaxYears )
 %TestSQRDecline Determines the time period at which the Patient was diagnosed after Infection
 %% Calculate Starting Point for Infection after Rebound
-CD4AtRebound = PatientCD4.StartingCD4Count .* Pxi.FractionalDeclineToRebound;
+CD4AtRebound = StartingCD4Count .* Pxi.FractionalDeclineToRebound;
 
 % Generate a squareroot decline for this Individual
 m = Pxi.SQRCD4Decline;
@@ -19,10 +19,12 @@ while (IndividualCD4Decline < MinimumCD4Decline)
     IndividualCD4Decline = lognrnd(mu,sigma);
 end
 
+IndexTest = false;
+AverageCD4Count = 0;
 TimeSinceRebound = 0;
 Step = 0;
 
-while (PatientCD4.IndexTest == false)
+while (IndexTest == false)
     Step = Step + 1;
 
     TimeMidpoint = TimeSinceRebound + StepSize/2;
@@ -58,24 +60,24 @@ while (PatientCD4.IndexTest == false)
         CD4AtMidpoint = 0;
     end
     
-    PatientCD4.IndexTest = DiagnosedDuringStep(TestingParameters, CD4AtMidpoint, StepSize);
+    IndexTest = DiagnosedDuringStep(TestingParameters, CD4AtMidpoint, StepSize);
 
-    if (PatientCD4.IndexTest == true)
+    if (IndexTest == true)
         RandomDistanceAlongThisStep = rand();
         TimeSinceReboundAtDiagnosis = TimeSinceRebound + RandomDistanceAlongThisStep * StepSize;
-        PatientCD4.Time = Pxi.TimeUntilRebound + TimeSinceReboundAtDiagnosis;
-        PatientCD4.MeasuredCD4Count = CD4AtMidpoint(DiagnosedThisStepSubIndex);
+        Time = Pxi.TimeUntilRebound + TimeSinceReboundAtDiagnosis;
+        MeasuredCD4Count = CD4AtMidpoint;
     end  
 
     %Finally, to catch problems with testing rates, if it has been more than 20 years, stop
-    if TimeSinceRebound > 20
+    if TimeSinceRebound > MaxYears
         %Calculate the time
         RandomDistanceAlongThisStep = rand();
         TimeSinceReboundAtDiagnosis = TimeSinceRebound + RandomDistanceAlongThisStep * StepSize;
 
-        PatientCD4.Time = Pxi.TimeUntilRebound+TimeSinceReboundAtDiagnosis;
-        PatientCD4.MeasuredCD4Count = CD4AtMidpoint;
-        PatientCD4.IndexTest = true;
+        Time = Pxi.TimeUntilRebound+TimeSinceReboundAtDiagnosis;
+        MeasuredCD4Count = CD4AtMidpoint;
+        IndexTest = true;
         %warning('Some of the elements in the GenerateCD4Count reached 50 years, which is probably too long');
     end
     

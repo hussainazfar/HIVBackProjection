@@ -1,16 +1,18 @@
-function [ PatientCD4 ] = TestRapidRebound( PatientCD4, Pxi, TestingParameters )
+function [ IndexTest, AverageCD4Count, Time, MeasuredCD4Count ] = TestRapidRebound( StartingCD4Count, Pxi, TestingParameters )
 %This function tests whether Patient was diagnosed during Rapid Rebound
 %Phase
 
-PatientCD4.AverageCD4Count = PatientCD4.StartingCD4Count * (Pxi.FractionalDeclineToRebound + Pxi.FractionalDeclineToTrough) / 2;
+AverageCD4Count = StartingCD4Count * (Pxi.FractionalDeclineToRebound + Pxi.FractionalDeclineToTrough) / 2;
 Duration = Pxi.TimeUntilRebound - Pxi.TimeUntilTrough;
-PatientCD4.IndexTest = DiagnosedDuringStep(TestingParameters, AverageCD4Count, Duration);
+IndexTest = DiagnosedDuringStep(TestingParameters, AverageCD4Count, Duration);
 
-    if (PatientCD4.IndexTest == true)
+    if (IndexTest == true)
         %Calculate the time
         RandomDistanceAlongThisStep = rand();
-        TimeAtDiagnosis = Pxi.TimeUntilTrough + (Pxi.TimeUntilRebound - Pxi.TimeUntilTrough) * RandomDistanceAlongThisStep;
-        PatientCD4.Time = TimeAtDiagnosis;
-        PatientCD4.MeasuredCD4Count = PatientCD4.StartingCD4Count .* ((1 - RandomDistanceAlongThisStep) * Pxi.FractionalDeclineToTrough + RandomDistanceAlongThisStep * Pxi.FractionalDeclineToRebound);
+        Time = Pxi.TimeUntilTrough + (Pxi.TimeUntilRebound - Pxi.TimeUntilTrough) * RandomDistanceAlongThisStep;
+        MeasuredCD4Count = StartingCD4Count .* ((1 - RandomDistanceAlongThisStep) * Pxi.FractionalDeclineToTrough + RandomDistanceAlongThisStep * Pxi.FractionalDeclineToRebound);
+    else
+        Time = 0;
+        MeasuredCD4Count = 0;
     end
 end

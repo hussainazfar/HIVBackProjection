@@ -1,10 +1,8 @@
-function [ CD4CountHistogram, Data ] = GenerateCD4CountModified( TestingParameters, Pxi )
+function [ CD4CountHistogram, Data ] = GenerateCD4Count( TestingParameters, Pxi )
 %GenerateCD4Count function takes a healthy population and simulates the CD4 decline
 % according to assumptions contained in in Pxi and the TestingP. In doing
 % so, it creates the number of people expected in the correct proportions
 % by CD4.
-StepSize = Pxi.StepSize;
-MaxYears = Pxi.MaxYears;
 
 %Start with the number of observations
 SimulatedPopSize = Pxi.SimulatedPopSize;
@@ -22,19 +20,19 @@ end
 %% For all people, find the time after which the person was defined as diagnosed
 for y = 1:SimulatedPopSize
     %Testing to see if Patient is Diagnosed During Rapid Decline
-    [ PatientCD4(y) ] = TestRapidDecline(PatientCD4(y), Pxi, TestingParameters);
-     
+    [ PatientCD4(y).IndexTest, PatientCD4(y).AverageCD4Count, PatientCD4(y).Time, PatientCD4(y).MeasuredCD4Count ] = TestRapidDecline(PatientCD4(y).StartingCD4Count, Pxi, TestingParameters);
+         
     if (PatientCD4(y).IndexTest == false)
         %Testing to see if Patient is Diagnosed During Rapid Rebound
-        [ PatientCD4(y) ] = TestRapidRebound(PatientCD4(y), Pxi, TestingParameters);
+        [ PatientCD4(y).IndexTest, PatientCD4(y).AverageCD4Count, PatientCD4(y).Time, PatientCD4(y).MeasuredCD4Count ] = TestRapidRebound(PatientCD4(y).StartingCD4Count, Pxi, TestingParameters);
     else
         continue
     end
     
-    if (Patient(y).IndexTest == false)
+    if (PatientCD4(y).IndexTest == false)
         %Testing to see when patient was diagnosed and CD4 Count at
         %Diagnosis
-        [ PatientCD4(y) ] = TestSQRDecline(PatientCD4(y), Pxi, TestingParameters);
+        [ PatientCD4(y).IndexTest, PatientCD4(y).AverageCD4Count, PatientCD4(y).Time, PatientCD4(y).MeasuredCD4Count ] = TestSQRDecline(PatientCD4(y).StartingCD4Count, Pxi, TestingParameters, Pxi.StepSize, Pxi.MaxYears);
     else
         continue
     end
